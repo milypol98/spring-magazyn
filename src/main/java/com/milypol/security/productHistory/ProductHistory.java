@@ -1,14 +1,13 @@
 package com.milypol.security.productHistory;
 
-import com.milypol.security.car.Car;
+import com.milypol.security.place.Place;
 import com.milypol.security.product.Product;
-import com.milypol.security.windFarm.WindFarm;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.util.Date;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,8 +18,11 @@ public class ProductHistory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String description;
+    private Date dateFrom;
+    private Date dateTo;
     @OneToOne
-    private Product products;
+    private Product product;
+
     @OneToOne
-    private WindFarm windFarm;
+    private Place place;
 }

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <link rel="stylesheet" href="../css/home.css" />
+  <!-- Styl ładowany przez Thymeleaf
+  <link rel="stylesheet" th:href="@{/static/css/home.css}"/>-->
+</head>
+<body>
+<div class="container">
+  <a th:href="@{/strona1}" class="box">Box 1</a>
+  <a th:href="@{/strona2}" class="box">Box 2</a>
+  <a th:href="@{/strona3}" class="box">Box 3</a>
+  <a th:href="@{/strona4}" class="box">Box 4</a>
+  <a th:href="@{/strona5}" class="box">Box 5</a>
+</div>
+<script src="../js/main.js"></script>
+<!-- Skrypt JS
+<script th:src="@{/js/main.js}"></script>-->
+</body>
+</html>

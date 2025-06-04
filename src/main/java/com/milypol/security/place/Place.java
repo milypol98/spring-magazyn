@@ -1,4 +1,4 @@
-package com.milypol.security.worker;
+package com.milypol.security.place;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -8,20 +8,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.LongSummaryStatistics;
-
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Entity
-public class Worker {
+public class Place {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
-    private String lastName;
-    private Long phone;
     private String address;
     private String description;
-
 }

@@ -21,11 +21,16 @@ public class Car {
     private String model;
     private String color;
     private String brand;
-    private String Registration;
+    private String registration;
     private Date year;
     private String description;
     private Date review;
     private Date insured;
     @ManyToMany
-    private List<Product> product;
+    @JoinTable(
+            name = "car_product",
+            joinColumns = @JoinColumn(name = "car_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id")
+    )
+    private List<Product> products;
 }

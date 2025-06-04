@@ -13,6 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 @Entity
+@Table(name = "product")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +22,8 @@ public class Product {
     private String name;
     private String description;
     private Double price;
-    private String condition;
-    @ManyToMany
-    private List<Car> car;
+    private String quantity;
+    @ManyToMany(mappedBy = "products")
+    private List<Car> cars;
+
 }
