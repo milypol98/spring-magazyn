@@ -1,0 +1,117 @@
+/* ---- Styl ogólny strony ---- */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f7fa; /* jasne, neutralne tło */
+    color: #333;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* ---- Kontener logowania ---- */
+.login-wrapper {
+    background: #ffffff;
+    padding: 40px 30px;
+    border-radius: 10px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    width: 360px;
+    text-align: center;
+}
+
+.login-wrapper h2 {
+    color: #2c3e50;
+    margin-bottom: 25px;
+    font-size: 1.6rem;
+}
+
+/* ---- Wiadomości błędu i sukcesu ---- */
+.message {
+    margin-bottom: 20px;
+    padding: 12px 15px;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    text-align: left;
+}
+
+.message.error {
+    background-color: #fdecec;
+    color: #c0392b;
+    border: 1px solid #e0b4b4;
+}
+
+.message.success {
+    background-color: #eafaf1;
+    color: #27ae60;
+    border: 1px solid #a9d6b5;
+}
+
+/* ---- Formularz logowania ---- */
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.form-group label {
+    margin-bottom: 6px;
+    font-weight: 500;
+    font-size: 0.98rem;
+    color: #34495e;
+}
+
+.form-group input {
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #2980b9;
+}
+
+/* ---- Przycisk logowania ---- */
+.login-form button {
+    background-color: #2980b9;
+    color: #ffffff;
+    border: none;
+    padding: 12px;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.login-form button:hover {
+    background-color: #1f6391;
+    transform: translateY(-2px);
+}
+
+/* ---- Link do rejestracji ---- */
+.register-link {
+    margin-top: 20px;
+    font-size: 0.95rem;
+}
+
+.register-link a {
+    color: #2980b9;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.register-link a:hover {
+    color: #1f6391;
+}

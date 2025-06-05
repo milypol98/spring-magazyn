@@ -1,0 +1,85 @@
+/* ---- Podstawowe style strony ---- */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f7fa; /* jasne, neutralne tło */
+    color: #333;
+    margin: 40px;
+}
+
+/* Nagłówek powitania */
+h2 {
+    color: #2c3e50;
+    margin-bottom: 15px;
+}
+
+/* Paragraph ze standardową wielkością czcionki */
+p {
+    font-size: 1.1rem;
+    margin: 8px 0;
+}
+
+/* Podkreślenie kolorem niebieskim wartości w <strong> */
+strong {
+    color: #2980b9;
+}
+
+/* Formularz wylogowania */
+form {
+    margin-top: 20px;
+}
+
+/* Przyciski */
+button {
+    background-color: #2980b9;
+    color: white;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #1f6391;
+}
+
+/* ---- Kontener „klocków” ---- */
+.container {
+    margin-top: 40px;
+    display: grid;
+    grid-template-columns: repeat(5, 250px);
+    gap: 20px;
+    padding: 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    max-width: 1350px; /* 5×250 + 4×20 odstępów */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Pojedynczy „klocek” */
+.box {
+    width: 250px;
+    height: 250px;
+    background: linear-gradient(135deg, #4a90e2, #357ABD);
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.12);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-weight: 700;
+    font-size: 1.25rem;
+    text-decoration: none;
+    user-select: none;
+    transition: background 0.3s, transform 0.25s, box-shadow 0.3s;
+    cursor: pointer;
+}
+
+.box:hover {
+    background: linear-gradient(135deg, #357ABD, #285a8f);
+    transform: scale(1.07);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.25);
+}

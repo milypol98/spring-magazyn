@@ -3,6 +3,7 @@ spring:
     url: jdbc:mysql://localhost:3306/magazyn2
     username: root
     password: root
+
   jpa:
     database: mysql
     hibernate:
@@ -11,3 +12,7 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  sql:
+    init:
+      mode: never
+      data-locations: classpath:data.sql

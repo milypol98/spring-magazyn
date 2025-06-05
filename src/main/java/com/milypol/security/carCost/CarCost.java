@@ -22,9 +22,9 @@ public class CarCost {
     private Date dateFrom;
     private Date dateTo;
 
-    @OneToOne
-    @JoinColumn(name = "car_id", referencedColumnName = "id")
+    @ManyToOne
     private Car car;
-    @OneToOne
+
+    @ManyToOne
     private User user;
 }

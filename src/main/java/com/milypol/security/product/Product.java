@@ -1,6 +1,7 @@
 package com.milypol.security.product;
 
 import com.milypol.security.car.Car;
+import com.milypol.security.cart.Cart;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,5 +26,6 @@ public class Product {
     private String quantity;
     @ManyToMany(mappedBy = "products")
     private List<Car> cars;
-
+    @ManyToMany(mappedBy = "products")
+    private List<Cart> carts;
 }

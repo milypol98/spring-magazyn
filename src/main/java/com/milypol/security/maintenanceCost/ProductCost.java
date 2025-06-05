@@ -21,6 +21,6 @@ public class ProductCost {
     private Double cost;
     private Date dateFrom;
     private Date dateTo;
-    @OneToOne
+    @ManyToOne
     private Product product;
 }

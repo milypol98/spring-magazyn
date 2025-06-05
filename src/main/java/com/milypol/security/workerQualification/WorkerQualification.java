@@ -18,7 +18,7 @@ public class WorkerQualification {
     private String qualification;
     private String dateFrom;
     private String dateTo;
-    @OneToOne
+    @ManyToOne
     private User user;
 
 }

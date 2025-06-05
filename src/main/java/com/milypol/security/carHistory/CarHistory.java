@@ -23,11 +23,11 @@ public class CarHistory {
     private Date dateTo;
     private double latitude;
     private double longitude;
-    @OneToOne
+    @ManyToOne
     private Car car;
 
-    @OneToOne
+    @ManyToOne
     private Place place;
-    @OneToOne
+    @ManyToOne
     private User user;
 }

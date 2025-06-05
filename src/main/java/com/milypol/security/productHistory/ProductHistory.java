@@ -20,9 +20,9 @@ public class ProductHistory {
     private String description;
     private Date dateFrom;
     private Date dateTo;
-    @OneToOne
+    @ManyToOne
     private Product product;
 
-    @OneToOne
+    @ManyToOne
     private Place place;
 }
