@@ -19,4 +19,6 @@ public class Place {
     private String name;
     private String address;
     private String description;
+    private double latitude;
+    private double longitude;
 }

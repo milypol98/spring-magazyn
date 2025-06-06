@@ -3,25 +3,34 @@
 <head>
     <meta charset="UTF-8" />
     <title>Samochody</title>
+    <link rel="stylesheet" th:href="@{/css/general.css}" />
     <link rel="stylesheet" th:href="@{/css/car.css}" />
 </head>
 <body>
 <h1>Samochody</h1>
-
+<a href="/cars/add" class="btn-add">Dodaj</a>
 <div class="table-container">
     <table>
         <thead>
         <tr>
+            <th>Nazwa</th>
             <th>Marka</th>
             <th>Model</th>
-            <th>Rok</th>
+            <th>Rocznik</th>
+            <th>Przegląd</th>
+            <th>Ubezpieczenie</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="car : ${cars}">
+        <tr th:each="car : ${cars}"
+            th:attr="onclick=|window.location.href='/cars/edit/${car.id}'|"
+            class="clickable-row">
+            <td th:text="${car.name}">Nazwa</td>
             <td th:text="${car.brand}">Marka</td>
             <td th:text="${car.model}">Model</td>
             <td th:text="${car.year}">Rok</td>
+            <td th:text="${car.review}">Przegląd</td>
+            <td th:text="${car.insured}">Ubezpieczenie</td>
         </tr>
         </tbody>
     </table>

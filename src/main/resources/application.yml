@@ -16,3 +16,7 @@ spring:
     init:
       mode: never
       data-locations: classpath:data.sql
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true

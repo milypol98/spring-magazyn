@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edycja samochodu</title>
+    <link rel="stylesheet" th:href="@{/css/general.css}" />
+    <link rel="stylesheet" th:href="@{/css/car/edit.css}" />
+    <link rel="stylesheet" th:href="@{/css/map.css}" />
+
+</head>
+<body>
+
+<h2>Edycja samochodu</h2>
+<!--<div th:object="${car}" th:if="${car.id != null }">-->
+<!--    <form  th:action="@{'/cars/delete/' + ${car.id}}" method="post">-->
+<!--        <button type="submit" class="btn-delete">Usuń</button>-->
+<!--    </form>-->
+<!--</div>-->
+
+
+<div class="container">
+    <!-- Formularz -->
+    <div class="form-section">
+        <form th:action="@{'/cars/save'}" th:object="${car}" method="post">
+            <input type="hidden" th:field="*{id}" />
+
+            <label>Nazwa:</label>
+            <input type="text" th:field="*{name}" />
+
+            <label>Marka:</label>
+            <input type="text" th:field="*{brand}" />
+
+            <label>Model:</label>
+            <input type="text" th:field="*{model}" />
+
+            <label>Kolor:</label>
+            <input type="text" th:field="*{color}" />
+
+            <label>Rejestracja:</label>
+            <input type="text" th:field="*{registration}" />
+
+            <label>Rok produkcji:</label>
+            <input type="date" th:field="*{year}" />
+
+            <label>Opis:</label>
+            <textarea th:field="*{description}"></textarea>
+
+            <label>Przegląd:</label>
+            <input type="date" th:field="*{review}" />
+
+            <label>Ubezpieczenie:</label>
+            <input type="date" th:field="*{insured}" />
+
+            <button type="submit" class="submit-btn">Zapisz</button>
+        </form>
+    </div>
+
+    <div th:object="${car}" th:if="${car.id != null }" class="squares">
+        <div class="square">
+            <button id="showPlacesBtn"
+                    data-places='[
+    {"id":1,"name":"Miejsce 1","address":"Adres 1","description":"Opis 1","latitude":50.1,"longitude":19.9},
+    {"id":2,"name":"Miejsce 2","address":"Adres 2","description":"Opis 2","latitude":50.2,"longitude":20.0}
+  ]'>
+                Pokaż miejsca
+            </button>
+            <div id="map"></div>
+        </div>
+        <div class="square">
+            <table>
+                <thead>
+                <tr>
+                    <th>Opis</th>
+                    <th>Cena</th>
+                    <th>Od</th>
+                    <th>Do</th>
+                    <th>Użytkownik</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="cost : ${car.costs}">
+                    <td th:text="${cost.description}"></td>
+                    <td th:text="${cost.cost}"></td>
+                    <td th:text="${cost.dateFrom}"></td>
+                    <td th:text="${cost.dateTo}"></td>
+                    <td th:text="${cost.user.firstname}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="square">Zdjecie</div>
+        <div class="square">
+            <table>
+                <thead>
+                <tr>
+                    <th>Opis</th>
+                    <th>Miejsce</th>
+                    <th>Od</th>
+                    <th>Do</th>
+                    <th>Użytkownik</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="history : ${car.history}">
+                    <td th:text="${history.description}"></td>
+                    <td th:text="${history.place.name}"></td>
+                    <td th:text="${history.dateFrom}"></td>
+                    <td th:text="${history.dateTo}"></td>
+                    <td th:text="${history.user.firstname}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div>
+    <form th:action="@{'/cars/save'}" th:object="${car_cost}"  method="post">
+        <input type="hidden" th:field="*{id}" />
+
+        <label>Nazwa:</label>
+        <input type="text" th:field="*{description}" />
+
+        <label>Marka:</label>
+        <input type="text" th:field="*{cost}" />
+
+        <label>Rok produkcji:</label>
+        <input type="date" th:field="*{dateTo}" />
+
+
+        <label>Przegląd:</label>
+        <input type="date" th:field="*{dateFrom}" />
+
+        <input type="hidden" th:field="*{car.id}" th:value="${car.id}" />
+        <button type="submit" class="submit-btn">Zapisz</button>
+    </form>
+</div>
+<script async
+        src="https://maps.googleapis.com/maps/api/js?key=TWÓJ_KLUCZ_API&callback=initMap">
+</script>
+<script th:src="@{/js/map.js}"></script>
+
+</body>
+</html>
