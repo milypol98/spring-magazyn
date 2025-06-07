@@ -1,5 +1,7 @@
 package com.milypol.security.product;
 
+import com.milypol.security.maintenanceCost.ProductCost;
+
 import java.util.List;
 
 public interface ProductService {
@@ -7,5 +9,6 @@ public interface ProductService {
     Product getProductById(Integer id);
     Product saveProduct(Product product);
     void deleteProduct(Integer id);
-    Product updateProduct(Integer id, Product updatedProduct);
+//    List<Product> getAllProductsByCarId(Integer carId);
+
 }

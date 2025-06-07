@@ -32,8 +32,9 @@ public class ProductServiceImpl implements ProductService{
         productRepo.deleteById(id);
     }
 
-    @Override
-    public Product updateProduct(Integer id, Product updatedProduct) {
-        return productRepo.save(updatedProduct);
-    }
+//    @Override
+//    public List<Product> getAllProductsByCarId(Integer carId) {
+//        return productRepo.findAllByCarId(carId);
+//    }
+
 }

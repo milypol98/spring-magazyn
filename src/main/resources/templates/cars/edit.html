@@ -78,7 +78,8 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="cost : ${car.costs}">
+                <tr th:each="cost : ${car.costs}"
+                    th:attr="onclick=|window.location.href='/cars/cost/edit/${cost.id}'|">
                     <td th:text="${cost.description}"></td>
                     <td th:text="${cost.cost}"></td>
                     <td th:text="${cost.dateFrom}"></td>
@@ -101,7 +102,8 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="history : ${car.history}">
+                <tr th:each="history : ${car.history}"
+                    th:attr="onclick=|window.location.href='/cars/history/edit/${history.id}'|">
                     <td th:text="${history.description}"></td>
                     <td th:text="${history.place.name}"></td>
                     <td th:text="${history.dateFrom}"></td>
@@ -113,27 +115,7 @@
         </div>
     </div>
 </div>
-<div>
-    <form th:action="@{'/cars/save'}" th:object="${car_cost}"  method="post">
-        <input type="hidden" th:field="*{id}" />
 
-        <label>Nazwa:</label>
-        <input type="text" th:field="*{description}" />
-
-        <label>Marka:</label>
-        <input type="text" th:field="*{cost}" />
-
-        <label>Rok produkcji:</label>
-        <input type="date" th:field="*{dateTo}" />
-
-
-        <label>Przegląd:</label>
-        <input type="date" th:field="*{dateFrom}" />
-
-        <input type="hidden" th:field="*{car.id}" th:value="${car.id}" />
-        <button type="submit" class="submit-btn">Zapisz</button>
-    </form>
-</div>
 <script async
         src="https://maps.googleapis.com/maps/api/js?key=TWÓJ_KLUCZ_API&callback=initMap">
 </script>

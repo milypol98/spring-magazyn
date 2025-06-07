@@ -3,7 +3,12 @@ package com.milypol.security.controller;
 import com.milypol.security.car.Car;
 import com.milypol.security.car.CarService;
 import com.milypol.security.carCost.CarCost;
+import com.milypol.security.carCost.CarCostService;
+import com.milypol.security.carCost.CarCostServiceImpl;
 import com.milypol.security.carHistory.CarHistory;
+import com.milypol.security.carHistory.CarHistoryService;
+import com.milypol.security.product.Product;
+import com.milypol.security.product.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -12,10 +17,15 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/cars")
 public class CarController {
     private final CarService carService;
+    private final CarCostService carCostService;
+    private final CarHistoryService carHistoryService;
+    private final ProductService productService;
 
-
-    public CarController(CarService carService) {
+    public CarController(CarService carService, CarCostService carCostService, CarHistoryService carHistoryService, ProductService productService) {
         this.carService = carService;
+        this.carCostService = carCostService;
+        this.carHistoryService = carHistoryService;
+        this.productService = productService;
     }
 
     @GetMapping
@@ -35,6 +45,17 @@ public class CarController {
         model.addAttribute("car_history", new CarHistory());
         return "cars/edit";
     }
+    @GetMapping("cost/edit/{id}")
+    public String carCostEdit(@PathVariable Integer id, Model model) {
+        model.addAttribute("car_cost", carCostService.getCarCostById(id));
+        return "cars/cost";
+    }
+    @GetMapping("history/edit/{id}")
+    public String carHistoryEdit(@PathVariable Integer id, Model model) {
+        model.addAttribute("car_histowy", carHistoryService.getCarHistoryById(id));
+        return "cars/history";
+    }
+
     @PostMapping("/delete/{id}")
     public String deleteCar( @PathVariable Integer id) {
         carService.deleteCar(id);
@@ -50,4 +71,5 @@ public class CarController {
         carService.saveCar(car);
         return "redirect:/cars/edit";
     }
+
 }

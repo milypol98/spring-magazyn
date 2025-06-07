@@ -33,8 +33,5 @@ public class CarServiceImpl implements CarService{
         carRepo.deleteById(id);
     }
 
-    @Override
-    public Car updateCar(Integer id, Car updatedCar) {
-        return null;
-    }
+
 }
