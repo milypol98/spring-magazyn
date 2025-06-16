@@ -7,6 +7,7 @@ public interface ProductService {
     Product getProductById(Integer id);
     Product saveProduct(Product product);
     void deleteProduct(Integer id);
+    List<Product> getAllProductsByStockPositionId(Integer stockPositionId);
 //    List<Product> getAllProductsByCarId(Integer carId);
 
 }

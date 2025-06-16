@@ -32,6 +32,11 @@ public class ProductServiceImpl implements ProductService{
         productRepo.deleteById(id);
     }
 
+    @Override
+    public List<Product> getAllProductsByStockPositionId(Integer stockPositionId) {
+        return productRepo.findAll(stockPositionId);
+    }
+
 //    @Override
 //    public List<Product> getAllProductsByCarId(Integer carId) {
 //        return productRepo.findAllByCarId(carId);

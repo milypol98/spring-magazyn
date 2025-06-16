@@ -4,10 +4,7 @@ import com.milypol.security.car.Car;
 import com.milypol.security.car.CarService;
 import com.milypol.security.carCost.CarCost;
 import com.milypol.security.carCost.CarCostService;
-import com.milypol.security.carCost.CarCostServiceImpl;
 
-import com.milypol.security.product.Product;
-import com.milypol.security.product.ProductService;
 import com.milypol.security.task.TaskService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,7 +26,7 @@ public class CarController {
     @GetMapping
     public String showCarPage(Model model) {
         model.addAttribute("cars", carService.getAllCars());
-        return "car";
+        return "cars/car";
     }
     @GetMapping("/add")
     public String addForm( Model model) {
@@ -58,7 +55,7 @@ public class CarController {
     @GetMapping("cost/edit/{id}")
     public String carCostEdit(@PathVariable Integer id, Model model) {
         model.addAttribute("car_cost", carCostService.getCarCostById(id));
-        return "cars/cost";
+        return "cars/costEdit";
     }
     @PostMapping( "cost/save")
     public String saveCostCar(@ModelAttribute CarCost carCost) {

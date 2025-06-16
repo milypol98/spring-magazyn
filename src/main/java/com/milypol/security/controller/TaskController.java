@@ -18,7 +18,7 @@ public class TaskController {
     @GetMapping
     public String showTaskPage(Model model){
         model.addAttribute("tasks", taskService.getAllTasks());
-        return "tasks";
+        return "tasks/list";
     }
     @GetMapping("/add")
     public String addForm(Task task){

@@ -18,7 +18,7 @@ public class PlaceController {
     @GetMapping
     public String showPlacePage(Model model){
         model.addAttribute("places", placeService.getAllPlaces());
-        return "place";
+        return "places/list";
     }
     @GetMapping("/add")
     public String addForm(Model model){
