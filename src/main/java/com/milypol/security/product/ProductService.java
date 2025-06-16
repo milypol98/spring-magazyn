@@ -1,7 +1,5 @@
 package com.milypol.security.product;
 
-import com.milypol.security.maintenanceCost.ProductCost;
-
 import java.util.List;
 
 public interface ProductService {

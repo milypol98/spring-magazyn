@@ -1,52 +1,172 @@
-.btn-edit,
-.btn-delete {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 6px;
-    font-size: 14px;
-    cursor: pointer;
-    margin-right: 10px;
-    transition: background-color 0.3s, box-shadow 0.3s;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-a.btn-add {
-    display: inline-block;
-    text-decoration: none;
-    background-color: #4a90e2;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 6px;
-    font-size: 14px;
-    cursor: pointer;
-    margin: 30px;
-    transition: background-color 0.3s, box-shadow 0.3s;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    border: none;
-}
-.btn-add {
-    background-color: #4a90e2;
-    color: white;
-    margin: 30px;
+/* styles.css */
+
+/* --- Reset i podstawowe ustawienia --- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    padding: 20px;
+    color: #333;
+    line-height: 1.5;
+}
+
+/* --- Nagłówki --- */
+h1, h2, h3, h4, h5, h6 {
+    color: #333;
+    margin-bottom: 1rem;
+    font-weight: normal;
+}
+
+/* --- Kontenery i układy --- */
+.container {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.table-container {
+    position: relative;
+    display: flex;
+}
+
+.squares {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    width: 60%;
+}
+
+/* --- Formularze --- */
+.form-section {
+    width: 40%;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+label {
+    font-weight: bold;
+}
+
+input, textarea, select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+    font-family: inherit;
+}
+
+/* --- Tabele --- */
+table {
+    width: 100%;
+    max-width: 600px;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+th, td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    font-size: 14px;
+    color: #555;
+}
+
+th {
+    background-color: #4a90e2;
+    color: #fff;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 13px;
+}
+
+tr:nth-child(even) {
+    background-color: #f0f8ff;
+}
+
+tr:hover {
+    background-color: #f0f0f0;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+}
+
+/* --- Infoboxy (np. podpowiedzi przy hover) --- */
+.info-box {
+    position: absolute;
+    background-color: #fff;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    width: 250px;
+    z-index: 10;
+    pointer-events: none;
+    font-size: 0.95rem;
+    display: none; /* pokazuj/ukrywaj za pomocą JS */
+}
+
+/* --- Mapy i inne pełnoekranowe elementy --- */
+#map {
+    margin: 10px 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* --- Wspólna klasa dla przycisków --- */
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    text-decoration: none;
+    text-align: center;
+    margin: 5px;
+}
+
+/* --- Modyfikatory przycisków --- */
+.btn-add {
+    background-color: #4a90e2;
+    color: #fff;
+}
 .btn-add:hover {
     background-color: #3a78c2;
 }
 
 .btn-edit {
     background-color: #6cbf84;
-    color: white;
+    color: #fff;
 }
-
 .btn-edit:hover {
     background-color: #56a46d;
 }
 
 .btn-delete {
     background-color: #e74c3c;
-    color: white;
+    color: #fff;
 }
-
 .btn-delete:hover {
     background-color: #c0392b;
+}
+
+/* --- Specyficzne klasy pomocnicze --- */
+.hidden {
+    display: none !important;
 }

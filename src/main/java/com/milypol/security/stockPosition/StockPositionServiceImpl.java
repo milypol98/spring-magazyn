@@ -16,4 +16,19 @@ public class StockPositionServiceImpl implements StockPositionService{
     public List<StockPosition> getAllStockPositions() {
         return stockPositionRepo.findAll();
     }
+
+    @Override
+    public StockPosition getStockPositionById(Integer id) {
+        return stockPositionRepo.findById(id).orElseThrow(() -> new RuntimeException("StockPosition not found"));
+    }
+
+    @Override
+    public StockPosition saveStockPosition(StockPosition stockPosition) {
+        return stockPositionRepo.save(stockPosition);
+    }
+
+    @Override
+    public void deleteStockPosition(Integer id) {
+        stockPositionRepo.deleteById(id);
+    }
 }

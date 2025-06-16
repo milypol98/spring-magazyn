@@ -1,7 +1,6 @@
 package com.milypol.security.car;
 
 import com.milypol.security.carCost.CarCost;
-import com.milypol.security.carHistory.CarHistory;
 import com.milypol.security.product.Product;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -41,8 +40,7 @@ public class Car {
             inverseJoinColumns = @JoinColumn(name = "product_id")
     )
     private List<Product> products;
-    @OneToMany(mappedBy = "car", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CarHistory> history;
+
     @OneToMany(mappedBy = "car", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CarCost> costs = new ArrayList<>();
 }

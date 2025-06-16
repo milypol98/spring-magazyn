@@ -1,6 +1,5 @@
-package com.milypol.security.productHistory;
+package com.milypol.security.productCost;
 
-import com.milypol.security.place.Place;
 import com.milypol.security.product.Product;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -13,16 +12,14 @@ import java.util.Date;
 @AllArgsConstructor
 @Data
 @Entity
-public class ProductHistory {
+public class ProductCost {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String description;
+    private Double cost;
     private Date dateFrom;
     private Date dateTo;
     @ManyToOne
     private Product product;
-
-    @ManyToOne
-    private Place place;
 }

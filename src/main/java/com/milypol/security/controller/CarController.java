@@ -5,10 +5,10 @@ import com.milypol.security.car.CarService;
 import com.milypol.security.carCost.CarCost;
 import com.milypol.security.carCost.CarCostService;
 import com.milypol.security.carCost.CarCostServiceImpl;
-import com.milypol.security.carHistory.CarHistory;
-import com.milypol.security.carHistory.CarHistoryService;
+
 import com.milypol.security.product.Product;
 import com.milypol.security.product.ProductService;
+import com.milypol.security.task.TaskService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -18,14 +18,12 @@ import org.springframework.web.bind.annotation.*;
 public class CarController {
     private final CarService carService;
     private final CarCostService carCostService;
-    private final CarHistoryService carHistoryService;
-    private final ProductService productService;
+    private final TaskService taskService;
 
-    public CarController(CarService carService, CarCostService carCostService, CarHistoryService carHistoryService, ProductService productService) {
+    public CarController(CarService carService, CarCostService carCostService, TaskService taskService) {
         this.carService = carService;
         this.carCostService = carCostService;
-        this.carHistoryService = carHistoryService;
-        this.productService = productService;
+        this.taskService = taskService;
     }
 
     @GetMapping
@@ -42,18 +40,8 @@ public class CarController {
     public String editForm(@PathVariable Integer id, Model model) {
         model.addAttribute("car", carService.getCarById(id));
         model.addAttribute("car_cost", new CarCost());
-        model.addAttribute("car_history", new CarHistory());
+        model.addAttribute("tasks", taskService.getAllTasksByCarId(id));
         return "cars/edit";
-    }
-    @GetMapping("cost/edit/{id}")
-    public String carCostEdit(@PathVariable Integer id, Model model) {
-        model.addAttribute("car_cost", carCostService.getCarCostById(id));
-        return "cars/cost";
-    }
-    @GetMapping("history/edit/{id}")
-    public String carHistoryEdit(@PathVariable Integer id, Model model) {
-        model.addAttribute("car_histowy", carHistoryService.getCarHistoryById(id));
-        return "cars/history";
     }
 
     @PostMapping("/delete/{id}")
@@ -66,9 +54,20 @@ public class CarController {
         carService.saveCar(car);
         return "redirect:/cars";
     }
-    @PostMapping( "history/save")
-    public String saveHistoryCar(@ModelAttribute Car car) {
-        carService.saveCar(car);
+
+    @GetMapping("cost/edit/{id}")
+    public String carCostEdit(@PathVariable Integer id, Model model) {
+        model.addAttribute("car_cost", carCostService.getCarCostById(id));
+        return "cars/cost";
+    }
+    @PostMapping( "cost/save")
+    public String saveCostCar(@ModelAttribute CarCost carCost) {
+        carCostService.saveCarCost(carCost);
+        return "redirect:/cars/edit";
+    }
+    @PostMapping("/cost/delete/{id}")
+    public String deleteCostCar(@PathVariable Integer id){
+        carCostService.deleteCarCost(id);
         return "redirect:/cars/edit";
     }
 
