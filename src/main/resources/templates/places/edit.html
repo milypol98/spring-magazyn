@@ -7,6 +7,29 @@
 
 </head>
 <body>
+<div class="container">
+    <div class="form-section">
+        <form th:action="@{'/places/save'}"
+              th:object="${place}"
+              method="post">
+            <input type="hidden" th:field="*{id}" />
 
+            <label>Nazwa</label>
+            <input type="text" th:field="*{name}" />
+
+            <label>Adres</label>
+            <input type="text" th:field="*{address}" />
+
+            <label>Opis</label>
+            <textarea th:field="*{description}"></textarea>
+
+            <label>Współrzędne</label>
+            <input type="text" th:field="*{latitude}" />
+            <input type="text" th:field="*{longitude}" />
+
+            <button type="submit" class="submit-btn">Zapisz</button>
+        </form>
+    </div>
+</div>
 </body>
 </html>

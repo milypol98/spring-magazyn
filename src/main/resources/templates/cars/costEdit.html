@@ -8,20 +8,22 @@
 </head>
 <body>
 <div>
-  <form th:action="@{'/cars/save'}" th:object="${car_cost}"  method="post">
+  <form th:action="@{'/cars/cost/save'}" th:object="${car_cost}"  method="post">
     <input type="hidden" th:field="*{id}" />
+
+    <input type="hidden" th:field="*{car.id}" />
 
     <label>Nazwa:</label>
     <input type="text" th:field="*{description}" />
 
-    <label>Marka:</label>
+    <label>Koszty:</label>
     <input type="text" th:field="*{cost}" />
 
-    <label>Rok produkcji:</label>
+    <label>Data od</label>
     <input type="date" th:field="*{dateTo}" />
 
 
-    <label>Przegląd:</label>
+    <label>Data do</label>
     <input type="date" th:field="*{dateFrom}" />
 
     <button type="submit" class="submit-btn">Zapisz</button>

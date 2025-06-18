@@ -7,6 +7,27 @@
 
 </head>
 <body>
-
+<h1>Lista miejsc</h1>
+<a href="/places/add">Dodaj</a>
+<div class="table-container">
+    <table>
+        <thead>
+        <tr>
+            <th>Nazwa</th>
+            <th>Adres</th>
+            <th>Opis</th>
+            <th>Pogoda</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="place : ${places}"
+            th:attr="onclick=|window.location.href='/places/edit/${place.id}'|"
+            class="clickable-row">
+            <td th:text="${place.name}">Nazwa</td>
+            <td th:text="${place.address}">Adres</td>
+            <td th:text="${place.description}">Opis</td>
+            <td>pogoda</td>
+    </table>
+</div>
 </body>
 </html>

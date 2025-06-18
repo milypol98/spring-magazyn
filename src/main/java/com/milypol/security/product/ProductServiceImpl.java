@@ -34,7 +34,7 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public List<Product> getAllProductsByStockPositionId(Integer stockPositionId) {
-        return productRepo.findAll(stockPositionId);
+        return productRepo.findAllByStockPosition_Id(stockPositionId);
     }
 
 //    @Override

@@ -21,7 +21,7 @@ public class UserController {
     @GetMapping
     public String showUserPage(Model model){
         model.addAttribute("users", userService.getAllUsers());
-        return "users";
+        return "workers/list";
     }
     //pracownicy admin
     @GetMapping("/add")

@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 @NoArgsConstructor
@@ -21,14 +22,12 @@ public class CarCost {
     private Integer id;
     private String description;
     private Double cost;
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
-    private LocalDateTime dateFrom;
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
-    private LocalDateTime dateTo;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate dateFrom;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate dateTo;
 
     @ManyToOne
     private Car car;
 
-    @ManyToOne
-    private User user;
 }

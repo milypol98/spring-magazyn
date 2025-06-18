@@ -55,16 +55,7 @@
 
     <div th:object="${car}" th:if="${car.id != null }" class="squares">
         <div class="square">
-            <button id="showPlacesBtn"
-                    data-places='[
-    {"id":1,"name":"Miejsce 1","address":"Adres 1","description":"Opis 1","latitude":50.1,"longitude":19.9},
-    {"id":2,"name":"Miejsce 2","address":"Adres 2","description":"Opis 2","latitude":50.2,"longitude":20.0}
-  ]'>
-                Pokaż miejsca
-            </button>
-            <div id="map"></div>
-        </div>
-        <div class="square">
+            <a th:href="@{'/cars/cost/add/' + ${car.id}}" class="btn btn-primary">Dodaj</a>
             <table>
                 <thead>
                 <tr>
@@ -82,17 +73,16 @@
                     <td th:text="${cost.cost}"></td>
                     <td th:text="${cost.dateFrom}"></td>
                     <td th:text="${cost.dateTo}"></td>
-                    <td th:text="${cost.user.firstname}"></td>
                 </tr>
                 </tbody>
             </table>
         </div>
-        <div class="square">Zdjecie</div>
         <div class="square">
             <table>
                 <thead>
                 <tr>
                     <th>Opis</th>
+                    <th>Nazwa</th>
                     <th>Miejsce</th>
                     <th>Od</th>
                     <th>Do</th>
@@ -100,13 +90,16 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="history : ${car.history}"
-                    th:attr="onclick=|window.location.href='/cars/history/edit/${history.id}'|">
-                    <td th:text="${history.description}"></td>
-                    <td th:text="${history.place.name}"></td>
-                    <td th:text="${history.dateFrom}"></td>
-                    <td th:text="${history.dateTo}"></td>
-                    <td th:text="${history.user.firstname}"></td>
+                <tr th:each="task : ${tasks}">
+                    <td th:text="${task.description}"></td>
+                    <td th:text="${task.name}"></td>
+                    <td th:text="${task.place.name}"></td>
+                    <td th:text="${task.dateFrom}"></td>
+                    <td th:text="${task.dateTo}"></td>
+                    <td>
+                        <label th:each="user : ${task.users}"
+                               th:text="${user.firstname + ' ' + user.lastName}"></label>
+                    </td>
                 </tr>
                 </tbody>
             </table>
@@ -114,9 +107,7 @@
     </div>
 </div>
 
-<script async
-        src="https://maps.googleapis.com/maps/api/js?key=TWÓJ_KLUCZ_API&callback=initMap">
-</script>
+
 <script th:src="@{/js/map.js}"></script>
 
 </body>
