@@ -7,6 +7,42 @@
 
 </head>
 <body>
+<h1>Prace</h1>
+<a href="/tasks/add">Dodaj</a>
+<div class="table-container">
+    <table>
+        <thead>
+        <tr>
+            <th>Nazwa</th>
+            <th>Opis</th>
+            <th>Data od</th>
+            <th>Status do</th>
+            <th>Miejsce</th>
+            <th>Pracownicy</th>
+            <th>Auto</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="task : ${tasks}"
+            th:attr="onclick=|window.location.href='/tasks/edit/${task.id}'|"
+            class="clickable-row">
+            <td th:text="${task.name}"></td>
+            <td th:text="${task.description}"></td>
+            <td th:text="${task.dateFrom}"></td>
+            <td th:text="${task.dateTo}"></td>
+            <td th:text="${task.place.address}"></td>
+            <td>
+                <label th:each="user : ${task.users}"
+                       th:text="${user.firstname + ' ' + user.lastName}"></label>
+            </td>
+            <td>
+                <label th:each="car : ${task.car}"
+                       th:text="${car.name}"></label>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 $END$
 </body>
 </html>

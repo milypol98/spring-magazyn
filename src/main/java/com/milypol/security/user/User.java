@@ -1,5 +1,6 @@
 package com.milypol.security.user;
 
+import com.milypol.security.address.Address;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,7 +27,8 @@ public class User  {
     @Column(nullable = false)
     private String password;
     private Long phone;
-    private String address;
+    @ManyToOne
+    private Address address;
     private String description;
     @Column(nullable = false, unique = true)
     private String email;

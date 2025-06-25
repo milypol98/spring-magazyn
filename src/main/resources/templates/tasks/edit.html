@@ -7,6 +7,52 @@
 
 </head>
 <body>
+<div class="container">
+    <div class="form-section">
+        <form th:action="@{'/tasks/save'}" th:object="${task}" method="post">
+            <input type="hidden" th:field="*{id}" />
 
+            <label>Nazwa:</label>
+            <input type="text" th:field="*{name}" />
+
+            <label>Opis:</label>
+            <textarea th:field="*{description}"></textarea>
+
+            <label>Data od:</label>
+            <input type="date" th:field="*{dateTo}" />
+
+            <label>Data do:</label>
+            <input type="date" th:field="*{dateFrom}" />
+
+            <label>Data do</label>
+            <input type="date" th:field="*{dateFrom}" />
+
+            <label>Miejsce</label>
+            <select th:field="*{place}">
+                <option th:each="p : ${allPlaces}"
+                        th:value="${p.id}"
+                        th:text="${p.name + ' ' + p.address}">
+                </option>
+            </select>
+
+            <label>Uczestnicy:</label>
+            <select th:field="*{users}" multiple size="5">
+                <option th:each="u : ${allUsers}"
+                        th:value="${u.id}"
+                        th:text="${u.firstname + ' ' + u.lastName}">
+                </option>
+            </select>
+
+            <label>Samochód:</label>
+            <select th:field="*{car}" multiple size="2">
+                <option th:each="c : ${allCars}"
+                        th:value="${c.id}"
+                        th:text="${c.name}">
+                </option>
+            </select>
+            <button type="submit" class="submit-btn">Zapisz</button>
+        </form>
+    </div>
+</div>
 </body>
 </html>
