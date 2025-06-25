@@ -38,8 +38,8 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<Task> getAllTasksByCarId(Integer carId) {
-        return taskRepo.findAllByCar_id(carId);
+    public List<Task> getAllTasksByCarsId(Integer carId) {
+        return taskRepo.findAllByCars_id(carId);
     }
 
     @Override

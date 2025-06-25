@@ -41,6 +41,6 @@ public class Car {
     )
     private List<Product> products;
 
-    @OneToMany(mappedBy = "car", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CarCost> costs = new ArrayList<>();
+    @OneToMany
+    private List<CarCost> costs;
 }

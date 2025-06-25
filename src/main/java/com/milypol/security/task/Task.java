@@ -53,7 +53,7 @@ public class Task {
             joinColumns = @JoinColumn(name = "task_id"),
             inverseJoinColumns = @JoinColumn(name = "car_id")
     )
-    private List<Car> car;
+    private List<Car> cars;
     @ManyToOne
     private Cart cart;
 }

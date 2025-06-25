@@ -9,7 +9,7 @@ public interface TaskService {
     void deleteTask(Integer id);
     List<Task> getAllTasksByUserId(Integer userId);
 
-    List<Task> getAllTasksByCarId(Integer id);
+    List<Task> getAllTasksByCarsId(Integer id);
 
     List<Task> getAllTasksByProductId(Integer id);
 }

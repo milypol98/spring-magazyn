@@ -44,6 +44,10 @@ public class TaskController {
     @GetMapping("/edit/{id}")
     public String editForm(@PathVariable Integer id, Model model){
         model.addAttribute("task", taskService.getTaskById(id));
+        model.addAttribute("allCars", carService.getAllCars());
+        model.addAttribute("allUsers", userService.getAllUsers());
+        model.addAttribute("allPlaces", placeService.getAllPlaces());
+        model.addAttribute("allProducts", productService.getAllProducts());
         return "tasks/edit";
     }
     @PostMapping("/delete/{id}")

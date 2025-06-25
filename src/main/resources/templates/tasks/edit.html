@@ -36,7 +36,7 @@
             </select>
 
             <label>Uczestnicy:</label>
-            <select th:field="*{users}" multiple size="5">
+            <select th:field="*{users}" multiple size="2">
                 <option th:each="u : ${allUsers}"
                         th:value="${u.id}"
                         th:text="${u.firstname + ' ' + u.lastName}">
@@ -44,7 +44,7 @@
             </select>
 
             <label>Samochód:</label>
-            <select th:field="*{car}" multiple size="2">
+            <select th:field="*{cars}" multiple size="5">
                 <option th:each="c : ${allCars}"
                         th:value="${c.id}"
                         th:text="${c.name}">
