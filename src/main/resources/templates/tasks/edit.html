@@ -43,13 +43,13 @@
                 </option>
             </select>
 
-            <label>Samochód:</label>
-            <select th:field="*{cars}" multiple size="5">
-                <option th:each="c : ${allCars}"
-                        th:value="${c.id}"
-                        th:text="${c.name}">
-                </option>
-            </select>
+            <label>Samochody:</label>
+            <div>
+                <div th:each="c : ${allCars}">
+                    <input type="checkbox" th:value="${c.id}" th:field="*{cars}" />
+                    <span th:text="${c.name}"></span>
+                </div>
+            </div>
             <button type="submit" class="submit-btn">Zapisz</button>
         </form>
     </div>
