@@ -2,11 +2,77 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
     <link rel="stylesheet" th:href="@{/css/general.css}" />
 
 </head>
 <body>
+<div class="container">
+    <div class="form-section">
+        <form th:action="@{/warehouses/products/save}" th:object="${product}" method="post">
 
+            <input type="hidden" th:field="*{id}" />
+            <input type="hidden" th:field="*{stockPosition.id}" />
+            <label>Nazwa:</label>
+            <input type="text" th:field="*{name}" />
+            <label>Opis:</label>
+            <input type="text" th:field="*{description}" />
+            <label>Kod:</label>
+            <input type="text" th:field="*{code}" />
+            <label>Cena:</label>
+            <input type="text" th:field="*{price}" />
+
+            <button type="submit" class="submit-btn">Zapisz</button>
+        </form>
+    </div>
+    <div th:object="${product}" th:if="${product.id != null }" class="squares">
+        <div class="square">
+            <a th:href="@{'/warehouses/products/cost/add/' + ${product.id}}" class="btn btn-primary">Dodaj</a>
+            <table>
+                <thead>
+                <tr>
+                    <th>Opis</th>
+                    <th>Cena</th>
+                    <th>Od</th>
+                    <th>Do</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="cost : ${product.productCosts}"
+                    th:attr="onclick=|window.location.href='/warehouses/products/cost/edit/${cost.id}'|">
+                    <td th:text="${cost.description}"></td>
+                    <td th:text="${cost.cost}"></td>
+                    <td th:text="${cost.dateFrom}"></td>
+                    <td th:text="${cost.dateTo}"></td>
+            </table>
+        </div>
+        <div class="square">
+            <table>
+                <thead>
+                <tr>
+                    <th>Opis</th>
+                    <th>Nazwa</th>
+                    <th>Miejsce</th>
+                    <th>Od</th>
+                    <th>Do</th>
+                    <th>Użytkownik</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="task : ${tasks}">
+                    <td th:text="${task.description}"></td>
+                    <td th:text="${task.name}"></td>
+                    <td th:text="${task.place.name}"></td>
+                    <td th:text="${task.dateFrom}"></td>
+                    <td th:text="${task.dateTo}"></td>
+                    <td>
+                        <label th:each="user : ${task.users}"
+                               th:text="${user.firstname + ' ' + user.lastName}"></label>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 </body>
 </html>

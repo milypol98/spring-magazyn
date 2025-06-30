@@ -1,10 +1,9 @@
 package com.milypol.security.stockPosition;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.milypol.security.product.Product;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
@@ -18,7 +17,10 @@ public class StockPosition {
     private Integer id;
     private String description;
     private String name;
-    @OneToMany
+    @OneToMany(mappedBy = "stockPosition", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore                    // ignoruj pole podczas serializacji JSON (REST, Thymeleaf)
+    @ToString.Exclude              // wyklucz z generowanego toString()
+    @EqualsAndHashCode.Exclude     // wyklucz z equals() i hashCode()
     private List<Product> product;
 
 }

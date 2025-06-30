@@ -2,6 +2,7 @@ package com.milypol.security.cart;
 
 import com.milypol.security.place.Place;
 import com.milypol.security.product.Product;
+import com.milypol.security.stockPosition.StockPosition;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,15 +23,13 @@ public class Cart {
     private String description;
     private String name;
 
-    @ManyToOne
-    private Place place;
 
     @ManyToMany
     @JoinTable(
-            name = "cart_products",
+            name = "cart_stock_positions",
             joinColumns = @JoinColumn(name = "cart_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id")
+            inverseJoinColumns = @JoinColumn(name = "stock_positions_id")
     )
-    private List<Product> products;
+    private List<StockPosition> stockPositions;
 
 }

@@ -3,12 +3,13 @@ package com.milypol.security.controller;
 import com.milypol.security.task.TaskService;
 import com.milypol.security.user.User;
 import com.milypol.security.user.UserService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/users")
 public class UserController {
     private final UserService userService;
     private final TaskService taskService;
@@ -18,29 +19,25 @@ public class UserController {
         this.taskService = taskService;
     }
     //pracownicy admin
-    @GetMapping
+    @GetMapping("/users")
     public String showUserPage(Model model){
         model.addAttribute("users", userService.getAllUsers());
         return "workers/list";
     }
-    //pracownicy admin
-    @GetMapping("/add")
-    public String addForm(Model model){
-        model.addAttribute("user", new User());
-        return "users/edit";
-    }
     //pracownicy admin // ten uzytkownik
-    @GetMapping("/edit/{id}")
-    public String editForm(@PathVariable Integer id, Model model){
-        model.addAttribute("user", userService.getUserById(id));
-        model.addAttribute("task",taskService.getAllTasksByUserId(id));
-        return "users/edit";
+    @GetMapping("/profile")
+    public String editForm(Model model, Authentication authentication){
+        String email = authentication.getName();
+        User user = userService.getUserByEmail(email);
+        model.addAttribute("user", userService.getUserById(user.getId()));
+        model.addAttribute("task",taskService.getAllTasksByUserId(user.getId()));
+        return "settings/edit";
     }
     //pracownicy admin
-    @PostMapping("/delete/{id}")
-    public String deleteUser(@PathVariable Integer id){
-        userService.deleteUser(id);
-        return "redirect:/users";
-    }
+//    @PostMapping("/delete/{id}")
+//    public String deleteUser(@PathVariable Integer id){
+//        userService.deleteUser(id);
+//        return "redirect:/users";
+//    }
 
 }

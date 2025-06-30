@@ -25,11 +25,7 @@ public class Product {
     private String name;
     private String description;
     private Double price;
-    private String quantity;
-    @ManyToMany(mappedBy = "products")
-    private List<Car> cars;
-    @ManyToMany(mappedBy = "products")
-    private List<Cart> carts;
     @ManyToOne
     private StockPosition stockPosition;
+
 }

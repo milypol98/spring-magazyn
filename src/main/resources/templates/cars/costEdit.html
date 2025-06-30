@@ -9,11 +9,12 @@
 <body>
 <div>
   <form th:action="@{'/cars/cost/save'}" th:object="${car_cost}"  method="post">
+    <label th:text="|Nazwa auta: ${car_cost.car.name}|"></label>
     <input type="hidden" th:field="*{id}" />
 
     <input type="hidden" th:field="*{car.id}" />
 
-    <label>Nazwa:</label>
+    <label>Opis:</label>
     <input type="text" th:field="*{description}" />
 
     <label>Koszty:</label>

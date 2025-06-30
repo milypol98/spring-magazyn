@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDate;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,8 +19,10 @@ public class WorkerQualification {
     private Integer id;
     private String description;
     private String qualification;
-    private String dateFrom;
-    private String dateTo;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate dateFrom;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate dateTo;
     @ManyToOne
     private User user;
 
