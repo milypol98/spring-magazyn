@@ -1,11 +1,15 @@
 package com.milypol.security.controller;
 
 import com.milypol.security.cart.Cart;
+import com.milypol.security.cart.CartService;
 import com.milypol.security.cart.CartServiceImpl;
 import com.milypol.security.product.Product;
 import com.milypol.security.product.ProductService;
-import com.milypol.security.productCost.ProductCost;
-import com.milypol.security.productCost.ProductCostService;
+import com.milypol.security.stockPosition.TypePosition;
+import com.milypol.security.task.TaskStatus;
+import com.milypol.security.tool.ToolService;
+import com.milypol.security.toolCost.ToolCost;
+import com.milypol.security.toolCost.ToolCostService;
 import com.milypol.security.stockPosition.StockPosition;
 import com.milypol.security.stockPosition.StockPositionService;
 import com.milypol.security.task.TaskService;
@@ -13,50 +17,82 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/warehouses")
 public class WarehouseController {
 
     private final ProductService productService;
     private final StockPositionService stockPositionService;
-    private final CartServiceImpl cartService;
-    private final ProductCostService productCostService;
+    private final CartService cartService;
+    private final ToolCostService toolCostService;
     private final TaskService taskService;
+    private final ToolService toolService;
 
-    public WarehouseController(ProductService productService, StockPositionService stockPositionService, CartServiceImpl cartService, ProductCostService productCostService, TaskService taskService) {
+    public WarehouseController(ProductService productService, StockPositionService stockPositionService, CartService cartService, ToolCostService toolCostService, TaskService taskService, ToolService toolService) {
         this.productService = productService;
         this.stockPositionService = stockPositionService;
         this.cartService = cartService;
-        this.productCostService = productCostService;
+        this.toolCostService = toolCostService;
         this.taskService = taskService;
+        this.toolService = toolService;
     }
 
     @GetMapping
     public String showWarehousePage(Model model) {
         model.addAttribute("stockPositions", stockPositionService.getAllStockPositions());
         model.addAttribute("carts", cartService.getAllCarts());
+        model.addAttribute("tools", toolService.getToolCountByStockPositionId());
+        model.addAttribute("tasksUnpacked", taskService.getAllTasksByStatus(TaskStatus.TO_BE_UNPACKED));
+        model.addAttribute("tasksPacked", taskService.getAllTasksByStatus(TaskStatus.TO_BE_PACKED));
         return "warehouses/list";
     }
-    @GetMapping("/add")
-    public String addStockPosition(Model model) {
+    @GetMapping("/stocks/tools")
+    public String addStockPositionTool(Model model) {
         model.addAttribute("stockPosition", new StockPosition());
+        model.addAttribute("stockPositionTypes", TypePosition.values());
         return "warehouses/edit";
     }
-    @GetMapping("/edit/{id}")
-    public String editStockPosition(@PathVariable Integer id, Model model) {
+    @GetMapping("/stocks/tools/{id}")
+    public String editStockPositionTool(@PathVariable Integer id, Model model) {
         model.addAttribute("stockPosition", stockPositionService.getStockPositionById(id));
+
         return "warehouses/edit";
     }
-    @PostMapping("/save")
+    @PostMapping("/stocks/tools/save")
+    public String saveStockPositionTool(@ModelAttribute StockPosition stockPosition) {
+        stockPositionService.saveStockPosition(stockPosition);
+        return "redirect:/warehouses";
+    }
+    @PostMapping("/stocks/tools/delete/{id}")
+    public String deleteStockPositionTool(@PathVariable Integer id) {
+        stockPositionService.deleteStockPosition(id);
+        return "redirect:/warehouses";
+    }
+    @GetMapping("/stocks/products")
+    public String addStockPositionProduct(Model model) {
+        model.addAttribute("stockPosition", new StockPosition());
+        model.addAttribute("stockPositionTypes", TypePosition.values());
+        return "warehouses/edit";
+    }
+    @GetMapping("/stocks/products/{id}")
+    public String editStockPositionProduct(@PathVariable Integer id, Model model) {
+        model.addAttribute("stockPosition", stockPositionService.getStockPositionById(id));
+
+        return "warehouses/edit";
+    }
+    @PostMapping("/stocks/products/save")
     public String saveStockPosition(@ModelAttribute StockPosition stockPosition) {
         stockPositionService.saveStockPosition(stockPosition);
         return "redirect:/warehouses";
     }
-    @PostMapping("/delete/{id}")
+    @PostMapping("/stocks/products/delete/{id}")
     public String deleteStockPosition(@PathVariable Integer id) {
         stockPositionService.deleteStockPosition(id);
         return "redirect:/warehouses";
     }
+
     //produkty
 //    @GetMapping("/products/{id}")
 //    public String showProduct(@PathVariable Integer id, Model model) {
@@ -86,27 +122,27 @@ public class WarehouseController {
         productService.deleteProduct(id);
         return "redirect:/warehouses/products";
     }
-    @GetMapping("/products/cost/add/{productId}")
-    public String productCostAdd(@PathVariable Integer productId, Model model) {
-        ProductCost productCost = new ProductCost();
-        productCost.setProduct(productService.getProductById(productId));
-        model.addAttribute("product_cost", productCost);
+    @GetMapping("/products/cost/add/{toolId}")
+    public String productCostAdd(@PathVariable Integer toolId, Model model) {
+        ToolCost toolCost = new ToolCost();
+        toolCost.setCost(toolCostService.getToolCostById(toolId).getCost());
+        model.addAttribute("product_cost", toolCost);
         return "warehouses/costEdit";
     }
 
     @GetMapping("/products/cost/edit/{id}")
     public String productCostEdit(@PathVariable Integer id, Model model) {
-        model.addAttribute("product_cost", productCostService.getProductCostById(id));
+        model.addAttribute("product_cost", toolCostService.getToolCostById(id));
         return "warehouses/costEdit";
     }
     @PostMapping( "products/cost/save")
-        public String saveCostProduct(@ModelAttribute ProductCost productCost) {
-        productCostService.saveProductCost(productCost);
-        return "redirect:/warehouses/products/edit/" + productCost.getProduct().getId();
+        public String saveCostProduct(@ModelAttribute ToolCost toolCost) {
+        toolCostService.saveToolCost(toolCost);
+        return "redirect:/warehouses/products/edit/" + toolCost.getTool().getId();
     }
     @PostMapping("/products/cost/delete/{id}")
     public String deleteCostProduct(@PathVariable Integer id){
-        productCostService.deleteProductCost(id);
+        toolCostService.deleteToolCost(id);
         return "redirect:/productEdit";
     }
     @GetMapping( "/carts/add")

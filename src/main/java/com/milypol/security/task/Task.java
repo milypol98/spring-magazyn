@@ -4,6 +4,7 @@ import com.milypol.security.car.Car;
 import com.milypol.security.cart.Cart;
 import com.milypol.security.place.Place;
 import com.milypol.security.product.Product;
+import com.milypol.security.tool.Tool;
 import com.milypol.security.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -35,6 +36,13 @@ public class Task {
     private List<Product> products;
     @ManyToMany
     @JoinTable(
+            name = "task_tool",
+            joinColumns = @JoinColumn(name = "task_id"),
+            inverseJoinColumns = @JoinColumn(name = "tool_id")
+    )
+    private List<Tool> tools;
+    @ManyToMany
+    @JoinTable(
             name = "task_product_used",
             joinColumns = @JoinColumn(name = "task_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id")
@@ -56,4 +64,6 @@ public class Task {
     private List<Car> cars;
     @ManyToOne
     private Cart cart;
+    @Enumerated(EnumType.STRING)
+    private TaskStatus status;
 }

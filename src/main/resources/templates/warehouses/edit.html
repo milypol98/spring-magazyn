@@ -10,11 +10,15 @@
         <form th:action="@{/warehouses/save}" th:object="${stockPosition}" method="post">
 
             <input type="hidden" th:field="*{id}" />
+            <input type="hidden" th:field="*{type}" th:value="${stockPositionTypes.TOOL}"/>
 
             <label>Nazwa:</label>
             <input type="text" th:field="*{name}" />
             <label>Opis:</label>
             <input type="text" th:field="*{description}" />
+            <label>Typ</label>
+            <input type="checkbox" th:field="*{type}" />
+
             <button type="submit" class="submit-btn">Zapisz</button>
         </form>
     </div>

@@ -1,21 +1,17 @@
-package com.milypol.security.productCost;
+package com.milypol.security.toolCost;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.milypol.security.carCost.CarCost;
-import com.milypol.security.product.Product;
+import com.milypol.security.tool.Tool;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Entity
-public class ProductCost {
+public class ToolCost {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -26,6 +22,6 @@ public class ProductCost {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateTo;
     @ManyToOne
-    private Product product;
+    private Tool tool;
 
 }

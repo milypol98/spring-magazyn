@@ -418,6 +418,22 @@ INSERT INTO task_car (car_id, task_id) VALUES
 #                                                    (1, 1),
 #                                                    (2, 2),
 #                                                    (3, 3);
+INSERT INTO task_user (task_id, user_id) VALUES
+                                             (1, 1),
+                                             (2, 2),
+                                             (3, 3),
+                                             (4, 1),
+                                             (5, 2),
+                                             (6, 3),
+                                             (7, 1),
+                                             (8, 2),
+                                             (9, 3),
+                                             (10, 1);
+-- 16) task_product_used
+# INSERT INTO task_product_used (product_id, task_id) VALUES
+#                                                         (1, 1),
+#                                                         (2, 2),
+#                                                         (3, 3);
 INSERT INTO task_product (product_id, task_id) VALUES
                                                    -- Task 1: products 1–20
                                                    (1, 1),  (2, 1),  (3, 1),  (4, 1),  (5, 1),
@@ -478,11 +494,12 @@ INSERT INTO task_product (product_id, task_id) VALUES
                                                    (6, 10),  (7, 10),  (8, 10),  (9, 10),  (10, 10),
                                                    (11, 10), (12, 10), (13, 10), (14, 10), (15, 10),
                                                    (16, 10), (17, 10), (18, 10), (19, 10), (20, 10);
--- 16) task_product_used
-# INSERT INTO task_product_used (product_id, task_id) VALUES
-#                                                         (1, 1),
-#                                                         (2, 2),
-#                                                         (3, 3);
+
+# -- 17) task_user
+# INSERT INTO task_user (task_id, user_id) VALUES
+#                                              (1, 1),
+#                                              (2, 2),
+#                                              (3, 3);
 INSERT INTO task_product_used (product_id, task_id) VALUES
                                                         -- Task 1 used products (subset of assigned)
                                                         (1, 1), (2, 1), (3, 1), (4, 1), (5, 1),
@@ -495,20 +512,3 @@ INSERT INTO task_product_used (product_id, task_id) VALUES
                                                         -- Task 3 used products (subset of assigned)
                                                         (41, 3), (42, 3), (43, 3), (44, 3), (45, 3),
                                                         (46, 3), (47, 3), (48, 3), (49, 3), (50, 3);
-
-# -- 17) task_user
-# INSERT INTO task_user (task_id, user_id) VALUES
-#                                              (1, 1),
-#                                              (2, 2),
-#                                              (3, 3);
-INSERT INTO task_user (task_id, user_id) VALUES
-                                             (1, 1),
-                                             (2, 2),
-                                             (3, 3),
-                                             (4, 1),
-                                             (5, 2),
-                                             (6, 3),
-                                             (7, 1),
-                                             (8, 2),
-                                             (9, 3),
-                                             (10, 1);

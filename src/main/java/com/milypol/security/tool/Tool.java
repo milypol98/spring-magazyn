@@ -1,32 +1,27 @@
-package com.milypol.security.product;
+package com.milypol.security.tool;
 
-import com.milypol.security.car.Car;
-import com.milypol.security.cart.Cart;
-import com.milypol.security.place.Place;
 import com.milypol.security.stockPosition.StockPosition;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
-
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Entity
-@Table(name = "product")
-public class Product {
+@Table(name = "tool")
+public class Tool {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String code;
-    private String name;
-    private String description;
-    private Double unitPrice;
-    private Integer stock;
-    @OneToOne
-    private StockPosition stockPosition;
 
+    private String name;
+    private String code;
+    private String description;
+    private Double price;
+    @ManyToOne
+    private StockPosition stockPosition;
+    @Enumerated(EnumType.STRING)
+    private ToolStatus status;
 }
