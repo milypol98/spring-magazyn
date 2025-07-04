@@ -2,33 +2,43 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
   <link rel="stylesheet" th:href="@{/css/general.css}" />
 
 </head>
 <body>
-<div>
-  <form th:action="@{'/cars/cost/save'}" th:object="${car_cost}"  method="post">
-    <label th:text="|Nazwa auta: ${car_cost.car.name}|"></label>
-    <input type="hidden" th:field="*{id}" />
+<h1>
+  <label>Koszty</label>
+  <a href="/dashboard" class="btn-add">Strona glowna</a>
+</h1>
+<div class="top-row">
+  <div class="side-by-side">
+    <div class="tools-container w1200">
+      <div class="table-header">
+        <label class="table-title" th:text="|Auto: ${car_cost.car.name}|"></label>
+      </div>
+      <form th:action="@{'/cars/cost/save'}" th:object="${car_cost}"  method="post">
 
-    <input type="hidden" th:field="*{car.id}" />
+        <input type="hidden" th:field="*{id}" />
 
-    <label>Opis:</label>
-    <input type="text" th:field="*{description}" />
+        <input type="hidden" th:field="*{car.id}" />
 
-    <label>Koszty:</label>
-    <input type="text" th:field="*{cost}" />
+        <label>Opis:</label>
+        <input type="text" th:field="*{description}" />
 
-    <label>Data od</label>
-    <input type="date" th:field="*{dateTo}" />
+        <label>Koszty:</label>
+        <input type="text" th:field="*{cost}" />
+
+        <label>Data od</label>
+        <input type="date" th:field="*{dateTo}" />
 
 
-    <label>Data do</label>
-    <input type="date" th:field="*{dateFrom}" />
+        <label>Data do</label>
+        <input type="date" th:field="*{dateFrom}" />
 
-    <button type="submit" class="submit-btn">Zapisz</button>
-  </form>
+        <button type="submit" class="submit-btn">Zapisz</button>
+      </form>
+    </div>
+  </div>
 </div>
 </body>
 </html>

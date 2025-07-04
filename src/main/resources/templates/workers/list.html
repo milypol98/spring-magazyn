@@ -7,30 +7,50 @@
 
 </head>
 <body>
-<h1>Lista pracowników</h1>
-<div class="table-container">
+<h1>
+    <label>Pracownicy</label>
+    <a href="/dashboard" class="btn-add">Strona glowna</a>
+</h1>
+<div class="top-row">
+    <div class="side-by-side">
+        <div class="tools-container">
+            <div class="table-header">
+                <label class="table-title">Lista pracowników:</label>
+            </div>
     <table>
         <thead>
         <tr>
             <th>Nazwisko</th>
             <th>Imię</th>
             <th>nr. Telefonu</th>
-            <th>Adres</th>
+            <th>Kraj</th>
+            <th>Miasto</th>
+            <th>Kod Pocztowy</th>
+            <th>Ulica</th>
+            <th>Numer Domu/Lokalu</th>
             <th>Opis</th>
             <th>Email</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="user : ${users}">
-            <td th:text="${user.lastName}">Nazwisko</td>
-            <td th:text="${user.firstname}">Imię</td>
+        <tr th:each="user : ${users}"
+            th:attr="onclick=|window.location.href='/users/edit/${user.id}'|"
+            class="clickable-row">
+            <td th:text="${user.lastName}"></td>
+            <td th:text="${user.firstname}"></td>
             <td th:text="${user.phone}"></td>
-            <td th:text="${user.address}"></td>
+            <td th:text="${user.address.country}"></td>
+            <td th:text="${user.address.city}"></td>
+            <td th:text="${user.address.postalCode}"></td>
+            <td th:text="${user.address.street}"></td>
+            <td th:text="${user.address.number}"></td>
             <td th:text="${user.description}"></td>
             <td th:text="${user.email}"></td>
         </tr>
         </tbody>
     </table>
+        </div>
+    </div>
 </div>
 </body>
 </html>

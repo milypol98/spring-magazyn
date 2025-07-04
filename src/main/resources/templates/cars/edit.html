@@ -2,60 +2,58 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Edycja samochodu</title>
     <link rel="stylesheet" th:href="@{/css/general.css}" />
 
 </head>
 <body>
+<h1>
+    <label>Pojazdy</label>
+    <a href="/dashboard" class="btn-add">Strona glowna</a>
+</h1>
+<div class="top-row">
+    <div class="side-by-side">
+        <div class="tools-container w1200">
+            <div class="table-header">
+                <label class="table-title">Edytuj:</label>
+            </div>
+            <form th:action="@{'/cars/save'}" th:object="${car}" method="post">
+                <input type="hidden" th:field="*{id}" />
 
-<h2>Edycja samochodu</h2>
-<!--<div th:object="${car}" th:if="${car.id != null }">-->
-<!--    <form  th:action="@{'/cars/delete/' + ${car.id}}" method="post">-->
-<!--        <button type="submit" class="btn-delete">Usuń</button>-->
-<!--    </form>-->
-<!--</div>-->
+                <label>Nazwa:</label>
+                <input type="text" th:field="*{name}" />
 
+                <label>Marka:</label>
+                <input type="text" th:field="*{brand}" />
 
-<div class="container">
-    <!-- Formularz -->
-    <div class="form-section">
-        <form th:action="@{'/cars/save'}" th:object="${car}" method="post">
-            <input type="hidden" th:field="*{id}" />
+                <label>Model:</label>
+                <input type="text" th:field="*{model}" />
 
-            <label>Nazwa:</label>
-            <input type="text" th:field="*{name}" />
+                <label>Kolor:</label>
+                <input type="text" th:field="*{color}" />
 
-            <label>Marka:</label>
-            <input type="text" th:field="*{brand}" />
+                <label>Rejestracja:</label>
+                <input type="text" th:field="*{registration}" />
 
-            <label>Model:</label>
-            <input type="text" th:field="*{model}" />
+                <label>Rok produkcji:</label>
+                <input type="date" th:field="*{year}" />
 
-            <label>Kolor:</label>
-            <input type="text" th:field="*{color}" />
+                <label>Opis:</label>
+                <textarea th:field="*{description}"></textarea>
 
-            <label>Rejestracja:</label>
-            <input type="text" th:field="*{registration}" />
+                <label>Przegląd:</label>
+                <input type="date" th:field="*{review}" />
 
-            <label>Rok produkcji:</label>
-            <input type="date" th:field="*{year}" />
+                <label>Ubezpieczenie:</label>
+                <input type="date" th:field="*{insured}" />
 
-            <label>Opis:</label>
-            <textarea th:field="*{description}"></textarea>
-
-            <label>Przegląd:</label>
-            <input type="date" th:field="*{review}" />
-
-            <label>Ubezpieczenie:</label>
-            <input type="date" th:field="*{insured}" />
-
-            <button type="submit" class="submit-btn">Zapisz</button>
-        </form>
-    </div>
-
-    <div th:object="${car}" th:if="${car.id != null }" class="squares">
-        <div class="square">
-            <a th:href="@{'/cars/cost/add/' + ${car.id}}" class="btn btn-primary">Dodaj</a>
+                <button type="submit" class="submit-btn">Zapisz</button>
+            </form>
+        </div>
+        <div  th:object="${car}" th:if="${car.id != null }" class="tools-container">
+            <div class="table-header">
+                <label class="table-title">Koszty:</label>
+                <a th:href="@{'/cars/cost/add/' + ${car.id}}" class="btn-add">Dodaj</a>
+            </div>
             <table>
                 <thead>
                 <tr>
@@ -76,7 +74,10 @@
                 </tbody>
             </table>
         </div>
-        <div class="square">
+        <div th:object="${car}" th:if="${car.id != null }" class="tools-container">
+            <div class="table-header">
+                <label class="table-title">Historia:</label>
+            </div>
             <table>
                 <thead>
                 <tr>
@@ -106,8 +107,6 @@
     </div>
 </div>
 
-
 <script th:src="@{/js/map.js}"></script>
-
 </body>
 </html>

@@ -26,10 +26,10 @@ public class Cart {
 
     @ManyToMany
     @JoinTable(
-            name = "cart_stock_positions",
+            name = "cart_cart_details",
             joinColumns = @JoinColumn(name = "cart_id"),
-            inverseJoinColumns = @JoinColumn(name = "stock_positions_id")
+            inverseJoinColumns = @JoinColumn(name = "cart_detail_id")
     )
-    private List<StockPosition> stockPositions;
+    private List<CartDetails> cartDetails;
 
 }

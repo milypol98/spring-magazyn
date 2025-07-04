@@ -7,6 +7,7 @@
 
 </head>
 <body>
+<h1><a href="/dashboard" class="btn-add">Strona glowna</a></h1>
 <div class="container">
     <div class="form-section">
         <form th:action="@{'/tasks/save'}" th:object="${task}" method="post">
@@ -27,28 +28,46 @@
             <label>Data do</label>
             <input type="date" th:field="*{dateFrom}" />
 
-            <label>Miejsce</label>
-            <select th:field="*{place}">
-                <option th:each="p : ${allPlaces}"
-                        th:value="${p.id}"
-                        th:text="${p.name + ' ' + p.address}">
-                </option>
-            </select>
+            <label>
+                <a href="/users" class="btn-add">Pracownicy</a>
+            </label>
+            <div class="car-grid">
+                <label th:each="u : ${allUsers}">
+                    <input type="checkbox" th:value="${u.id}" th:field="*{users}" />
+                    <span th:text="${u.firstname + ' ' + u.lastName}"></span>
+                </label>
+            </div>
 
-            <label>Uczestnicy:</label>
-            <select th:field="*{users}" multiple size="2">
-                <option th:each="u : ${allUsers}"
-                        th:value="${u.id}"
-                        th:text="${u.firstname + ' ' + u.lastName}">
-                </option>
-            </select>
+            <label>
+                <a href="/places" class="btn-add">Miejsca</a>
+                <a href="/places/add" class="btn-add">Dodaj</a>
+            </label>
+            <div class="car-grid">
+                <label th:each="p : ${allPlaces}">
+                    <input type="checkbox" th:value="${p.id}" th:field="*{place}" />
+                    <span th:text="${p.name + ' ' + p.address}"></span>
+                </label>
+            </div>
 
-            <label>Samochody:</label>
-            <div>
-                <div th:each="c : ${allCars}">
+            <label>
+                <a href="/cars" class="btn-add">Samochody</a>
+                <a href="/cars/add" class="btn-add">Dodaj</a>
+            </label>
+            <div class="car-grid">
+                <label th:each="c : ${allCars}">
                     <input type="checkbox" th:value="${c.id}" th:field="*{cars}" />
                     <span th:text="${c.name}"></span>
-                </div>
+                </label>
+            </div>
+            <label>
+                <a href="/carts" class="btn-add">Koszyki</a>
+                <a href="/carts/add" class="btn-add">Dodaj</a>
+            </label>
+            <div class="car-grid">
+                <label th:each="cart : ${allCarts}">
+                    <input type="checkbox" th:value="${cart.id}" th:field="*{carts}" />
+                    <span th:text="${cart.name}"></span>
+                </label>
             </div>
             <button type="submit" class="submit-btn">Zapisz</button>
         </form>

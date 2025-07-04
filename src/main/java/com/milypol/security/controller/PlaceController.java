@@ -32,7 +32,7 @@ public class PlaceController {
     }
     @PostMapping("/save")
     public String savePlace(@ModelAttribute Place place){
-        placeService.savePlace(place);
+        Integer id = placeService.savePlace(place).getId();
         return "redirect:/places";
     }
     @PostMapping("/delete/{id}")

@@ -2,12 +2,12 @@ package com.milypol.security.controller;
 
 import com.milypol.security.cart.Cart;
 import com.milypol.security.cart.CartService;
-import com.milypol.security.cart.CartServiceImpl;
 import com.milypol.security.product.Product;
 import com.milypol.security.product.ProductService;
 import com.milypol.security.stockPosition.TypePosition;
 import com.milypol.security.task.TaskStatus;
 import com.milypol.security.tool.ToolService;
+import com.milypol.security.tool.ToolStatus;
 import com.milypol.security.toolCost.ToolCost;
 import com.milypol.security.toolCost.ToolCostService;
 import com.milypol.security.stockPosition.StockPosition;
@@ -16,8 +16,6 @@ import com.milypol.security.task.TaskService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Controller
 @RequestMapping("/warehouses")
@@ -43,25 +41,30 @@ public class WarehouseController {
     public String showWarehousePage(Model model) {
         model.addAttribute("stockPositions", stockPositionService.getAllStockPositions());
         model.addAttribute("carts", cartService.getAllCarts());
-        model.addAttribute("tools", toolService.getToolCountByStockPositionId());
+        model.addAttribute("countToolsPosition", toolService.getToolCountByStockPositionId());
+        model.addAttribute("typeProduct", TypePosition.PRODUCT);
+        model.addAttribute("typeTool", TypePosition.TOOL);
         model.addAttribute("tasksUnpacked", taskService.getAllTasksByStatus(TaskStatus.TO_BE_UNPACKED));
         model.addAttribute("tasksPacked", taskService.getAllTasksByStatus(TaskStatus.TO_BE_PACKED));
+        model.addAttribute("countToolsStatus",toolService.getToolCountByStockPositionIdStatus());
         return "warehouses/list";
     }
     @GetMapping("/stocks/tools")
     public String addStockPositionTool(Model model) {
         model.addAttribute("stockPosition", new StockPosition());
-        model.addAttribute("stockPositionTypes", TypePosition.values());
-        return "warehouses/edit";
+        return "warehouses/stockPositionToolEdit";
     }
     @GetMapping("/stocks/tools/{id}")
     public String editStockPositionTool(@PathVariable Integer id, Model model) {
         model.addAttribute("stockPosition", stockPositionService.getStockPositionById(id));
-
-        return "warehouses/edit";
+        model.addAttribute("toolStatusUse", ToolStatus.USE);
+        model.addAttribute("toolStatusStock", ToolStatus.STOCK);
+        model.addAttribute("toolStatusRepair", ToolStatus.REPAIR);
+        return "warehouses/stockPositionToolEdit";
     }
     @PostMapping("/stocks/tools/save")
     public String saveStockPositionTool(@ModelAttribute StockPosition stockPosition) {
+        stockPosition.setType(TypePosition.TOOL);
         stockPositionService.saveStockPosition(stockPosition);
         return "redirect:/warehouses";
     }
@@ -70,20 +73,22 @@ public class WarehouseController {
         stockPositionService.deleteStockPosition(id);
         return "redirect:/warehouses";
     }
+
+
+
     @GetMapping("/stocks/products")
     public String addStockPositionProduct(Model model) {
         model.addAttribute("stockPosition", new StockPosition());
-        model.addAttribute("stockPositionTypes", TypePosition.values());
-        return "warehouses/edit";
+        return "warehouses/stockPositionProductEdit";
     }
     @GetMapping("/stocks/products/{id}")
     public String editStockPositionProduct(@PathVariable Integer id, Model model) {
         model.addAttribute("stockPosition", stockPositionService.getStockPositionById(id));
-
-        return "warehouses/edit";
+        return "warehouses/stockPositionProductEdit";
     }
     @PostMapping("/stocks/products/save")
     public String saveStockPosition(@ModelAttribute StockPosition stockPosition) {
+        stockPosition.setType(TypePosition.PRODUCT);
         stockPositionService.saveStockPosition(stockPosition);
         return "redirect:/warehouses";
     }
@@ -94,6 +99,7 @@ public class WarehouseController {
     }
 
     //produkty
+
 //    @GetMapping("/products/{id}")
 //    public String showProduct(@PathVariable Integer id, Model model) {
 //        model.addAttribute("product", productService.getAllProductsByStockPositionId(id));
@@ -145,27 +151,5 @@ public class WarehouseController {
         toolCostService.deleteToolCost(id);
         return "redirect:/productEdit";
     }
-    @GetMapping( "/carts/add")
-    public String addCart(Model model) {
-        model.addAttribute("cart", new Cart());
-        model.addAttribute("allStackPositions", stockPositionService.getAllStockPositions());
-        return "warehouses/cartEdit";
-    }
-    @GetMapping( "/carts/edit/{id}")
-    public String editCart(@PathVariable Integer id, Model model) {
-        model.addAttribute("cart", cartService.getCartById(id));
-        model.addAttribute("allStackPositions", stockPositionService.getAllStockPositions());
-        return "warehouses/cartEdit";
-    }
-    @PostMapping( "/carts/save")
-    public String saveCart(@ModelAttribute Cart cart) {
-        cartService.saveCart(cart);
-        return "redirect:/warehouses";
-    }
 
-    @PostMapping( "/carts/delete/{id}")
-    public String deleteCart(@PathVariable Integer id){
-        cartService.deleteCart(id);
-        return "redirect:/warehouses";
-    }
 }

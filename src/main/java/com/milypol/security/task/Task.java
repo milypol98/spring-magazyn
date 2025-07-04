@@ -62,8 +62,13 @@ public class Task {
             inverseJoinColumns = @JoinColumn(name = "car_id")
     )
     private List<Car> cars;
-    @ManyToOne
-    private Cart cart;
+    @ManyToMany
+    @JoinTable(
+            name = "task_cart",
+            joinColumns = @JoinColumn(name = "task_id"),
+            inverseJoinColumns = @JoinColumn(name = "cart_id")
+    )
+    private List<Cart> carts;
     @Enumerated(EnumType.STRING)
     private TaskStatus status;
 }

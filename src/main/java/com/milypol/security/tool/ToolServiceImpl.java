@@ -50,4 +50,18 @@ public class ToolServiceImpl implements ToolService{
                         Collectors.counting()
                 ));
     }
+    @Override
+    public Map<Integer, Long> getToolCountByStockPositionIdStatus() {
+        return toolRepo.findAll().stream()
+                .filter(t -> t.getStockPosition() != null)
+                .filter(t -> t.getStatus() == ToolStatus.STOCK)
+                .collect(Collectors.groupingBy(
+                        t -> t.getStockPosition().getId(),
+                        Collectors.counting()
+                ));
+    }
+    @Override
+    public Integer countByStatus(ToolStatus status) {
+        return toolRepo.countByStatus(status);
+    }
 }

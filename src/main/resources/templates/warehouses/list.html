@@ -1,135 +1,159 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8" />
-    <link rel="stylesheet" th:href="@{/css/general.css}" />
+    <meta charset="UTF-8"/>
+    <link rel="stylesheet" th:href="@{/css/general.css}"/>
 </head>
 <body>
 <h1>Magazyn</h1>
-<a href="/warehouses/add" class="btn-add">Dodaj</a>
-<div class="container">
-    <table>
-        <thead>
-        <tr>
-            <td>L.P.</td>
-            <th>Nazwa</th>
-            <th>Opis</th>
-            <th>Stan Magazynu</th>
-            <th>Stan Calkowity</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="s, iter : ${stockPositions}"
-            th:attr="onclick=|window.location.href='/warehouses/edit/${s.id}'|"
-            th:if="${s.type == 'PRODUCT'}"
-            class="clickable-row">
-            <td th:text="${iter.index + 1}"></td>
-            <td th:text="${s.name}"></td>
-            <td th:text="${s.description}"></td>
-            <td th:text="${s.product.stock} + '/' + ${s.minStock}"></td>
-            <td th:text="${s.product.stock} + '/' + ${s.minStock}"></td>
-        </tr>
-        </tbody>
-    </table>
-</div>
-<div class="container">
-    <table>
-        <thead>
-        <tr>
-            <td>L.P.</td>
-            <th>Nazwa</th>
-            <th>Opis</th>
-            <th>Stan Magazynu</th>
-            <th>Stan Calkowity</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="s, iter : ${stockPositions}"
-            th:attr="onclick=|window.location.href='/warehouses/edit/${s.id}'|"
-            th:if="${s.type == 'TOOL'}"
-            class="clickable-row">
-            <td th:text="${iter.index + 1}"></td>
-            <td th:text="${s.name}"></td>
-            <td th:text="${s.description}"></td>
-            <td th:text="${tools[s.id]} ?: 0 + '/' + ${s.minStock}"></td>
-            <td th:text="${tools[s.id]} ?: 0 + '/' + ${s.minStock}"></td>
-        </tr>
-        </tbody>
-    </table>
-</div>
-<div class="container">
-    <label>Wyladowanie</label>
-    <table>
-        <thead>
-        <tr>
-            <th>L.P.</th>
-            <th>Nazwa</th>
-            <th>Opis</th>
-            <th>Data od</th>
-            <th>Data do</th>
-        </tr>
-        </thead>
-        <tbody>
-            <tr th:each="p,iter : ${tasksPacked}"
-            th:attr="onclick=|window.location.href='/warehouses/products/edit/${p.id}'|"
-            class="clickable-row">
-                <td th:text="${iter.index + 1}"></td>
-                <td th:text="${p.name}"></td>
-                <td th:text="${p.description}"></td>
-                <td th:text="${p.dateTo}"></td>
-                <td th:text="${p.dateFrom}"></td>
+<div class="top-row">
+    <div class="side-by-side">
+        <div class="tools-container">
+            <div class="table-header">
+                <label class="table-title">Narzędzia</label>
+                <a href="/warehouses/stocks/products/add" class="btn-add">Dodaj</a>
+            </div>
 
-            </tr>
-        </tbody>
-    </table>
-</div>
-<div class="container">
-    <label>Zalodowanie</label>
-    <table>
-        <thead>
-        <tr>
-            <th>L.P.</th>
-            <th>Nazwa</th>
-            <th>Opis</th>
-            <th>Data od</th>
-            <th>Data do</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="p,iter : ${tasksUnpacked}"
-            th:attr="onclick=|window.location.href='/warehouses/products/edit/${p.id}'|"
-            class="clickable-row">
-            <td th:text="${iter.index + 1}"></td>
-            <td th:text="${iter.index + 1}"></td>
-            <td th:text="${p.name}"></td>
-            <td th:text="${p.description}"></td>
-            <td th:text="${p.dateTo}"></td>
-            <td th:text="${p.dateFrom}"></td>
-            <td></td>
-        </tr>
-        </tbody>
-    </table>
-</div>
-    <div class="squares">
-        <div class="square">
             <table>
                 <thead>
                 <tr>
                     <th>Nazwa</th>
                     <th>Opis</th>
+                    <th>Stan Magazynu</th>
+                    <th>Stan Calkowity</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="c : ${carts}"
-                    th:attr="onclick=|window.location.href='/warehouses/carts/edit/${c.id}'|">
-                    <td th:text="${c.name}"></td>
-                    <td th:text="${c.description}"></td>
-
+                <tr th:each="s : ${stockPositions}"
+                    th:attr="onclick=|window.location.href='/warehouses/stocks/products/${s.id}'|"
+                    th:if="${s.type == typeProduct}"
+                    class="clickable-row">
+                    <td th:text="${s.name}"></td>
+                    <td th:text="${s.description}"></td>
+                    <td th:each="p : ${s.product}"
+                        th:text="${p.stock}"
+                        th:classappend="${p.stock < s.minStock} ? 'low-stock'">
+                    </td>
+                    <td th:each="p : ${s.product}"
+                        th:text="${p.stock}"
+                        th:classappend="${p.stock < s.minStock} ? 'low-stock'">
+                    </td>
                 </tr>
                 </tbody>
             </table>
         </div>
+
+        <div class="products-container">
+            <div class="table-header">
+                <label class="table-title">Produkty</label>
+                <a href="/warehouses/stocks/tools" class="btn-add">Dodaj</a>
+            </div>
+
+            <table>
+                <thead>
+                <tr>
+                    <th>Nazwa</th>
+                    <th>Opis</th>
+                    <th>Stan Magazynu</th>
+                    <th>Stan Calkowity</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="s : ${stockPositions}"
+                    th:attr="onclick=|window.location.href='/warehouses/stocks/tools/${s.id}'|"
+                    th:if="${s.type == typeTool}"
+                    class="clickable-row">
+                    <td th:text="${s.name}"></td>
+                    <td th:text="${s.description}"></td>
+                    <td th:text="${(countToolsStatus[s.id] ?: 0)}"
+                        th:classappend="${(countToolsStatus[s.id] ?: 0) < s.minStock} ? 'low-stock'">
+                    </td>
+                    <td th:text="${(countToolsPosition[s.id] ?: 0)}"
+                        th:classappend="${(countToolsPosition[s.id] ?: 0) < s.minStock} ? 'low-stock'">
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="products-container">
+            <div class="full-width-container">
+                <div class="table-header">
+                    <label class="table-title">Wyladunek</label>
+                </div>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>L.P.</th>
+                        <th>Nazwa</th>
+                        <th>Opis</th>
+                        <th>Data od</th>
+                        <th>Data do</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="p,iter : ${tasksPacked}"
+                        th:attr="onclick=|window.location.href='/warehouses/products/edit/${p.id}'|"
+                        class="clickable-row">
+                        <td th:text="${iter.index + 1}"></td>
+                        <td th:text="${p.name}"></td>
+                        <td th:text="${p.description}"></td>
+                        <td th:text="${p.dateTo}"></td>
+                        <td th:text="${p.dateFrom}"></td>
+
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="full-width-container">
+                <div class="table-header">
+                    <label class="table-title">Zaladunek</label>
+                </div>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>L.P.</th>
+                        <th>Nazwa</th>
+                        <th>Opis</th>
+                        <th>Data od</th>
+                        <th>Data do</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="p,iter : ${tasksUnpacked}"
+                        th:attr="onclick=|window.location.href='/warehouses/products/edit/${p.id}'|"
+                        class="clickable-row">
+                        <td th:text="${iter.index + 1}"></td>
+                        <td th:text="${p.name}"></td>
+                        <td th:text="${p.description}"></td>
+                        <td th:text="${p.dateTo}"></td>
+                        <td th:text="${p.dateFrom}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
+</div>
+<!--    <div class="squares">-->
+<!--        <div class="square">-->
+<!--            <table>-->
+<!--                <thead>-->
+<!--                <tr>-->
+<!--                    <th>Nazwa</th>-->
+<!--                    <th>Opis</th>-->
+<!--                </tr>-->
+<!--                </thead>-->
+<!--                <tbody>-->
+<!--                <tr th:each="c : ${carts}"-->
+<!--                    th:attr="onclick=|window.location.href='/warehouses/carts/edit/${c.id}'|">-->
+<!--                    <td th:text="${c.name}"></td>-->
+<!--                    <td th:text="${c.description}"></td>-->
+
+<!--                </tr>-->
+<!--                </tbody>-->
+<!--            </table>-->
+<!--        </div>-->
+<!--    </div>-->
 
 
 </body>

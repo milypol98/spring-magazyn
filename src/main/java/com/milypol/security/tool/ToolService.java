@@ -10,4 +10,8 @@ public interface ToolService {
     void deleteTool(Integer id);
     List<Tool> getAllToolsByStockPositionId(Integer stockPositionId);
     Map<Integer, Long> getToolCountByStockPositionId();
+
+    Map<Integer, Long> getToolCountByStockPositionIdStatus();
+
+    Integer countByStatus(ToolStatus status);
 }

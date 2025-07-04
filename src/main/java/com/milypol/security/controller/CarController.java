@@ -43,16 +43,17 @@ public class CarController {
         return "cars/edit";
     }
 
-    @PostMapping("/delete/{id}")
-    public String deleteCar( @PathVariable Integer id) {
-        carService.deleteCar(id);
-        return "redirect:/cars";
-    }
     @PostMapping( "/save")
     public String saveCar(@ModelAttribute Car car) {
         carService.saveCar(car);
         return "redirect:/cars";
     }
+    @PostMapping("/delete/{id}")
+    public String deleteCar( @PathVariable Integer id) {
+        carService.deleteCar(id);
+        return "redirect:/cars";
+    }
+
     @GetMapping("cost/add/{carId}")
     public String carCostAdd(@PathVariable Integer carId, Model model) {
         CarCost carCost = new CarCost();

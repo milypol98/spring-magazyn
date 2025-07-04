@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/general.css}" />
+</head>
+<body>
+<div class="top-row">
+    <div class="side-by-side">
+        <div class="all-container">
+                <div class="form-header">
+                    <label class="form-title">Edycja pozycij magazynowej</label>
+                </div>
+                <form th:action="@{/warehouses/stocks/tools/save}" th:object="${stockPosition}" method="post">
+
+                    <input type="hidden" th:field="*{id}" />
+
+                    <label>Nazwa:</label>
+                    <input type="text" th:field="*{name}" />
+                    <label>Opis:</label>
+                    <input type="text" th:field="*{description}" />
+                    <label>Minimalna ilosc na stanie:</label>
+                    <input type="text" th:field="*{minStock}" />
+
+                    <button type="submit" class="submit-btn">Zapisz</button>
+                </form>
+        </div>
+            <div class="all-container">
+                <div class="table-header">
+                    <label class="table-title">Narzędzia w magazynie</label>
+                    <a th:href="@{'/warehouses/tool/add/' + ${stockPosition.id}}" class="btn-add">Dodaj</a>
+                </div>
+                <div class="full-width-container">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Nazwa</th>
+                            <th>Kod</th>
+                            <th>Opis</th>
+                            <th>Cena</th>
+                            <th>Kod</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="item : ${stockPosition.tools}"
+                            th:if="${item.status == toolStatusStock}"
+                            th:attr="onclick=|window.location.href='/warehouses/tool/edit/${item.id}'|">
+                            <td th:text="${item.name}"></td>
+                            <td th:text="${item.code}"></td>
+                            <td th:text="${item.description}"></td>
+                            <td th:text="${item.price}"></td>
+                            <td th:text="${item.status}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="all-container">
+                <div class="full-width-container">
+                    <div class="table-header">
+                        <label class="table-title">Narzędzia poza magazynem</label>
+                    </div>
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Nazwa</th>
+                            <th>Kod</th>
+                            <th>Opis</th>
+                            <th>Cena</th>
+                            <th>Kod</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="item : ${stockPosition.tools}"
+                            th:if="${item.status == toolStatusUse}"
+                            th:attr="onclick=|window.location.href='/warehouses/tool/edit/${item.id}'|">
+                            <td th:text="${item.name}"></td>
+                            <td th:text="${item.code}"></td>
+                            <td th:text="${item.description}"></td>
+                            <td th:text="${item.price}"></td>
+                            <td th:text="${item.status}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="all-container">
+                <div class="full-width-container">
+                    <div class="table-header">
+                        <label class="table-title">Narzędzia w naprawie</label>
+                    </div>
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Nazwa</th>
+                            <th>Kod</th>
+                            <th>Opis</th>
+                            <th>Cena</th>
+                            <th>Kod</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="item : ${stockPosition.tools}"
+                            th:if="${item.status == toolStatusRepair}"
+                            th:attr="onclick=|window.location.href='/warehouses/tool/edit/${item.id}'|">
+                            <td th:text="${item.name}"></td>
+                            <td th:text="${item.code}"></td>
+                            <td th:text="${item.description}"></td>
+                            <td th:text="${item.price}"></td>
+                            <td th:text="${item.status}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

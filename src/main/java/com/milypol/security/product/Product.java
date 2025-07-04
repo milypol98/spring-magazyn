@@ -26,7 +26,7 @@ public class Product {
     private String description;
     private Double unitPrice;
     private Integer stock;
-    @OneToOne
+    @ManyToOne
     private StockPosition stockPosition;
 
 }

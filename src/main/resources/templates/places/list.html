@@ -2,32 +2,42 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
     <link rel="stylesheet" th:href="@{/css/general.css}" />
-
 </head>
 <body>
-<h1>Lista miejsc</h1>
-<a href="/places/add">Dodaj</a>
-<div class="table-container">
-    <table>
-        <thead>
-        <tr>
-            <th>Nazwa</th>
-            <th>Adres</th>
-            <th>Opis</th>
-            <th>Pogoda</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="place : ${places}"
-            th:attr="onclick=|window.location.href='/places/edit/${place.id}'|"
-            class="clickable-row">
-            <td th:text="${place.name}">Nazwa</td>
-            <td th:text="${place.address}">Adres</td>
-            <td th:text="${place.description}">Opis</td>
-            <td>pogoda</td>
-    </table>
+<h1>
+    <label>Miejsca</label>
+    <a href="/dashboard" class="btn-add">Strona glowna</a>
+</h1>
+<div class="top-row">
+    <div class="side-by-side">
+        <div class="tools-container">
+            <div class="table-header">
+                <label class="table-title">Lista miejsc:</label>
+                <a href="/places/add" class="btn-add" >Dodaj</a>
+            </div>
+            <table>
+                <thead>
+                <tr>
+                    <th>Nazwa</th>
+                    <th>Opis</th>
+                    <th>Lokalizacija</th>
+                    <th>Pogoda</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="place : ${places}"
+                    th:attr="onclick=|window.location.href='/places/edit/${place.id}'|"
+                    class="clickable-row">
+                    <td th:text="${place.name}"></td>
+                    <td th:text="${place.description}"></td>
+                    <td th:text="${place.latitude + ', ' + place.longitude}"></td>
+                    <td>21C 35mm</td>
+            </table>
+        </div>
+    </div>
 </div>
+
+
 </body>
 </html>

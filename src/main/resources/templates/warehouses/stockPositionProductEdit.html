@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/general.css}" />
+</head>
+<body>
+<div class="top-row">
+  <div class="side-by-side">
+    <div class="all-container">
+      <div class="form-header">
+        <label class="form-title">Edycja pozycij magazynowej</label>
+      </div>
+    <form th:action="@{/warehouses/stocks/products/save}" th:object="${stockPosition}" method="post">
+
+      <input type="hidden" th:field="*{id}" />
+
+      <label>Nazwa:</label>
+      <input type="text" th:field="*{name}" />
+      <label>Opis:</label>
+      <input type="text" th:field="*{description}" />
+      <label>Minimalna ilosc na stanie:</label>
+      <input type="text" th:field="*{minStock}" />
+
+
+      <button type="submit" class="submit-btn">Zapisz</button>
+    </form>
+  </div>
+
+<!--<div th:object="${stockPosition}" th:if="${stockPosition.id != null }" class="squares">-->
+<!--    <a th:href="@{'/warehouses/products/add/' + ${stockPosition.id}}" class="btn btn-primary">Dodaj</a>-->
+<!--    <table>-->
+<!--      <thead>-->
+<!--      <tr>-->
+<!--        <th>Nazwa</th>-->
+<!--        <th>Kod</th>-->
+<!--        <th>Opis</th>-->
+<!--        <th>Cena jednostkowa</th>-->
+<!--        <th>Ilość</th>-->
+<!--      </tr>-->
+<!--      </thead>-->
+<!--      <tbody>-->
+<!--      <tr th:attr="onclick=|window.location.href='/warehouses/tool/edit/${item.id}'|">-->
+<!--        <td th:text="${stockPosition.product.name}"></td>-->
+<!--        <td th:text="${stockPosition.product.code}"></td>-->
+<!--        <td th:text="${stockPosition.product.description}"></td>-->
+<!--        <td th:text="${stockPosition.product.unitPrice}"></td>-->
+<!--        <td th:text="${stockPosition.product.stock}"></td>-->
+<!--      </tr>-->
+<!--      </tbody>-->
+<!--    </table>-->
+<!--</div>-->
+  </div>
+</div>
+</body>
+</html>

@@ -24,13 +24,19 @@ public class UserController {
         model.addAttribute("users", userService.getAllUsers());
         return "workers/list";
     }
+    @GetMapping("/users/edit/{id}")
+    public String editUser(@PathVariable Integer id , Model model){
+        model.addAttribute("user", userService.getUserById(id));
+        model.addAttribute("tasks",taskService.getAllTasksByUserId(id));
+        return "settings/edit";
+    }
     //pracownicy admin // ten uzytkownik
     @GetMapping("/profile")
     public String editForm(Model model, Authentication authentication){
         String email = authentication.getName();
         User user = userService.getUserByEmail(email);
         model.addAttribute("user", userService.getUserById(user.getId()));
-        model.addAttribute("task",taskService.getAllTasksByUserId(user.getId()));
+        model.addAttribute("tasks",taskService.getAllTasksByUserId(user.getId()));
         return "settings/edit";
     }
     //pracownicy admin

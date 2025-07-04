@@ -48,13 +48,13 @@ button:hover {
 .container {
     margin-top: 40px;
     display: grid;
-    grid-template-columns: repeat(5, 250px);
+    grid-template-columns: repeat(6, 250px);
     gap: 20px;
     padding: 20px;
     background: white;
     border-radius: 12px;
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-    max-width: 1350px; /* 5×250 + 4×20 odstępów */
+    max-width: 1600px; /* 5×250 + 4×20 odstępów */
     margin-left: auto;
     margin-right: auto;
 }

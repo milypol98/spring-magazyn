@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface ToolRepo extends JpaRepository<Tool, Integer> {
     List<Tool> findAllByStockPosition_Id(Integer stockPositionId);
-    Integer countByStockPosition_Id(Integer stockPositionId);
+    Integer countByStatus(ToolStatus status);
 }

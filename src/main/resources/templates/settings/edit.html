@@ -7,38 +7,85 @@
 
 </head>
 <body>
-<div class="container">
-    <div class="form-section">
-        <form th:action="@{/profile/edit}" th:object="${user}" method="post">
-            <div>
-                <label for="firstname">Imię</label>
-                <input type="text" id="firstname" th:field="*{firstname}" />
+<h1>
+    <label>Ustawienia</label>
+    <a href="/dashboard" class="btn-add">Strona glowna</a>
+</h1>
+<div class="top-row">
+    <div class="side-by-side">
+        <div class="tools-container">
+            <div class="table-header">
+                <label class="table-title">Edytuj:</label>
             </div>
+            <form th:action="@{/profile/edit}" th:object="${user}" method="post">
+                <div>
+                    <label for="firstname">Imię</label>
+                    <input type="text" id="firstname" th:field="*{firstname}" />
+                </div>
 
-            <div>
-                <label for="lastName">Nazwisko</label>
-                <input type="text" id="lastName" th:field="*{lastName}" />
+                <div>
+                    <label for="lastName">Nazwisko</label>
+                    <input type="text" id="lastName" th:field="*{lastName}" />
+                </div>
+
+                <div>
+                    <label for="email">E‑mail</label>
+                    <input type="email" id="email" th:field="*{email}" />
+                </div>
+
+                <div>
+                    <label for="phone">Telefon</label>
+                    <input type="text" id="phone" th:field="*{phone}" />
+                </div>
+
+                <div>
+                    <label for="description">Opis</label>
+                    <textarea id="description" th:field="*{description}"></textarea>
+                </div>
+
+                <button type="submit">Zapisz</button>
+            </form>
+        </div>
+        <div class="tools-container">
+            <div class="table-header">
+                <label class="table-title">Wykonywane Prace:</label>
             </div>
-
-            <div>
-                <label for="email">E‑mail</label>
-                <input type="email" id="email" th:field="*{email}" />
-            </div>
-
-            <div>
-                <label for="phone">Telefon</label>
-                <input type="text" id="phone" th:field="*{phone}" />
-            </div>
-
-            <div>
-                <label for="description">Opis</label>
-                <textarea id="description" th:field="*{description}"></textarea>
-            </div>
-
-            <button type="submit">Zapisz</button>
-        </form>
-
+            <table class="w1200">
+                <thead>
+                <tr>
+                    <th>Nazwa</th>
+                    <th>Opis</th>
+                    <th>Data od</th>
+                    <th>Status do</th>
+                    <th>Miejsce</th>
+                    <th>Pracownicy</th>
+                    <th>Auto</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="task : ${tasks}"
+                    th:attr="onclick=|window.location.href='/tasks/edit/${task.id}'|"
+                    class="clickable-row">
+                    <td th:text="${task.name}"></td>
+                    <td th:text="${task.description}"></td>
+                    <td th:text="${task.dateFrom}"></td>
+                    <td th:text="${task.dateTo}"></td>
+                    <td th:text="${task.place.name}"></td>
+                    <td>
+                        <label th:each="user : ${task.users}"
+                               th:text="${user.firstname + ' ' + user.lastName + ', '}"></label>
+                    </td>
+                    <td>
+                        <label th:each="car : ${task.cars}"
+                               th:text="${car.name  + ', '}"></label>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
+
+
 </body>
 </html>

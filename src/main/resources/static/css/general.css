@@ -66,8 +66,10 @@ input, textarea, select {
 
 /* --- Tabele --- */
 table {
+    max-width: 800px;
     width: 100%;
-    max-width: 600px;
+    margin-left: 30px;
+    margin-right: 30px;
     border-collapse: collapse;
     background-color: #ffffff;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
@@ -125,26 +127,40 @@ tr:hover {
     height: 100%;
 }
 
-/* --- Wspólna klasa dla przycisków --- */
-.btn {
-    display: inline-block;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 6px;
-    font-size: 14px;
-    font-family: inherit;
-    cursor: pointer;
-    transition: background-color 0.3s, box-shadow 0.3s;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    text-decoration: none;
-    text-align: center;
-    margin: 5px;
-}
+/*!* --- Wspólna klasa dla przycisków --- *!*/
+/*.btn {*/
+/*    display: inline-block;*/
+/*    padding: 10px 20px;*/
+/*    border: none;*/
+/*    border-radius: 6px;*/
+/*    font-size: 14px;*/
+/*    font-family: inherit;*/
+/*    cursor: pointer;*/
+/*    transition: background-color 0.3s, box-shadow 0.3s;*/
+/*    box-shadow: 0 2px 5px rgba(0,0,0,0.1);*/
+/*    text-decoration: none;*/
+/*    text-align: center;*/
+/*    margin: 5px;*/
+/*}*/
 
 /* --- Modyfikatory przycisków --- */
+a.btn-add,
+a.btn-edit,
+a.btn-delete {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+/* Dodanie ogólnych styli, a potem nadpisanie kolorów */
 .btn-add {
     background-color: #4a90e2;
     color: #fff;
+    margin: 15px;
 }
 .btn-add:hover {
     background-color: #3a78c2;
@@ -169,4 +185,98 @@ tr:hover {
 /* --- Specyficzne klasy pomocnicze --- */
 .hidden {
     display: none !important;
+}
+.top-row {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* odstęp między rzędami */
+}
+
+/* Dwie pierwsze tabele obok siebie */
+.side-by-side {
+    display: flex;
+    gap: 20px; /* odstęp między tabelami */
+}
+
+/* Narzędzia i Produkty mają po 50% szerokości (możesz dostosować) */
+.tools-container,
+.products-container,
+.all-container{
+    flex: 1 1 50%;
+    margin-right: 30px;
+    box-sizing: border-box;
+}
+
+/* Reszta kontenerów na całą szerokość */
+.full-width-container {
+    width: 100%;
+    margin-bottom: 40px;
+}
+.form-header,
+.table-header {
+    min-height: 70px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.form-title,
+.table-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+.low-stock {
+    background-color: #ffdddd;
+    color: #a10000;
+    font-weight: bold;
+}
+.w1200 {
+    max-width: 1200px;
+}
+.w1000 {
+    max-width: 1000px;
+}
+.w800 {
+    max-width: 800px;
+}
+
+
+/* Kontener z siatką checkboxów */
+.car-grid {
+    width: 100%;               /* pełna szerokość kontenera rodzica */
+    display: grid;
+    /* jak najwięcej kolumn o minimalnej szerokości 140px */
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 10px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #fafafa;
+    max-height: 300px;         /* ograniczenie wysokości */
+    overflow-y: auto;          /* scroll gdy za dużo opcji */
+}
+
+/* Pojedynczy element */
+.car-grid label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+/* Hover i focus */
+.car-grid label:hover,
+.car-grid input:focus + span {
+    background-color: #eef;
+}
+
+/* Checkbox */
+.car-grid input[type="checkbox"] {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
 }

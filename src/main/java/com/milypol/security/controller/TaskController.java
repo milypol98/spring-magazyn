@@ -1,10 +1,12 @@
 package com.milypol.security.controller;
 
 import com.milypol.security.car.CarService;
+import com.milypol.security.cart.CartService;
 import com.milypol.security.place.PlaceService;
 import com.milypol.security.product.ProductService;
 import com.milypol.security.task.Task;
 import com.milypol.security.task.TaskService;
+import com.milypol.security.task.TaskStatus;
 import com.milypol.security.user.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,18 +20,21 @@ public class TaskController {
     private final UserService userService;
     private final PlaceService placeService;
     private final ProductService productService;
+    private final CartService cartService;
 
-    public TaskController(TaskService taskService, CarService carService, UserService userService, PlaceService placeService, ProductService productService) {
+    public TaskController(TaskService taskService, CarService carService, UserService userService, PlaceService placeService, ProductService productService, CartService cartService) {
         this.taskService = taskService;
         this.carService = carService;
         this.userService = userService;
         this.placeService = placeService;
         this.productService = productService;
+        this.cartService = cartService;
     }
 
     @GetMapping
     public String showTaskPage(Model model){
         model.addAttribute("tasks", taskService.getAllTasks());
+        model.addAttribute("statusCompleted", TaskStatus.COMPLETED);
         return "tasks/list";
     }
     @GetMapping("/add")
@@ -39,6 +44,7 @@ public class TaskController {
         model.addAttribute("allUsers", userService.getAllUsers());
         model.addAttribute("allPlaces", placeService.getAllPlaces());
         model.addAttribute("allProducts", productService.getAllProducts());
+        model.addAttribute("allCarts", cartService.getAllCarts());
         return "tasks/edit";
     }
     @GetMapping("/edit/{id}")
@@ -48,6 +54,7 @@ public class TaskController {
         model.addAttribute("allUsers", userService.getAllUsers());
         model.addAttribute("allPlaces", placeService.getAllPlaces());
         model.addAttribute("allProducts", productService.getAllProducts());
+        model.addAttribute("allCarts", cartService.getAllCarts());
         return "tasks/edit";
     }
     @PostMapping("/delete/{id}")
