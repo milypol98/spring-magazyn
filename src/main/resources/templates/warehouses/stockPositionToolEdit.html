@@ -7,7 +7,7 @@
 <body>
 <div class="top-row">
     <div class="side-by-side">
-        <div class="all-container">
+        <div class="all-container w1200">
                 <div class="form-header">
                     <label class="form-title">Edycja pozycij magazynowej</label>
                 </div>
@@ -25,7 +25,7 @@
                     <button type="submit" class="submit-btn">Zapisz</button>
                 </form>
         </div>
-            <div class="all-container">
+            <div th:object="${stockPosition}" th:if="${stockPosition.id != null }" class="all-container">
                 <div class="table-header">
                     <label class="table-title">Narzędzia w magazynie</label>
                     <a th:href="@{'/warehouses/tool/add/' + ${stockPosition.id}}" class="btn-add">Dodaj</a>
@@ -55,7 +55,7 @@
                     </table>
                 </div>
             </div>
-            <div class="all-container">
+            <div th:object="${stockPosition}" th:if="${stockPosition.id != null }"  class="all-container">
                 <div class="full-width-container">
                     <div class="table-header">
                         <label class="table-title">Narzędzia poza magazynem</label>
@@ -84,7 +84,7 @@
                     </table>
                 </div>
             </div>
-            <div class="all-container">
+            <div th:object="${stockPosition}" th:if="${stockPosition.id != null }"  class="all-container">
                 <div class="full-width-container">
                     <div class="table-header">
                         <label class="table-title">Narzędzia w naprawie</label>

@@ -1,6 +1,7 @@
 package com.milypol.security.controller;
 
 import com.milypol.security.cart.Cart;
+import com.milypol.security.cart.CartDetails;
 import com.milypol.security.cart.CartService;
 import com.milypol.security.stockPosition.StockPositionService;
 import org.springframework.stereotype.Controller;
@@ -22,13 +23,13 @@ public class CartsController {
     public String addCart(Model model) {
         model.addAttribute("cart", new Cart());
         model.addAttribute("allStackPositions", stockPositionService.getAllStockPositions());
-        return "warehouses/cartEdit";
+        return "carts/edit";
     }
     @GetMapping( "/edit/{id}")
     public String editCart(@PathVariable Integer id, Model model) {
         model.addAttribute("cart", cartService.getCartById(id));
         model.addAttribute("allStackPositions", stockPositionService.getAllStockPositions());
-        return "warehouses/cartEdit";
+        return "carts/edit";
     }
     @PostMapping( "/save")
     public String saveCart(@ModelAttribute Cart cart) {

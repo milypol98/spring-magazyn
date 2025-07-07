@@ -52,7 +52,7 @@
                         <label th:each="car : ${task.cars}"
                                th:text="${car.name  + ', '}"></label>
                     </td>
-                    <td th:text="${task.status.values()}"></td>
+                    <td th:text="${task.status.displayName}"></td>
                 </tr>
                 </tbody>
             </table>

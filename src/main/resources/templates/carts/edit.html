@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/general.css}" />
+
+</head>
+<body>
+<h1>
+    <label>Koszyki</label>
+    <a href="/dashboard" class="btn-add">Strona glowna</a>
+</h1>
+<div class="top-row">
+    <div class="side-by-side">
+        <div class="tools-container w1200" >
+            <div class="table-header">
+                <label class="table-title">Edytuj:</label>
+            </div>
+            <form th:action="@{'/carts/save'}" th:object="${cart}" method="post">
+                <input type="hidden" th:field="*{id}" />
+                <label>Nazwa:</label>
+                <input type="text" th:field="*{name}" />
+                <label>Opis:</label>
+                <textarea th:field="*{description}"></textarea>
+                <label>Szczególy</label>
+                <label th:each="c : ${cart.cartDetails}">
+                    <input type="checkbox" th:value="${c.id}" th:field="*{cartDetails}" />
+
+                </label>
+                <button type="submit" class="submit-btn">Zapisz</button>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

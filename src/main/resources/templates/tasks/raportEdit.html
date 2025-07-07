@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/general.css}" />
+
+</head>
+<body>
+<h1>
+    <label>Raporty</label>
+    <a href="/dashboard" class="btn-add">Strona glowna</a>
+</h1>
+<div class="top-row">
+    <div class="side-by-side">
+        <div class="tools-container w1200">
+            <div class="table-header">
+                <label class="table-title">Edytuj:</label>
+            </div>
+            <form th:action="@{'/tasks/raports/save'}" th:object="${taskRaport}" method="post">
+                <input type="hidden" th:field="*{id}" />
+                <input type="hidden" th:field="*{task.id}" />
+                <label>Opis:</label>
+                <input type="text" th:field="*{description}" />
+                <label>Data:</label>
+                <input type="date" th:field="*{date}" />
+                <label>Godziny</label>
+                <input type="text" th:field="*{hour}" />
+                <input type="submit" value="Zapisz"/>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

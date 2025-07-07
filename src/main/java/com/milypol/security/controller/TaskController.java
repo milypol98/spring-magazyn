@@ -7,6 +7,8 @@ import com.milypol.security.product.ProductService;
 import com.milypol.security.task.Task;
 import com.milypol.security.task.TaskService;
 import com.milypol.security.task.TaskStatus;
+import com.milypol.security.taskRoport.TaskRaport;
+import com.milypol.security.taskRoport.TaskRaportService;
 import com.milypol.security.user.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,14 +23,16 @@ public class TaskController {
     private final PlaceService placeService;
     private final ProductService productService;
     private final CartService cartService;
+    private final TaskRaportService taskRaportService;
 
-    public TaskController(TaskService taskService, CarService carService, UserService userService, PlaceService placeService, ProductService productService, CartService cartService) {
+    public TaskController(TaskService taskService, CarService carService, UserService userService, PlaceService placeService, ProductService productService, CartService cartService, TaskRaportService taskRaportService) {
         this.taskService = taskService;
         this.carService = carService;
         this.userService = userService;
         this.placeService = placeService;
         this.productService = productService;
         this.cartService = cartService;
+        this.taskRaportService = taskRaportService;
     }
 
     @GetMapping
@@ -51,6 +55,7 @@ public class TaskController {
     public String editForm(@PathVariable Integer id, Model model){
         model.addAttribute("task", taskService.getTaskById(id));
         model.addAttribute("allCars", carService.getAllCars());
+        model.addAttribute("taskRaports", taskRaportService.getAllTaskRaportsByTaskId(id));
         model.addAttribute("allUsers", userService.getAllUsers());
         model.addAttribute("allPlaces", placeService.getAllPlaces());
         model.addAttribute("allProducts", productService.getAllProducts());
@@ -66,5 +71,17 @@ public class TaskController {
     public String saveTask(@ModelAttribute Task task){
         taskService.saveTask(task);
         return "redirect:/tasks";
+    }
+    @GetMapping("/raports/add/{taskId}")
+    public String addTaskRaports(@PathVariable Integer taskId, Model model){
+        TaskRaport taskRaport = new TaskRaport();
+        taskRaport.setTask(taskService.getTaskById(taskId));
+        model.addAttribute("taskRaport", taskRaport);
+        return "tasks/raportEdit";
+    }
+    @PostMapping("/raports/save")
+    public String saveTaskRaport(@ModelAttribute TaskRaport taskRaport){
+        taskRaportService.saveTaskRaport(taskRaport);
+        return "redirect:/tasks/edit/" + taskRaport.getTask().getId();
     }
 }

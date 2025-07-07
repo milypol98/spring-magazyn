@@ -7,71 +7,180 @@
 
 </head>
 <body>
-<h1><a href="/dashboard" class="btn-add">Strona glowna</a></h1>
-<div class="container">
-    <div class="form-section">
-        <form th:action="@{'/tasks/save'}" th:object="${task}" method="post">
-            <input type="hidden" th:field="*{id}" />
+<h1>
+    <label>Projekty</label>
+    <a href="/dashboard" class="btn-add">Strona glowna</a>
+</h1>
+<div class="top-row">
+    <div class="side-by-side">
+        <div class="tools-container">
+            <div class="table-header">
+                <label class="table-title">Edytuj:</label>
+            </div>
+            <form th:action="@{'/tasks/save'}" th:object="${task}" method="post">
+                <input type="hidden" th:field="*{id}" />
 
-            <label>Nazwa:</label>
-            <input type="text" th:field="*{name}" />
+                <label>Nazwa:</label>
+                <input type="text" th:field="*{name}" />
 
-            <label>Opis:</label>
-            <textarea th:field="*{description}"></textarea>
+                <label>Opis:</label>
+                <textarea th:field="*{description}"></textarea>
 
-            <label>Data od:</label>
-            <input type="date" th:field="*{dateTo}" />
+                <label>Data od:</label>
+                <input type="date" th:field="*{dateTo}" />
 
-            <label>Data do:</label>
-            <input type="date" th:field="*{dateFrom}" />
+                <label>Data do:</label>
+                <input type="date" th:field="*{dateFrom}" />
 
-            <label>Data do</label>
-            <input type="date" th:field="*{dateFrom}" />
+                <label>Data do</label>
+                <input type="date" th:field="*{dateFrom}" />
 
-            <label>
-                <a href="/users" class="btn-add">Pracownicy</a>
-            </label>
-            <div class="car-grid">
-                <label th:each="u : ${allUsers}">
-                    <input type="checkbox" th:value="${u.id}" th:field="*{users}" />
-                    <span th:text="${u.firstname + ' ' + u.lastName}"></span>
+                <label>
+                    <a href="/users" class="btn-add">Pracownicy</a>
                 </label>
+                <div class="car-grid">
+                    <label th:each="u : ${allUsers}">
+                        <input type="checkbox" th:value="${u.id}" th:field="*{users}" />
+                        <span th:text="${u.firstname + ' ' + u.lastName}"></span>
+                    </label>
+                </div>
+
+                <label>
+                    <a href="/places" class="btn-add">Miejsca</a>
+                </label>
+                <div class="car-grid">
+                    <label th:each="p : ${allPlaces}">
+                        <input type="checkbox" th:value="${p.id}" th:field="*{place}" />
+                        <span th:text="${p.name + ' ' + p.address}"></span>
+                    </label>
+                </div>
+
+                <label>
+                    <a href="/cars" class="btn-add">Samochody</a>
+                </label>
+                <div class="car-grid">
+                    <label th:each="c : ${allCars}">
+                        <input type="checkbox" th:value="${c.id}" th:field="*{cars}" />
+                        <span th:text="${c.name}"></span>
+                    </label>
+                </div>
+                <label>
+                    <a href="/carts" class="btn-add">Koszyki</a>
+                </label>
+                <div class="car-grid">
+                    <label th:each="cart : ${allCarts}">
+                        <input type="checkbox" th:value="${cart.id}" th:field="*{carts}" />
+                        <span th:text="${cart.name}"></span>
+                    </label>
+                </div>
+                <button type="submit" class="submit-btn">Zapisz</button>
+            </form>
+        </div>
+        <div class="tools-container">
+            <div class="full-width-container">
+                <div class="table-header">
+                    <label class="table-title">Narzedzia:</label>
+                </div>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Nazwa</th>
+                        <th>Kod</th>
+                        <th>Opis</th>
+                        <th>Cena</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    <tr th:each="item : ${task.tools}">
+                        <td th:text="${item.name}"></td>
+                        <td th:text="${item.code}"></td>
+                        <td th:text="${item.description}"></td>
+                        <td th:text="${item.price}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="tools-container">
+                <div class="table-header">
+                    <label class="table-title">Części:</label>
+                </div>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Nazwa</th>
+                        <th>Kod</th>
+                        <th>Opis</th>
+                        <th>Cena</th>
+                        <th>Ilosc</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    <tr th:each="item : ${task.products}">
+                        <td th:text="${item.name}"></td>
+                        <td th:text="${item.code}"></td>
+                        <td th:text="${item.description}"></td>
+                        <td th:text="${item.unitPrice}"></td>
+                        <td th:text="10"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div>
+                <label>
+                    <label>Raporty</label>
+                    <a th:href="@{'/tasks/raports/add/' + ${task.id}}" class="btn-add">Dodaj</a>
+                </label>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Opis</th>
+                        <th>Dzien</th>
+                        <th>Data wpyniecia</th>
+                        <th>Godziny przepracowane</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="item : ${taskRaports}">
+                        <td th:text="${item.description}"></td>
+                        <td th:text="${item.date}"></td>
+                        <td th:text="${item.dateComeIn}"></td>
+                        <td th:text="${item.hour}"></td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
 
-            <label>
-                <a href="/places" class="btn-add">Miejsca</a>
-                <a href="/places/add" class="btn-add">Dodaj</a>
-            </label>
-            <div class="car-grid">
-                <label th:each="p : ${allPlaces}">
-                    <input type="checkbox" th:value="${p.id}" th:field="*{place}" />
-                    <span th:text="${p.name + ' ' + p.address}"></span>
-                </label>
-            </div>
 
-            <label>
-                <a href="/cars" class="btn-add">Samochody</a>
-                <a href="/cars/add" class="btn-add">Dodaj</a>
-            </label>
-            <div class="car-grid">
-                <label th:each="c : ${allCars}">
-                    <input type="checkbox" th:value="${c.id}" th:field="*{cars}" />
-                    <span th:text="${c.name}"></span>
-                </label>
-            </div>
-            <label>
-                <a href="/carts" class="btn-add">Koszyki</a>
-                <a href="/carts/add" class="btn-add">Dodaj</a>
-            </label>
-            <div class="car-grid">
-                <label th:each="cart : ${allCarts}">
-                    <input type="checkbox" th:value="${cart.id}" th:field="*{carts}" />
-                    <span th:text="${cart.name}"></span>
-                </label>
-            </div>
-            <button type="submit" class="submit-btn">Zapisz</button>
-        </form>
+<!--            <div class="tools-container">-->
+<!--                <div class="table-header">-->
+<!--                    <label class="table-title">Części zużyte:</label>-->
+<!--                </div>-->
+<!--                <table>-->
+<!--                    <thead>-->
+<!--                    <tr>-->
+<!--                        <th>Nazwa</th>-->
+<!--                        <th>Kod</th>-->
+<!--                        <th>Opis</th>-->
+<!--                        <th>Cena</th>-->
+<!--                        <th>Ilosc</th>-->
+<!--                    </tr>-->
+<!--                    </thead>-->
+<!--                    <tbody>-->
+
+<!--                    <tr th:each="item : ${task.products}">-->
+<!--                        <td th:text="${item.name}"></td>-->
+<!--                        <td th:text="${item.code}"></td>-->
+<!--                        <td th:text="${item.description}"></td>-->
+<!--                        <td th:text="${item.unitPrice}"></td>-->
+<!--                        <td th:text="5"></td>-->
+<!--                    </tr>-->
+<!--                    </tbody>-->
+<!--                </table>-->
+<!--            </div>-->
+        </div>
     </div>
-</div>
 </body>
 </html>
