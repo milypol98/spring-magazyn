@@ -8,7 +8,13 @@
 <body>
 <h1>
     <label>Pojazdy</label>
-    <a href="/dashboard" class="btn-add">Strona glowna</a>
+    <a th:href="@{/dashboard}" class="btn-main">Strona glowna</a>
+    <a th:href="@{/warehouses}" class="btn-main">Magazyn</a>
+    <a th:href="@{/tasks}" class="btn-main">Task</a>
+    <a th:href="@{/cars}" class="btn-main">Auta</a>
+    <a th:href="@{/places}" class="btn-main">Miejsca</a>
+    <a th:href="@{/users}" class="btn-main">Pracownicy</a>
+    <a th:href="@{/profile}" class="btn-main">Ustawienia</a>
 </h1>
 <div class="top-row">
     <div class="side-by-side">
@@ -18,7 +24,7 @@
             </div>
             <form th:action="@{'/cars/save'}" th:object="${car}" method="post">
                 <input type="hidden" th:field="*{id}" />
-
+                <input type="hidden" th:field="*{id}" />
                 <label>Nazwa:</label>
                 <input type="text" th:field="*{name}" />
 
@@ -46,67 +52,22 @@
                 <label>Ubezpieczenie:</label>
                 <input type="date" th:field="*{insured}" />
 
+                <label>
+                    <a class="btn-add">Koszyki</a>
+                </label>
+                <label>
+                    <select th:field="*{cart}">
+                        <option th:each="c : ${allCarts}"
+                                th:value="${c.id}"
+                                th:text="${c.name}">
+                        </option>
+                    </select>
+                </label>
+
                 <button type="submit" class="submit-btn">Zapisz</button>
             </form>
         </div>
-        <div  th:object="${car}" th:if="${car.id != null }" class="tools-container">
-            <div class="table-header">
-                <label class="table-title">Koszty:</label>
-                <a th:href="@{'/cars/cost/add/' + ${car.id}}" class="btn-add">Dodaj</a>
-            </div>
-            <table>
-                <thead>
-                <tr>
-                    <th>Opis</th>
-                    <th>Cena</th>
-                    <th>Od</th>
-                    <th>Do</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="cost : ${car.costs}"
-                    th:attr="onclick=|window.location.href='/cars/cost/edit/${cost.id}'|">
-                    <td th:text="${cost.description}"></td>
-                    <td th:text="${cost.cost}"></td>
-                    <td th:text="${cost.dateFrom}"></td>
-                    <td th:text="${cost.dateTo}"></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-        <div th:object="${car}" th:if="${car.id != null }" class="tools-container">
-            <div class="table-header">
-                <label class="table-title">Historia:</label>
-            </div>
-            <table>
-                <thead>
-                <tr>
-                    <th>Opis</th>
-                    <th>Nazwa</th>
-                    <th>Miejsce</th>
-                    <th>Od</th>
-                    <th>Do</th>
-                    <th>Użytkownik</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="task : ${tasks}">
-                    <td th:text="${task.description}"></td>
-                    <td th:text="${task.name}"></td>
-                    <td th:text="${task.place.name}"></td>
-                    <td th:text="${task.dateFrom}"></td>
-                    <td th:text="${task.dateTo}"></td>
-                    <td>
-                        <label th:each="user : ${task.users}"
-                               th:text="${user.firstname + ' ' + user.lastName}"></label>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
     </div>
 </div>
-
-<script th:src="@{/js/map.js}"></script>
 </body>
 </html>

@@ -2,13 +2,11 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
     <link rel="stylesheet" th:href="@{/css/general.css}" />
-
 </head>
 <body>
 <h1>
-    <label>Miejsca</label>
+    <label>Dostawy</label>
     <a th:href="@{/dashboard}" class="btn-main">Strona glowna</a>
     <a th:href="@{/warehouses}" class="btn-main">Magazyn</a>
     <a th:href="@{/tasks}" class="btn-main">Task</a>
@@ -19,32 +17,27 @@
 </h1>
 <div class="top-row">
     <div class="side-by-side">
-        <div class="tools-container w800">
+        <div class="tools-container w1200">
             <div class="table-header">
-                <label class="table-title">Edytuj:</label>
+                <label class="table-title" th:text="|Produkt: ${product.name}|"></label>
             </div>
-            <form th:action="@{'/places/save'}"
-                  th:object="${place}"
-                  method="post">
+            <form th:action="@{'/events/save'}" th:object="${productEvent}"  method="post">
                 <input type="hidden" th:field="*{id}" />
+                <input type="hidden" th:field="*{product.id}" />
 
-                <label>Nazwa</label>
-                <input type="text" th:field="*{name}" />
-
-
-                <label>Opis</label>
-                <textarea th:field="*{description}"></textarea>
-
-                <label>Współrzędne</label>
-                <input type="text" th:field="*{latitude}" />
-                <input type="text" th:field="*{longitude}" />
-
+                <label>ilość</label>
+                <input type="text" th:field="*{quantity}" />
+                <label>Cena jednostkowa</label>
+                <input type="text" th:field="*{unitPrice}" />
+                <label>Komentarz</label>
+                <textarea th:field="*{comment}"></textarea>
+                <label>Data i czas:</label>
+                <input type="datetime-local" th:field="*{timestamp}"
+                       th:text="${#temporals.format(productEvent.timestamp, 'yyyy-MM-dd''T''HH:mm')}" required />
                 <button type="submit" class="submit-btn">Zapisz</button>
             </form>
         </div>
     </div>
 </div>
-
-
 </body>
 </html>

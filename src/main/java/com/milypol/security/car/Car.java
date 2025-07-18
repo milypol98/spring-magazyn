@@ -2,7 +2,9 @@ package com.milypol.security.car;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.milypol.security.carCost.CarCost;
+import com.milypol.security.cart.Cart;
 import com.milypol.security.product.Product;
+import com.milypol.security.tool.Tool;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -26,15 +28,38 @@ public class Car {
     private String brand;
     private String registration;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate  year;
+    private LocalDate year;
     private String description;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate review;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate  insured;
+    private LocalDate insured;
     @OneToMany(mappedBy = "car", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore                    // ignoruj pole podczas serializacji JSON (REST, Thymeleaf)
     @ToString.Exclude              // wyklucz z generowanego toString()
     @EqualsAndHashCode.Exclude     // wyklucz z equals() i hashCode()
     private List<CarCost> costs;
+    @ManyToMany
+    @JoinTable(
+            name = "car_product",
+            joinColumns = @JoinColumn(name = "car_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id")
+    )
+    private List<Product> products;
+    @ManyToMany
+    @JoinTable(
+            name = "car_tool",
+            joinColumns = @JoinColumn(name = "car_id"),
+            inverseJoinColumns = @JoinColumn(name = "tool_id")
+    )
+    private List<Tool> tools;
+    @ManyToMany
+    @JoinTable(
+            name = "car_cart",
+            joinColumns = @JoinColumn(name = "car_id"),
+            inverseJoinColumns = @JoinColumn(name = "cart_id")
+    )
+    private List<Cart> cart;
+
+
 }

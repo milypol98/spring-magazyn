@@ -11,6 +11,6 @@ public interface TaskService {
 
     List<Task> getAllTasksByCarsId(Integer id);
 
-    List<Task> getAllTasksByProductId(Integer id);
     List<Task> getAllTasksByStatus(TaskStatus status);
+
 }

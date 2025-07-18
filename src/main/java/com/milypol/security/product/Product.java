@@ -1,13 +1,10 @@
 package com.milypol.security.product;
 
-import com.milypol.security.car.Car;
-import com.milypol.security.cart.Cart;
-import com.milypol.security.place.Place;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.milypol.security.productEvent.ProductEvent;
 import com.milypol.security.stockPosition.StockPosition;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
@@ -16,7 +13,6 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 @Entity
-@Table(name = "product")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,9 +20,12 @@ public class Product {
     private String code;
     private String name;
     private String description;
-    private Double unitPrice;
-    private Integer stock;
-    @ManyToOne
-    private StockPosition stockPosition;
+    private Integer minStock;
+    private String position;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore                    // ignoruj pole podczas serializacji JSON (REST, Thymeleaf)
+    @ToString.Exclude              // wyklucz z generowanego toString()
+    @EqualsAndHashCode.Exclude     // wyklucz z equals() i hashCode()
+    private List<ProductEvent> events;
 
 }

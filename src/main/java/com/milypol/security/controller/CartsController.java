@@ -1,7 +1,6 @@
 package com.milypol.security.controller;
 
 import com.milypol.security.cart.Cart;
-import com.milypol.security.cart.CartDetails;
 import com.milypol.security.cart.CartService;
 import com.milypol.security.stockPosition.StockPositionService;
 import org.springframework.stereotype.Controller;

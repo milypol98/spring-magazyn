@@ -5,6 +5,16 @@
     <link rel="stylesheet" th:href="@{/css/general.css}" />
 </head>
 <body>
+<h1>
+    <label>Magazyn</label>
+    <a th:href="@{/dashboard}" class="btn-main">Strona glowna</a>
+    <a th:href="@{/warehouses}" class="btn-main">Magazyn</a>
+    <a th:href="@{/tasks}" class="btn-main">Task</a>
+    <a th:href="@{/cars}" class="btn-main">Auta</a>
+    <a th:href="@{/places}" class="btn-main">Miejsca</a>
+    <a th:href="@{/users}" class="btn-main">Pracownicy</a>
+    <a th:href="@{/profile}" class="btn-main">Ustawienia</a>
+</h1>
 <div class="top-row">
     <div class="side-by-side">
         <div class="all-container w1200">
@@ -28,7 +38,7 @@
             <div th:object="${stockPosition}" th:if="${stockPosition.id != null }" class="all-container">
                 <div class="table-header">
                     <label class="table-title">Narzędzia w magazynie</label>
-                    <a th:href="@{'/warehouses/tool/add/' + ${stockPosition.id}}" class="btn-add">Dodaj</a>
+                    <a th:href="@{'/warehouses/tools/add/' + ${stockPosition.id}}" class="btn-add">Dodaj</a>
                 </div>
                 <div class="full-width-container">
                     <table>
@@ -44,7 +54,7 @@
                         <tbody>
                         <tr th:each="item : ${stockPosition.tools}"
                             th:if="${item.status == toolStatusStock}"
-                            th:attr="onclick=|window.location.href='/warehouses/tool/edit/${item.id}'|">
+                            th:attr="onclick=|window.location.href='/warehouses/tools/edit/${item.id}'|">
                             <td th:text="${item.name}"></td>
                             <td th:text="${item.code}"></td>
                             <td th:text="${item.description}"></td>
@@ -73,7 +83,7 @@
                         <tbody>
                         <tr th:each="item : ${stockPosition.tools}"
                             th:if="${item.status == toolStatusUse}"
-                            th:attr="onclick=|window.location.href='/warehouses/tool/edit/${item.id}'|">
+                            th:attr="onclick=|window.location.href='/warehouses/tools/edit/${item.id}'|">
                             <td th:text="${item.name}"></td>
                             <td th:text="${item.code}"></td>
                             <td th:text="${item.description}"></td>
@@ -102,7 +112,7 @@
                         <tbody>
                         <tr th:each="item : ${stockPosition.tools}"
                             th:if="${item.status == toolStatusRepair}"
-                            th:attr="onclick=|window.location.href='/warehouses/tool/edit/${item.id}'|">
+                            th:attr="onclick=|window.location.href='/warehouses/tools/edit/${item.id}'|">
                             <td th:text="${item.name}"></td>
                             <td th:text="${item.code}"></td>
                             <td th:text="${item.description}"></td>

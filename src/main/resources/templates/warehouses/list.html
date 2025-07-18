@@ -5,13 +5,22 @@
     <link rel="stylesheet" th:href="@{/css/general.css}"/>
 </head>
 <body>
-<h1>Magazyn</h1>
+<h1>
+    <label>Magazyn</label>
+    <a th:href="@{/dashboard}" class="btn-main">Strona glowna</a>
+    <a th:href="@{/warehouses}" class="btn-main">Magazyn</a>
+    <a th:href="@{/tasks}" class="btn-main">Task</a>
+    <a th:href="@{/cars}" class="btn-main">Auta</a>
+    <a th:href="@{/places}" class="btn-main">Miejsca</a>
+    <a th:href="@{/users}" class="btn-main">Pracownicy</a>
+    <a th:href="@{/profile}" class="btn-main">Ustawienia</a>
+</h1>
 <div class="top-row">
     <div class="side-by-side">
         <div class="tools-container">
             <div class="table-header">
                 <label class="table-title">Narzędzia</label>
-                <a href="/warehouses/stocks/products" class="btn-add">Dodaj</a>
+                <a href="/warehouses/products/add" class="btn-add">Dodaj</a>
             </div>
 
             <table>
@@ -24,19 +33,16 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="s : ${stockPositions}"
-                    th:attr="onclick=|window.location.href='/warehouses/stocks/products/${s.id}'|"
-                    th:if="${s.type == typeProduct}"
+                <tr th:each="p : ${products}"
+                    th:attr="onclick=|window.location.href='/warehouses/products/${p.id}'|"
                     class="clickable-row">
-                    <td th:text="${s.name}"></td>
-                    <td th:text="${s.description}"></td>
-                    <td th:each="p : ${s.product}"
-                        th:text="${p.stock}"
-                        th:classappend="${p.stock < s.minStock} ? 'low-stock'">
+                    <td th:text="${p.name}"></td>
+                    <td th:text="${p.description}"></td>
+                    <td th:text="${(countProductWarehouse[p.id] ?: 0)}"
+                        th:classappend="${(countProductWarehouse[p.id] ?: 0) < p.minStock} ? 'low-stock'">
                     </td>
-                    <td th:each="p : ${s.product}"
-                        th:text="${p.stock}"
-                        th:classappend="${p.stock < s.minStock} ? 'low-stock'">
+                    <td th:text="${(countProductWarehouseAndCar[p.id] ?: 0)}"
+                        th:classappend="${(countProductWarehouseAndCar[p.id] ?: 0) < p.minStock} ? 'low-stock'">
                     </td>
                 </tr>
                 </tbody>
@@ -61,7 +67,6 @@
                 <tbody>
                 <tr th:each="s : ${stockPositions}"
                     th:attr="onclick=|window.location.href='/warehouses/stocks/tools/${s.id}'|"
-                    th:if="${s.type == typeTool}"
                     class="clickable-row">
                     <td th:text="${s.name}"></td>
                     <td th:text="${s.description}"></td>

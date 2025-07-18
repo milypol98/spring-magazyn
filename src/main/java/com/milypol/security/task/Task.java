@@ -29,27 +29,6 @@ public class Task {
     private Place place;
     @ManyToMany
     @JoinTable(
-            name = "task_product",
-            joinColumns = @JoinColumn(name = "task_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id")
-    )
-    private List<Product> products;
-    @ManyToMany
-    @JoinTable(
-            name = "task_tool",
-            joinColumns = @JoinColumn(name = "task_id"),
-            inverseJoinColumns = @JoinColumn(name = "tool_id")
-    )
-    private List<Tool> tools;
-    @ManyToMany
-    @JoinTable(
-            name = "task_product_used",
-            joinColumns = @JoinColumn(name = "task_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id")
-    )
-    private List<Product> productsUsed;
-    @ManyToMany
-    @JoinTable(
             name = "task_user",
             joinColumns = @JoinColumn(name = "task_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
@@ -62,13 +41,6 @@ public class Task {
             inverseJoinColumns = @JoinColumn(name = "car_id")
     )
     private List<Car> cars;
-    @ManyToMany
-    @JoinTable(
-            name = "task_cart",
-            joinColumns = @JoinColumn(name = "task_id"),
-            inverseJoinColumns = @JoinColumn(name = "cart_id")
-    )
-    private List<Cart> carts;
     @Enumerated(EnumType.STRING)
     private TaskStatus status;
 }

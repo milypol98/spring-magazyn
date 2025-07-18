@@ -18,18 +18,11 @@ public class StockPosition {
     private Integer id;
     private String description;
     private String name;
-    @OneToMany(mappedBy = "stockPosition", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonIgnore                    // ignoruj pole podczas serializacji JSON (REST, Thymeleaf)
-    @ToString.Exclude              // wyklucz z generowanego toString()
-    @EqualsAndHashCode.Exclude     // wyklucz z equals() i hashCode()
-    private List<Product> product;
+
     @OneToMany(mappedBy = "stockPosition", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore                    // ignoruj pole podczas serializacji JSON (REST, Thymeleaf)
     @ToString.Exclude              // wyklucz z generowanego toString()
     @EqualsAndHashCode.Exclude     // wyklucz z equals() i hashCode()
     private List<Tool> tools;
     private Integer minStock;
-    @Enumerated(EnumType.STRING)
-    private TypePosition type;
-
 }

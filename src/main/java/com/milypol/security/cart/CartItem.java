@@ -1,23 +1,25 @@
 package com.milypol.security.cart;
 
+import com.milypol.security.product.Product;
 import com.milypol.security.stockPosition.StockPosition;
 import jakarta.persistence.*;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
 
+
+@Entity
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
-@Entity
-public class CartDetails {
+public class CartItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @OneToOne
-    private StockPosition stockPositions;
+    @ManyToOne
+    private StockPosition stockPosition;
+    @ManyToOne
+    private Product product;
     private Integer quantity;
 }

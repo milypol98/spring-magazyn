@@ -9,7 +9,7 @@ public interface TaskRepo extends JpaRepository<Task, Integer> {
 
     List<Task> findAllByCars_id(Integer carId);
 
-    List<Task> findAllByProducts_Id(Integer productsId);
 
     List<Task> findAllByStatus(TaskStatus status);
+
 }

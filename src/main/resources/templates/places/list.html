@@ -7,7 +7,13 @@
 <body>
 <h1>
     <label>Miejsca</label>
-    <a href="/dashboard" class="btn-add">Strona glowna</a>
+    <a th:href="@{/dashboard}" class="btn-main">Strona glowna</a>
+    <a th:href="@{/warehouses}" class="btn-main">Magazyn</a>
+    <a th:href="@{/tasks}" class="btn-main">Task</a>
+    <a th:href="@{/cars}" class="btn-main">Auta</a>
+    <a th:href="@{/places}" class="btn-main">Miejsca</a>
+    <a th:href="@{/users}" class="btn-main">Pracownicy</a>
+    <a th:href="@{/profile}" class="btn-main">Ustawienia</a>
 </h1>
 <div class="top-row">
     <div class="side-by-side">

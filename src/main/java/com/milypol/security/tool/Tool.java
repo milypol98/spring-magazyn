@@ -1,10 +1,13 @@
 package com.milypol.security.tool;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.milypol.security.carCost.CarCost;
 import com.milypol.security.stockPosition.StockPosition;
+import com.milypol.security.toolCost.ToolCost;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -23,4 +26,9 @@ public class Tool {
     private StockPosition stockPosition;
     @Enumerated(EnumType.STRING)
     private ToolStatus status;
+    @OneToMany(mappedBy = "tool", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore                    // ignoruj pole podczas serializacji JSON (REST, Thymeleaf)
+    @ToString.Exclude              // wyklucz z generowanego toString()
+    @EqualsAndHashCode.Exclude     // wyklucz z equals() i hashCode()
+    private List<ToolCost> costs;
 }

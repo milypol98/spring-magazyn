@@ -5,8 +5,8 @@ import com.milypol.security.car.CarService;
 import com.milypol.security.carCost.CarCost;
 import com.milypol.security.carCost.CarCostService;
 
+import com.milypol.security.cart.CartService;
 import com.milypol.security.task.TaskService;
-import com.milypol.security.user.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -17,13 +17,13 @@ public class CarController {
     private final CarService carService;
     private final CarCostService carCostService;
     private final TaskService taskService;
-    private final UserService userService;
+    private final CartService cartService;
 
-    public CarController(CarService carService, CarCostService carCostService, TaskService taskService, UserService userService) {
+    public CarController(CarService carService, CarCostService carCostService, TaskService taskService, CartService cartService) {
         this.carService = carService;
         this.carCostService = carCostService;
         this.taskService = taskService;
-        this.userService = userService;
+        this.cartService = cartService;
     }
 
     @GetMapping
@@ -31,22 +31,29 @@ public class CarController {
         model.addAttribute("cars", carService.getAllCars());
         return "cars/list";
     }
+    @GetMapping("/info/{id}")
+    public String infoCar(@PathVariable Integer id, Model model) {
+        model.addAttribute("car", carService.getCarById(id));
+        model.addAttribute("tasks", taskService.getAllTasksByCarsId(id));
+        return "cars/info";
+    }
     @GetMapping("/add")
     public String addForm( Model model) {
         model.addAttribute("car", new Car());
+        model.addAttribute("allCarts", cartService.getAllCarts());
         return "cars/edit";
     }
     @GetMapping("/edit/{id}")
     public String editForm(@PathVariable Integer id, Model model) {
         model.addAttribute("car", carService.getCarById(id));
-        model.addAttribute("tasks", taskService.getAllTasksByCarsId(id));
+        model.addAttribute("allCarts", cartService.getAllCarts());
         return "cars/edit";
     }
 
     @PostMapping( "/save")
     public String saveCar(@ModelAttribute Car car) {
         carService.saveCar(car);
-        return "redirect:/cars";
+        return "redirect:/cars/info/" + car.getId();
     }
     @PostMapping("/delete/{id}")
     public String deleteCar( @PathVariable Integer id) {

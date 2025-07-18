@@ -7,11 +7,21 @@
 
 </head>
 <body>
+<h1>
+    <label>Magazyn</label>
+    <a th:href="@{/dashboard}" class="btn-main">Strona glowna</a>
+    <a th:href="@{/warehouses}" class="btn-main">Magazyn</a>
+    <a th:href="@{/tasks}" class="btn-main">Task</a>
+    <a th:href="@{/cars}" class="btn-main">Auta</a>
+    <a th:href="@{/places}" class="btn-main">Miejsca</a>
+    <a th:href="@{/users}" class="btn-main">Pracownicy</a>
+    <a th:href="@{/profile}" class="btn-main">Ustawienia</a>
+</h1>
 <div class="form-section">
-    <form th:action="@{/warehouses/products/cost/save}" th:object="${product_cost}" method="post">
-        <label th:text="|Nazwa produktu: ${product_cost.product.name}|"></label>
+    <form th:action="@{/warehouses/tools/cost/save}" th:object="${tool_cost}" method="post">
+        <label th:text="|Nazwa produktu: ${tool_cost.tool.name}|"></label>
         <input type="hidden" th:field="*{id}" />
-        <input type="hidden" th:field="*{product.id}" />
+        <input type="hidden" th:field="*{tool.id}" />
 
         <label>Opis:</label>
         <input type="text" th:field="*{description}" />

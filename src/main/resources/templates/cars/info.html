@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/general.css}" />
+
+</head>
+<body>
+<h1>
+    <label>Pojazdy</label>
+    <a th:href="@{/dashboard}" class="btn-main">Strona glowna</a>
+    <a th:href="@{/warehouses}" class="btn-main">Magazyn</a>
+    <a th:href="@{/tasks}" class="btn-main">Task</a>
+    <a th:href="@{/cars}" class="btn-main">Auta</a>
+    <a th:href="@{/places}" class="btn-main">Miejsca</a>
+    <a th:href="@{/users}" class="btn-main">Pracownicy</a>
+    <a th:href="@{/profile}" class="btn-main">Ustawienia</a>
+</h1>
+<div class="top-row">
+    <div class="side-by-side">
+        <div class="tools-container">
+            <div class="table-header">
+                <label class="table-title">Info</label>
+                <a th:href="@{'/cars/edit/' + ${car.id}}" class="btn-add">Edytuj</a>
+            </div>
+            <div class="car-info">
+                <h2>Informacje o pojeździe</h2>
+
+                <p><strong>Nazwa:</strong> <span th:text="${car.name}">–</span></p>
+                <p><strong>Marka:</strong> <span th:text="${car.brand}">–</span></p>
+                <p><strong>Model:</strong> <span th:text="${car.model}">–</span></p>
+                <p><strong>Kolor:</strong> <span th:text="${car.color}">–</span></p>
+                <p><strong>Rejestracja:</strong> <span th:text="${car.registration}">–</span></p>
+
+                <p><strong>Rok produkcji:</strong> <span th:text="${car.year}">–</span></p>
+
+                <p><strong>Opis:</strong></p>
+                <p th:text="${car.description}">–</p>
+
+                <p><strong>Przegląd:</strong> <span th:text="${car.review}">–</span></p>
+
+                <p><strong>Ubezpieczenie:</strong> <span th:text="${car.insured}">–</span></p>
+            </div>
+
+
+        </div>
+        <div class="tools-container" th:if="${car.cart != null}" th:each="cart : ${car.cart}">
+            <div class="table-header">
+                <label th:text="|Koszyk: ${cart.name}|" class="table-title"></label>
+            </div>
+            <table>
+                <thead>
+                <tr>
+                    <th>Nazwa</th>
+                    <th>Opis</th>
+                    <th>Ilosc</th>
+                    <th>Zmiana Stanu</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="item : ${cart.items}" th:if="${item.stockPosition.type == typeProduct}">
+                        <td th:text="${item.stockPosition.name}"></td>
+                        <td th:text="${item.stockPosition.description}"></td>
+                        <td>
+                            <label th:text="|${item.quantity} / ${item.quantity}|" ></label>
+                        </td>
+                        <td>
+                            <label>
+                                <input class="w100" type="number">
+                                <a  class="btn-add">+</a>
+                                <a  class="btn-delete">-</a>
+                            </label>
+                        </td>
+                    </tr>
+                    <tr th:each="item : ${cart.items}" th:if="${item.stockPosition.type == typeTool}">
+                        <td th:text="${item.stockPosition.name}"></td>
+                        <td th:text="${item.stockPosition.description}"></td>
+                        <td>
+                            <label th:text="|${item.quantity} / ${item.quantity}|" ></label>
+                        </td>
+                        <td>
+                            <label>
+                                <input class="w100" type="number">
+                                <a  class="btn-add">+</a>
+                                <a  class="btn-delete">-</a>
+                            </label>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div  th:object="${car}" th:if="${car.id != null }" class="tools-container">
+            <div class="table-header">
+                <label class="table-title">Koszty:</label>
+                <a th:href="@{'/cars/cost/add/' + ${car.id}}" class="btn-add">Dodaj</a>
+            </div>
+            <table>
+                <thead>
+                <tr>
+                    <th>Opis</th>
+                    <th>Cena</th>
+                    <th>Od</th>
+                    <th>Do</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="cost : ${car.costs}"
+                    th:attr="onclick=|window.location.href='/cars/cost/edit/${cost.id}'|">
+                    <td th:text="${cost.description}"></td>
+                    <td th:text="${cost.cost}"></td>
+                    <td th:text="${cost.dateFrom}"></td>
+                    <td th:text="${cost.dateTo}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div th:object="${car}" th:if="${car.id != null }" class="tools-container">
+            <div class="table-header">
+                <label class="table-title">Historia:</label>
+            </div>
+            <table>
+                <thead>
+                <tr>
+                    <th>Opis</th>
+                    <th>Nazwa</th>
+                    <th>Miejsce</th>
+                    <th>Od</th>
+                    <th>Do</th>
+                    <th>Użytkownik</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="task : ${tasks}">
+                    <td th:text="${task.description}"></td>
+                    <td th:text="${task.name}"></td>
+                    <td th:text="${task.place.name}"></td>
+                    <td th:text="${task.dateFrom}"></td>
+                    <td th:text="${task.dateTo}"></td>
+                    <td>
+                        <label th:each="user : ${task.users}"
+                               th:text="${user.firstname + ' ' + user.lastName}"></label>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -165,7 +165,23 @@ a.btn-delete {
 .btn-add:hover {
     background-color: #3a78c2;
 }
-
+.btn-main {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 20px;
+    transition: background-color 0.3s ease;
+    background-color: #4a90e2;
+    color: #fff;
+    margin: 2px;
+    width: 200px;
+    text-align: center;
+}
+.btn-main:hover {
+    background-color: #3a78c2;
+}
 .btn-edit {
     background-color: #6cbf84;
     color: #fff;
@@ -240,6 +256,18 @@ a.btn-delete {
 .w800 {
     max-width: 800px;
 }
+.w600 {
+    max-width: 600px;
+}
+.w400 {
+    max-width: 400px;
+}
+.w200 {
+    max-width: 200px;
+}
+.w100 {
+    max-width: 100px;
+}
 
 
 /* Kontener z siatką checkboxów */
@@ -279,4 +307,45 @@ a.btn-delete {
     flex-shrink: 0;
     width: 16px;
     height: 16px;
+}
+.product-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    max-width: 2000px;      /* kontener nie będzie szerszy niż 800px */
+    width: 100%;           /* ale może się rozciągać do pełnej szerokości */
+    margin: 1rem 0;        /* tylko odstępy pionowe, bez centrowania */
+    padding: 1rem 1.5rem;
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+}
+
+.product-info h2 {
+    flex-basis: 100%;
+    margin: 0 0 1rem;
+    text-align: left;      /* wyrównanie nagłówka do lewej */
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.product-row {
+    display: flex;
+    flex-direction: column;
+    min-width: 150px;
+    flex: 1;
+}
+
+.product-row .label {
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 0.25rem;
+}
+
+.product-row .value {
+    color: #222;
+    line-height: 1.3;
+    word-wrap: break-word;
 }
