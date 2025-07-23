@@ -21,7 +21,7 @@
             <div class="table-header">
                 <label class="table-title" th:text="|Produkt: ${product.name}|"></label>
             </div>
-            <form th:action="@{'/events/save'}" th:object="${productEvent}"  method="post">
+            <form th:action="@{'/events/delivery'}" th:object="${productEvent}"  method="post">
                 <input type="hidden" th:field="*{id}" />
                 <input type="hidden" th:field="*{product.id}" />
 

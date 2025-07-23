@@ -38,25 +38,33 @@ public class ProductEventServiceImpl implements ProductEventService{
 
     @Override
     public Map<Integer, Long> getProductCountInWarehouse() {
-        return productEventRepo.findAll().stream()
-                .filter(t -> t.getLocationType() == LocationType.WAREHOUSE)
-                .filter(t -> t.getType() == ProductEventType.DELIVERY || t.getType() == ProductEventType.RETURN)
-                .collect(Collectors.groupingBy(
-                    t -> t.getProduct().getId(),
-                        Collectors.summingLong(t -> t.getQuantity() != null ? t.getQuantity() : 0)
+        return productEventRepo.calculateProductBalanceInWarehouse().stream()
+                .collect(Collectors.toMap(
+                        ProductEventCountProjection::getProductId,
+                        ProductEventCountProjection::getQuantity
                 ));
 }
 
     @Override
     public Map<Integer, Long> getProductCountInWarehouseAndCar() {
-        return productEventRepo.findAll().stream()
-                .filter(t -> t.getLocationType() == LocationType.WAREHOUSE || t.getLocationType() == LocationType.CAR)
-                .filter(t -> t.getType() == ProductEventType.DELIVERY || t.getType() == ProductEventType.RETURN || t.getType() == ProductEventType.TRANSFER)
-                .collect(Collectors.groupingBy(
-                        t -> t.getProduct().getId(),
-                        Collectors.summingLong(t -> t.getQuantity() != null ? t.getQuantity() : 0)
+        return productEventRepo.calculateProductBalanceInWarehouseAndCar().stream()
+                .collect(Collectors.toMap(
+                        ProductEventCountProjection::getProductId,
+                        ProductEventCountProjection::getQuantity
                 ));
     }
+
+    @Override
+    public Map<Integer, Long> getProductCountInCar(Integer carId) {
+        return productEventRepo.calculateProductBalanceInCar().stream()
+                .collect(Collectors.toMap(
+                        ProductEventCountProjection::getProductId,
+                        ProductEventCountProjection::getQuantity
+                ));
+
+    }
+
+
 
 
 }

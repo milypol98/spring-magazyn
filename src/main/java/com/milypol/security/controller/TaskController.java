@@ -4,6 +4,7 @@ import com.milypol.security.car.CarService;
 import com.milypol.security.cart.CartService;
 import com.milypol.security.place.PlaceService;
 import com.milypol.security.product.ProductService;
+import com.milypol.security.productEvent.ProductEventService;
 import com.milypol.security.task.Task;
 import com.milypol.security.task.TaskService;
 import com.milypol.security.task.TaskStatus;
@@ -24,8 +25,9 @@ public class TaskController {
     private final ProductService productService;
     private final CartService cartService;
     private final TaskRaportService taskRaportService;
+    private final ProductEventService productEventService;
 
-    public TaskController(TaskService taskService, CarService carService, UserService userService, PlaceService placeService, ProductService productService, CartService cartService, TaskRaportService taskRaportService) {
+    public TaskController(TaskService taskService, CarService carService, UserService userService, PlaceService placeService, ProductService productService, CartService cartService, TaskRaportService taskRaportService, ProductEventService productEventService) {
         this.taskService = taskService;
         this.carService = carService;
         this.userService = userService;
@@ -33,6 +35,7 @@ public class TaskController {
         this.productService = productService;
         this.cartService = cartService;
         this.taskRaportService = taskRaportService;
+        this.productEventService = productEventService;
     }
 
     @GetMapping
@@ -53,6 +56,7 @@ public class TaskController {
     }
     @GetMapping("/edit/{id}")
     public String editForm(@PathVariable Integer id, Model model){
+
         model.addAttribute("task", taskService.getTaskById(id));
         model.addAttribute("allCars", carService.getAllCars());
         model.addAttribute("taskRaports", taskRaportService.getAllTaskRaportsByTaskId(id));

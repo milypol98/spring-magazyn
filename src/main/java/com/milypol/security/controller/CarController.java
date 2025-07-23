@@ -6,6 +6,8 @@ import com.milypol.security.carCost.CarCost;
 import com.milypol.security.carCost.CarCostService;
 
 import com.milypol.security.cart.CartService;
+import com.milypol.security.productEvent.ProductEvent;
+import com.milypol.security.productEvent.ProductEventService;
 import com.milypol.security.task.TaskService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,12 +20,14 @@ public class CarController {
     private final CarCostService carCostService;
     private final TaskService taskService;
     private final CartService cartService;
+    private final ProductEventService productEventService;
 
-    public CarController(CarService carService, CarCostService carCostService, TaskService taskService, CartService cartService) {
+    public CarController(CarService carService, CarCostService carCostService, TaskService taskService, CartService cartService, ProductEventService productEventService) {
         this.carService = carService;
         this.carCostService = carCostService;
         this.taskService = taskService;
         this.cartService = cartService;
+        this.productEventService = productEventService;
     }
 
     @GetMapping
@@ -33,8 +37,11 @@ public class CarController {
     }
     @GetMapping("/info/{id}")
     public String infoCar(@PathVariable Integer id, Model model) {
+        ProductEvent productEvent = new ProductEvent();
         model.addAttribute("car", carService.getCarById(id));
         model.addAttribute("tasks", taskService.getAllTasksByCarsId(id));
+        model.addAttribute("productInCar", productEventService.getProductCountInCar(id));
+        model.addAttribute("productEvent", productEvent);
         return "cars/info";
     }
     @GetMapping("/add")

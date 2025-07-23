@@ -10,4 +10,6 @@ public interface ProductEventService {
     List<ProductEvent> getAllProductByType(ProductEventType type);
     Map<Integer, Long> getProductCountInWarehouse();
     Map<Integer, Long> getProductCountInWarehouseAndCar();
+    Map<Integer, Long> getProductCountInCar(Integer carId);
+
 }

@@ -2,7 +2,9 @@ package com.milypol.security.task;
 
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TaskServiceImpl implements TaskService {
@@ -47,6 +49,11 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public List<Task> getAllTasksByStatus(TaskStatus status) {
         return taskRepo.findAllByStatus(status);
+    }
+
+    @Override
+    public Optional<Task> getTaskByCarIdAndDate(Integer carId, LocalDate date) {
+        return taskRepo.findTaskByCarIdAndCurrentDateBetween(carId, date);
     }
 
 

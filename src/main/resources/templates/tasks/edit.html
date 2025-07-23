@@ -70,123 +70,54 @@
                         <span th:text="${c.name}"></span>
                     </label>
                 </div>
-                <label>
-                    <a href="/carts" class="btn-add">Koszyki</a>
-                </label>
-                <div class="car-grid">
-                    <label th:each="cart : ${allCarts}">
-                        <input type="checkbox" th:value="${cart.id}" th:field="*{carts}" />
-                        <span th:text="${cart.name}"></span>
-                    </label>
-                </div>
                 <button type="submit" class="submit-btn">Zapisz</button>
             </form>
         </div>
         <div class="tools-container">
-            <div class="full-width-container">
-                <div class="table-header">
-                    <label class="table-title">Narzedzia:</label>
-                </div>
-                <table>
-                    <thead>
-                    <tr>
-                        <th>Nazwa</th>
-                        <th>Kod</th>
-                        <th>Opis</th>
-                        <th>Cena</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-
-                    <tr th:each="item : ${task.tools}">
-                        <td th:text="${item.name}"></td>
-                        <td th:text="${item.code}"></td>
-                        <td th:text="${item.description}"></td>
-                        <td th:text="${item.price}"></td>
-                    </tr>
-                    </tbody>
-                </table>
+            <div class="table-header">
+                <label th:text="${productTask}">Zrealizowane</label>
             </div>
+<!--            <table>-->
+<!--                <thead>-->
+<!--                <tr>-->
+<!--                    <th>Nazwa</th>-->
+<!--                    <th>Opis</th>-->
+<!--                </tr>-->
+<!--                </thead>-->
+<!--                <tbody>-->
+<!--                <tr th:each="productTask : ${productTask}">-->
+<!--                    <td th:text="${productTask.id}"></td>-->
+<!--                    <td th:text="${productTask.description}"></td>-->
+<!--                    <td th:text="${productTask.quantity}"></td>-->
+<!--                </tr>-->
+<!--                </tbody>-->
+<!--            </table>-->
         </div>
         <div class="tools-container">
-                <div class="table-header">
-                    <label class="table-title">Części:</label>
-                </div>
-                <table>
-                    <thead>
-                    <tr>
-                        <th>Nazwa</th>
-                        <th>Kod</th>
-                        <th>Opis</th>
-                        <th>Cena</th>
-                        <th>Ilosc</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-
-                    <tr th:each="item : ${task.products}">
-                        <td th:text="${item.name}"></td>
-                        <td th:text="${item.code}"></td>
-                        <td th:text="${item.description}"></td>
-                        <td th:text="${item.unitPrice}"></td>
-                        <td th:text="10"></td>
-                    </tr>
-                    </tbody>
-                </table>
+            <div class="table-header">
+                <label>Raporty</label>
+                <a th:href="@{'/tasks/raports/add/' + ${task.id}}" class="btn-add">Dodaj</a>
             </div>
-            <div>
-                <label>
-                    <label>Raporty</label>
-                    <a th:href="@{'/tasks/raports/add/' + ${task.id}}" class="btn-add">Dodaj</a>
-                </label>
-                <table>
-                    <thead>
-                    <tr>
-                        <th>Opis</th>
-                        <th>Dzien</th>
-                        <th>Data wpyniecia</th>
-                        <th>Godziny przepracowane</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="item : ${taskRaports}">
-                        <td th:text="${item.description}"></td>
-                        <td th:text="${item.date}"></td>
-                        <td th:text="${item.dateComeIn}"></td>
-                        <td th:text="${item.hour}"></td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-
-
-<!--            <div class="tools-container">-->
-<!--                <div class="table-header">-->
-<!--                    <label class="table-title">Części zużyte:</label>-->
-<!--                </div>-->
-<!--                <table>-->
-<!--                    <thead>-->
-<!--                    <tr>-->
-<!--                        <th>Nazwa</th>-->
-<!--                        <th>Kod</th>-->
-<!--                        <th>Opis</th>-->
-<!--                        <th>Cena</th>-->
-<!--                        <th>Ilosc</th>-->
-<!--                    </tr>-->
-<!--                    </thead>-->
-<!--                    <tbody>-->
-
-<!--                    <tr th:each="item : ${task.products}">-->
-<!--                        <td th:text="${item.name}"></td>-->
-<!--                        <td th:text="${item.code}"></td>-->
-<!--                        <td th:text="${item.description}"></td>-->
-<!--                        <td th:text="${item.unitPrice}"></td>-->
-<!--                        <td th:text="5"></td>-->
-<!--                    </tr>-->
-<!--                    </tbody>-->
-<!--                </table>-->
-<!--            </div>-->
+            <table>
+                <thead>
+                <tr>
+                    <th>Opis</th>
+                    <th>Dzien</th>
+                    <th>Data wpyniecia</th>
+                    <th>Godziny przepracowane</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="item : ${taskRaports}">
+                    <td th:text="${item.description}"></td>
+                    <td th:text="${item.date}"></td>
+                    <td th:text="${item.dateComeIn}"></td>
+                    <td th:text="${item.hour}"></td>
+                </tr>
+                </tbody>
+            </table>
         </div>
     </div>
+</div>
 </body>
 </html>
