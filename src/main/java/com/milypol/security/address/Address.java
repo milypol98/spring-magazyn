@@ -1,25 +1,34 @@
 package com.milypol.security.address;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.Embeddable;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import lombok.*;
 
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
-@Entity
+@Builder
+@Embeddable
 public class Address {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-    private String country;
-    private String city;
+
+    @NotBlank(message = "Ulica jest wymagana")
     private String street;
-    private String number;
+
+    @NotBlank(message = "Numer budynku jest wymagany")
+    private String buildingNumber;
+
+    private String apartmentNumber;
+
+    @NotBlank(message = "Kod pocztowy jest wymagany")
+    // Format polski 00-000 (możesz dostosować)
+    @Pattern(regexp = "\\d{2}-\\d{3}", message = "Nieprawidłowy kod pocztowy (oczekiwano format 00-000)")
     private String postalCode;
 
+    @NotBlank(message = "Miejscowość jest wymagana")
+    private String city;
+
+    @NotBlank(message = "Kraj jest wymagany")
+    private String country;
 }

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pl">
+<head>
+    <meta charset="UTF-8" />
+    <title th:text="${company?.id} != null ? 'Edycja firmy' : 'Nowa firma'">Firma</title>
+    <link rel="stylesheet" th:href="@{/css/companies.css}" />
+</head>
+<body>
+<header class="page-header">
+    <h1 th:text="${company?.id} != null ? 'Edycja firmy' : 'Nowa firma'">Firma</h1>
+    <div class="actions">
+        <a th:href="@{/companies}" class="btn btn-secondary">← Wróć do listy</a>
+        <a th:if="${company?.id != null}" class="btn" th:href="@{|/companies/${company.id}|}">Szczegóły</a>
+    </div>
+</header>
+
+<section class="form-container">
+    <form th:action="${company?.id} != null ? @{|/companies/${company.id}|} : @{/companies}"
+          th:object="${company}"
+          method="post"
+          class="card form">
+
+        <div th:if="${#fields.hasErrors()}" class="flash" style="border-color:#fca5a5;background:#fef2f2;color:#991b1b;">
+            Popraw zaznaczone pola formularza.
+        </div>
+
+        <div class="form-grid">
+            <div class="field">
+                <label for="name">Nazwa <span class="req">*</span></label>
+                <input id="name" type="text" th:field="*{name}" placeholder="np. Acme Sp. z o.o." required />
+                <div class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Błąd</div>
+            </div>
+
+            <div class="field">
+                <label for="phoneNumber">Telefon</label>
+                <input id="phoneNumber" type="text" th:field="*{phoneNumber}" placeholder="+48 123 456 789" />
+                <div class="error" th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}">Błąd</div>
+            </div>
+
+            <div class="field">
+                <label for="email">E-mail</label>
+                <input id="email" type="email" th:field="*{email}" placeholder="biuro@firma.pl" />
+                <div class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Błąd</div>
+            </div>
+
+            <div class="field">
+                <label for="website">Strona WWW</label>
+                <input id="website" type="url" th:field="*{website}" placeholder="https://firma.pl" />
+                <div class="error" th:if="${#fields.hasErrors('website')}" th:errors="*{website}">Błąd</div>
+            </div>
+
+            <div class="field">
+                <label for="nip">NIP</label>
+                <input id="nip" type="text" th:field="*{nip}" placeholder="123-456-32-18" />
+                <div class="error" th:if="${#fields.hasErrors('nip')}" th:errors="*{nip}">Błąd</div>
+            </div>
+
+            <div class="field">
+                <label for="regon">REGON</label>
+                <input id="regon" type="text" th:field="*{regon}" placeholder="123456789" />
+                <div class="error" th:if="${#fields.hasErrors('regon')}" th:errors="*{regon}">Błąd</div>
+            </div>
+
+            <div class="field span-2">
+                <label for="description">Opis</label>
+                <textarea id="description" th:field="*{description}" rows="4" placeholder="Krótki opis działalności..."></textarea>
+                <div class="error" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Błąd</div>
+            </div>
+
+            <!-- Sekcja ADRES - oddzielny blok na pełną szerokość -->
+            <div class="section-box span-2">
+                <div class="section-header">Adres</div>
+                <div class="subgrid">
+                    <div class="field">
+                        <label for="address.street">Ulica</label>
+                        <input id="address.street" type="text" th:field="*{address.street}" placeholder="np. Długa" />
+                        <div class="error" th:if="${#fields.hasErrors('address.street')}" th:errors="*{address.street}">Błąd</div>
+                    </div>
+
+                    <div class="field">
+                        <label for="address.buildingNumber">Nr budynku</label>
+                        <input id="address.buildingNumber" type="text" th:field="*{address.buildingNumber}" placeholder="10A" />
+                        <div class="error" th:if="${#fields.hasErrors('address.buildingNumber')}" th:errors="*{address.buildingNumber}">Błąd</div>
+                    </div>
+
+                    <div class="field">
+                        <label for="address.apartmentNumber">Nr lokalu</label>
+                        <input id="address.apartmentNumber" type="text" th:field="*{address.apartmentNumber}" placeholder="5" />
+                        <div class="error" th:if="${#fields.hasErrors('address.apartmentNumber')}" th:errors="*{address.apartmentNumber}">Błąd</div>
+                    </div>
+
+                    <div class="field">
+                        <label for="address.postalCode">Kod pocztowy</label>
+                        <input id="address.postalCode" type="text" th:field="*{address.postalCode}" placeholder="00-000" />
+                        <div class="error" th:if="${#fields.hasErrors('address.postalCode')}" th:errors="*{address.postalCode}">Błąd</div>
+                    </div>
+
+                    <div class="field">
+                        <label for="address.city">Miejscowość</label>
+                        <input id="address.city" type="text" th:field="*{address.city}" placeholder="np. Warszawa" />
+                        <div class="error" th:if="${#fields.hasErrors('address.city')}" th:errors="*{address.city}">Błąd</div>
+                    </div>
+
+                    <div class="field">
+                        <label for="address.country">Kraj</label>
+                        <input id="address.country" type="text" th:field="*{address.country}" placeholder="np. Polska" />
+                        <div class="error" th:if="${#fields.hasErrors('address.country')}" th:errors="*{address.country}">Błąd</div>
+                    </div>
+                </div>
+            </div>
+            <!-- /Sekcja ADRES -->
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary"
+                    th:text="${company?.id} != null ? 'Zapisz zmiany' : 'Utwórz firmę'">Zapisz</button>
+            <a th:href="@{/companies}" class="btn btn-secondary">Anuluj</a>
+        </div>
+    </form>
+</section>
+
+<script th:src="@{/js/companies.js}"></script>
+</body>
+</html>

@@ -2,7 +2,7 @@ package com.milypol.security.task;
 
 import com.milypol.security.car.Car;
 import com.milypol.security.cart.Cart;
-import com.milypol.security.place.Place;
+
 import com.milypol.security.product.Product;
 import com.milypol.security.tool.Tool;
 import com.milypol.security.user.User;
@@ -26,8 +26,7 @@ public class Task {
     private String name;
     private LocalDate dateFrom;
     private LocalDate dateTo;
-    @ManyToOne
-    private Place place;
+
     @ManyToMany
     @JoinTable(
             name = "task_user",

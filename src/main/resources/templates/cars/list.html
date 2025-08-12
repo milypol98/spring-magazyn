@@ -3,54 +3,195 @@
 <head>
     <meta charset="UTF-8" />
     <link rel="stylesheet" th:href="@{/css/general.css}" />
+    <style>
+        .sev-green { color: #167c2f; font-weight: 600; }
+        .sev-yellow { color: #b27d12; font-weight: 600; }
+        .sev-orange { color: #c24914; font-weight: 600; }
+        .sev-red { color: #c1121f; font-weight: 700; }
+        .sev-neutral { color: #6b7280; }
+    </style>
 </head>
 <body>
 <h1>
-    <label>Pojazdy</label>
-    <a th:href="@{/dashboard}" class="btn-main">Strona glowna</a>
-    <a th:href="@{/warehouses}" class="btn-main">Magazyn</a>
-    <a th:href="@{/tasks}" class="btn-main">Task</a>
-    <a th:href="@{/cars}" class="btn-main">Auta</a>
-    <a th:href="@{/places}" class="btn-main">Miejsca</a>
-    <a th:href="@{/users}" class="btn-main">Pracownicy</a>
-    <a th:href="@{/profile}" class="btn-main">Ustawienia</a>
+    <div th:replace="~{fragments/navBar :: navbar}"></div>
 </h1>
 <div class="top-row">
     <div class="side-by-side">
-        <div class="tools-container">
+        <div class="container">
             <div class="table-header">
                 <label class="table-title">Lista pojazdow:</label>
+                <input type="text" class="table-search" placeholder="Szukaj..." data-target="#carsTable">
                 <a href="/cars/add" class="btn-add">Dodaj</a>
             </div>
-            <table>
+            <table id="carsTable">
                 <thead>
                 <tr>
-                    <th>Nazwa</th>
-                    <th>Marka</th>
-                    <th>Model</th>
-                    <th>Rocznik</th>
-                    <th>Przegląd do</th>
-                    <th>Ubezpieczenie do</th>
-                    <th>Km. od wymiany oleju</th>
+                    <th data-sort="text">Rejestracja</th>
+                    <th data-sort="text">Wlasciciel</th>
+                    <th data-sort="text">Polorzenie</th>
+                    <th data-sort="text">Uzytkownik</th>
+                    <th data-sort="text">Marka</th>
+                    <th data-sort="text">Model</th>
+                    <th data-sort="text">Rocznik</th>
+                    <th data-sort="text">Kolor</th>
+                    <th data-sort="text">Pojemnosc Silnika</th>
+                    <th data-sort="text">VIN</th>
+                    <th data-sort="date">Ubezpieczenie do</th>
+                    <th data-sort="number">Ilość dni do końca Ubezpieczenia</th>
+                    <th data-sort="date">Przegląd do</th>
+                    <th data-sort="number">Ilość dni do końca Przeglądu</th>
+                    <th data-sort="number">Przebieg</th>
+                    <th data-sort="date">Przebieg z dnia</th>
+                    <th data-sort="text">Wymiana oleju za</th>
+                    <th data-sort="text">Wymiana Rozrządu za</th>
                 </tr>
                 </thead>
                 <tbody>
+                <!-- HTML: wiersz tabeli z atrybutami data-* -->
                 <tr th:each="car : ${cars}"
-                    th:attr="onclick=|window.location.href='/cars/info/${car.id}'|"
+                    th:attr="onclick=|window.location.href='/cars/info/${car.id}'|,
+                             data-course=${car.course},
+                             data-timing-course=${car.timingSystemCourse},
+                             data-timing-int=${car.timingSystemIntervalKm},
+                             data-oil-course=${car.oilChangeCourse},
+                             data-oil-int=${car.oilChangeIntervalKm}"
                     class="clickable-row">
-                    <td th:text="${car.name}">Nazwa</td>
-                    <td th:text="${car.brand}">Marka</td>
-                    <td th:text="${car.model}">Model</td>
-                    <td th:text="${car.year}">Rok</td>
-                    <td th:text="${car.review}">Przegląd</td>
-                    <td th:text="${car.insured}">Ubezpieczenie</td>
-                    <td>Km. od wymiany oleju</td>
+                    <td th:text="${car.registration}"></td>
+                    <td th:text="${car.owner}"></td>
+                    <td th:text="asda"></td>
+                    <td th:text="asdad"></td>
+                    <td th:text="${car.brand}"></td>
+                    <td th:text="${car.model}"></td>
+                    <td th:text="${car.year}"></td>
+                    <td th:text="${car.color}"></td>
+                    <td th:text="${car.engineCapacity}"></td>
+                    <td th:text="${car.vin}"></td>
+                    <td class="insured-date" th:text="${car.insured}"></td>
+                    <td class="insurance-days"></td>
+                    <td class="review-date" th:text="${car.review}"></td>
+                    <td class="review-days"></td>
+                    <td class="course" th:text="${car.course}"></td>
+                    <td th:text="${car.courseDate}"></td>
+                    <td class="oil-remaining"></td>
+                    <td class="timing-remaining"></td>
                 </tr>
                 </tbody>
             </table>
         </div>
     </div>
 </div>
+<script src="/js/main.js"></script>
+<script>
+// JavaScript
+document.addEventListener('DOMContentLoaded', () => {
+  const MS_PER_DAY = 24 * 60 * 60 * 1000;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
 
+  const thresholds = { red: 0, orange: 7, yellow: 30 };
+
+  function parseIsoDate(text) {
+    if (!text) return null;
+    const d = new Date(text);
+    if (Number.isNaN(d.getTime())) return null;
+    d.setHours(0, 0, 0, 0);
+    return d;
+  }
+
+  function computeDaysLeft(dateText) {
+    const d = parseIsoDate(dateText);
+    if (!d) return null;
+    return Math.round((d - today) / MS_PER_DAY);
+  }
+
+  function formatDaysLeft(days) {
+    if (days === null || days === undefined) return 'brak danych';
+    if (days < 0) return `po terminie o ${Math.abs(days)} dni`;
+    if (days === 0) return 'dzisiaj';
+    return `za ${days} dni`;
+  }
+
+  // Bezpieczne parsowanie liczb (puste/null/NaN -> null)
+  function toNum(value) {
+    if (value === null || value === undefined) return null;
+    const s = String(value).trim();
+    if (s === '') return null;
+    const n = Number(s);
+    return Number.isFinite(n) ? n : null;
+  }
+
+  // current: obecny przebieg; last: przebieg przy wymianie; interval: interwał km
+  function computeKmLeft(current, last, interval) {
+    const cur = toNum(current);
+    const l = toNum(last);
+    const i = toNum(interval);
+    if (cur === null || l === null || i === null) return null;
+    return l + i - cur;
+  }
+
+  function formatKmLeft(km) {
+    if (km === null || km === undefined) return 'brak danych';
+    if (km < 0) return `po terminie o ${Math.abs(km)} km`;
+    if (km === 0) return 'teraz';
+    return `za ${km} km`;
+  }
+
+  function classForValue(value) {
+    if (value === null || value === undefined) return 'sev-neutral';
+    if (value <= thresholds.red) return 'sev-red';
+    if (value <= thresholds.orange) return 'sev-orange';
+    if (value <= thresholds.yellow) return 'sev-yellow';
+    return 'sev-green';
+  }
+
+  function applySeverity(cell, value) {
+    if (!cell) return;
+    cell.classList.remove('sev-green', 'sev-yellow', 'sev-orange', 'sev-red', 'sev-neutral');
+    cell.classList.add(classForValue(value));
+  }
+
+  document.querySelectorAll('#carsTable tbody tr').forEach(tr => {
+    // Ubezpieczenie
+    const insuredCell = tr.querySelector('.insured-date');
+    const insuranceDaysCell = tr.querySelector('.insurance-days');
+    if (insuredCell && insuranceDaysCell) {
+      const dLeft = computeDaysLeft(insuredCell.textContent.trim());
+      insuranceDaysCell.textContent = formatDaysLeft(dLeft);
+      applySeverity(insuranceDaysCell, dLeft);
+    }
+
+    // Przegląd
+    const reviewCell = tr.querySelector('.review-date');
+    const reviewDaysCell = tr.querySelector('.review-days');
+    if (reviewCell && reviewDaysCell) {
+      const dLeft = computeDaysLeft(reviewCell.textContent.trim());
+      reviewDaysCell.textContent = formatDaysLeft(dLeft);
+      applySeverity(reviewDaysCell, dLeft);
+    }
+
+    // Olej (course, oilChangeCourse, oilChangeIntervalKm)
+    const oilCell = tr.querySelector('.oil-remaining');
+    if (oilCell) {
+      const cur = tr.getAttribute('data-course');
+      const lastOil = tr.getAttribute('data-oil-course');
+      const intOil = tr.getAttribute('data-oil-int');
+      const kmLeftOil = computeKmLeft(cur, lastOil, intOil);
+      oilCell.textContent = formatKmLeft(kmLeftOil);
+      applySeverity(oilCell, kmLeftOil);
+    }
+
+    // Rozrząd (course, timingSystemCourse, timingSystemIntervalKm)
+    const timingCell = tr.querySelector('.timing-remaining');
+    if (timingCell) {
+      const cur = tr.getAttribute('data-course');
+      const last = tr.getAttribute('data-timing-course');
+      const intTiming = tr.getAttribute('data-timing-int');
+      const kmLeft = computeKmLeft(cur, last, intTiming);
+      timingCell.textContent = formatKmLeft(kmLeft);
+      applySeverity(timingCell, kmLeft);
+    }
+  });
+});
+</script>
 </body>
 </html>

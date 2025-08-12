@@ -1,0 +1,99 @@
+/* profile.css – styl dedykowany dla zakładki profilu */
+
+/* Drobne dostrojenie układu */
+.profile-layout { align-items: stretch; }
+.profile-form .readonly {
+    background: #f3f4f6;
+    color: #6b7280;
+    cursor: not-allowed;
+}
+
+/* Narzędzia nad tabelą zadań */
+.tasks-tools{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.toggle-only-inprogress{
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    color: var(--muted);
+}
+.toggle-only-inprogress input{
+    width: 16px; height: 16px;
+}
+
+/* Wyróżnienie wierszy zadań w trakcie */
+.row--in-progress{
+    background: linear-gradient(90deg, rgba(74,144,226,0.08), rgba(74,144,226,0));
+    border-left: 4px solid var(--primary);
+}
+.row--in-progress:hover{
+    background: linear-gradient(90deg, rgba(74,144,226,0.12), rgba(74,144,226,0.02));
+}
+
+/* Odznaki statusów */
+.status-badge{
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .02em;
+    border: 1px solid var(--border);
+    background: var(--panel-2);
+}
+
+/* Przykładowe mapowanie nazw -> kolorów */
+.status-in_progress{ /* IN_PROGRESS */
+    color: #0b5ed7;
+    background: #e7f1ff;
+    border-color: #cfe2ff;
+}
+.status-completed{
+    color: #0f766e;
+    background: #ecfdf5;
+    border-color: #a7f3d0;
+}
+.status-planned{
+    color: #b45309;
+    background: #fffbeb;
+    border-color: #fde68a;
+}
+.status-cancelled{
+    color: #b91c1c;
+    background: #fef2f2;
+    border-color: #fecaca;
+}
+.status-unknown{
+    color: #374151;
+    background: #f3f4f6;
+    border-color: #e5e7eb;
+}
+
+/* Zasoby w komórce tabeli */
+.resources{ display: flex; flex-direction: column; gap: 6px; }
+.res-row{ display: flex; gap: 6px; flex-wrap: wrap; }
+.res-label{ color: var(--muted); font-weight: 600; }
+.res-values{ color: var(--text); }
+
+/* Legenda pod tabelą */
+.legend{
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    padding-top: 10px;
+}
+.legend-item{ display: inline-flex; align-items: center; gap: 8px; color: #475569; font-size: 13px; }
+.legend-dot{
+    width: 10px; height: 10px; border-radius: 50%;
+    display: inline-block;
+    border: 1px solid var(--border);
+}
+.legend-inprogress{ background: #0b5ed7; }
+.legend-completed{ background: #0f766e; }
+.legend-planned{ background: #b45309; }

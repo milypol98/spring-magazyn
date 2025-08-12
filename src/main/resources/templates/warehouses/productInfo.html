@@ -6,141 +6,43 @@
 </head>
 <body>
 <h1>
-  <label>Magazyn</label>
   <a th:href="@{/dashboard}" class="btn-main">Strona glowna</a>
   <a th:href="@{/warehouses}" class="btn-main">Magazyn</a>
   <a th:href="@{/tasks}" class="btn-main">Task</a>
   <a th:href="@{/cars}" class="btn-main">Auta</a>
-  <a th:href="@{/places}" class="btn-main">Miejsca</a>
   <a th:href="@{/users}" class="btn-main">Pracownicy</a>
   <a th:href="@{/profile}" class="btn-main">Ustawienia</a>
 </h1>
 <div class="top-row">
-  <div class="form-header">
-    <a th:href="@{'/warehouses/products/edit/' + ${product.id}}" class="btn-add">Edytuj</a>
-  </div>
-
-
   <div class="side-by-side">
-    <div class="product-info">
-      <div class="product-row">
+    <div class="info">
+      <div class="info-row">
         <span class="label">Model:</span>
         <span class="value" th:text="${product.position}">–</span>
       </div>
-      <div class="product-row">
+      <div class="info-row">
         <span class="label">Nazwa:</span>
         <span class="value" th:text="${product.name}">–</span>
       </div>
-      <div class="product-row">
+      <div class="info-row">
         <span class="label">Minimalna dopuszczalna ilość:</span>
         <span class="value" th:text="${product.minStock}">–</span>
       </div>
-      <div class="product-row">
+      <div class="info-row">
         <span class="label">Opis:</span>
         <span class="value" th:text="${product.description}">–</span>
       </div>
+        <div class="info-row">
+            <span class="label">Akcija:</span>
+            <a th:href="@{'/warehouses/products/edit/' + ${product.id}}" class="btn-add">Edytuj</a>
+        </div>
     </div>
 
-
+      <div class="form-header">
+          <label class="form-title">Dostawy:</label>
+          <a th:href="@{'/events/add/' + ${product.id}}" class="btn-add">Dodaj</a>
+      </div>
   </div>
-  <div class="side-by-side">
-    <div class="all-container" >
-      <div class="form-header">
-        <label class="form-title">Dostawy:</label>
-        <a th:href="@{'/events/add/' + ${product.id}}" class="btn-add">Dodaj</a>
-      </div>
-      <table>
-        <thead>
-        <tr>
-          <th>Nazwa</th>
-          <th>Ilosc</th>
-          <th>Cena Jednostkowa</th>
-          <th>Komentarz</th>
-          <th>Cena calkowita parti</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="event : ${product.events}"
-            th:if="${event.type == productEventTypeDelivery}">
-          <td th:text="${event.product.name}"></td>
-          <td th:text="${event.quantity}"></td>
-          <td th:text="${event.unitPrice}"></td>
-          <td th:text="${event.comment}"></td>
-          <td th:text="${event.quantity != null and event.unitPrice != null ? event.quantity * event.unitPrice : '–'}"></td>        </tr>
-      </table>
-    </div>
-    <div class="all-container" >
-      <div class="form-header">
-        <label class="form-title">Zwroty</label>
-      </div>
-      <table>
-        <thead>
-        <tr>
-          <th>Nazwa</th>
-          <th>Ilosc</th>
-          <th>Komentarz</th>
-          <th>Data</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="event : ${product.events}"
-            th:if="${event.type == productEventTypeReturn}">
-          <td th:text="${event.product.name}"></td>
-          <td th:text="${event.quantity}"></td>
-          <td th:text="${event.comment}"></td>
-          <td th:text="${event.timestamp}"></td>
-        </tr>
-      </table>
-    </div>
-    <div class="all-container" >
-      <div class="form-header">
-        <label class="form-title">Auta</label>
-      </div>
-      <table>
-        <thead>
-        <tr>
-          <th>Nazwa</th>
-          <th>Ilosc</th>
-          <th>Komentarz</th>
-          <th>Data</th>
-        </tr>
-        </thead>
-        <tbody>
-
-        <tr th:each="event : ${product.events}"
-            th:if="${event.type == productEventTypeTransfer}">
-          <td th:text="${event.product.name}"></td>
-          <td th:text="${event.quantity}"></td>
-          <td th:text="${event.comment}"></td>
-          <td th:text="${event.timestamp}"></td>
-        </tr>
-      </table>
-    </div>
-    <div class="all-container" >
-      <div class="form-header">
-        <label class="form-title">Zużyte</label>
-      </div>
-      <table>
-        <thead>
-        <tr>
-          <th>Nazwa</th>
-          <th>Ilosc</th>
-          <th>Komentarz</th>
-          <th>Data</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="event : ${product.events}"
-            th:if="${event.type == productEventTypeConsumption}">
-          <td th:text="${event.product.name}"></td>
-          <td th:text="${event.quantity}"></td>
-          <td th:text="${event.comment}"></td>
-          <td th:text="${event.timestamp}"></td>
-        </tr>
-      </table>
-    </div>
-  </div>
-
 </div>
 </body>
 </html>

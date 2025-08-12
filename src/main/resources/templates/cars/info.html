@@ -1,212 +1,322 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="pl">
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" th:href="@{/css/general.css}" />
-
+    <style>
+        .hidden { display: none !important; }
+        .field-group { margin: 8px 0; }
+        label.inline { margin-right: 8px; }
+        .w200 { width: 200px; }
+    </style>
 </head>
 <body>
 <h1>
-    <label>Pojazdy</label>
-    <a th:href="@{/dashboard}" class="btn-main">Strona glowna</a>
-    <a th:href="@{/warehouses}" class="btn-main">Magazyn</a>
-    <a th:href="@{/tasks}" class="btn-main">Task</a>
-    <a th:href="@{/cars}" class="btn-main">Auta</a>
-    <a th:href="@{/places}" class="btn-main">Miejsca</a>
-    <a th:href="@{/users}" class="btn-main">Pracownicy</a>
-    <a th:href="@{/profile}" class="btn-main">Ustawienia</a>
+    <div th:replace="~{fragments/navBar :: navbar}"></div>
 </h1>
+
 <div class="top-row">
-    <div class="table-header">
-        <label class="table-title">Info</label>
-        <a th:href="@{'/cars/edit/' + ${car.id}}" class="btn-add">Edytuj</a>
-    </div>
     <div class="side-by-side">
-        <div class="product-info">
-            <div class="product-row">
-                <span class="label">Nazwa:</span>
-                <span class="value" th:text="${car.name}">–</span>
-            </div>
-
-            <div class="product-row">
-                <span class="label">Marka:</span>
-                <span class="value" th:text="${car.brand}">–</span>
-            </div>
-
-            <div class="product-row">
-                <span class="label">Model:</span>
-                <span class="value" th:text="${car.model}">–</span>
-            </div>
-
-            <div class="product-row">
-                <span class="label">Kolor:</span>
-                <span class="value" th:text="${car.color}">–</span>
-            </div>
-
-            <div class="product-row">
-                <span class="label">Rejestracja:</span>
-                <span class="value" th:text="${car.registration}">–</span>
-            </div>
-
-            <div class="product-row">
-                <span class="label">Rok produkcji:</span>
-                <span class="value" th:text="${car.year}">–</span>
-            </div>
-
-            <div class="product-row">
-                <span class="label">Opis:</span>
-                <span class="value" th:text="${car.description}">–</span>
-            </div>
-
-            <div class="product-row">
-                <span class="label">Przegląd:</span>
-                <span class="value" th:text="${car.review}">–</span>
-            </div>
-
-            <div class="product-row">
-                <span class="label">Ubezpieczenie:</span>
-                <span class="value" th:text="${car.insured}">–</span>
-            </div>
-        </div>
-    </div>
-    <div class="side-by-side">
-
-        <div class="tools-container" th:if="${car.cart != null}">
+        <div class="container w1200">
             <div class="table-header">
-                <label class="table-title">Produkty</label>
+                <label class="table-title" th:text="|Produkt: ${product.name}|"></label>
             </div>
-            <div th:each="cart : ${car.cart}">
-                <div class="table-header">
-                    <label th:text="|Koszyk: ${cart.name}|" class="table-title"></label>
+
+            <!-- Jeden endpoint dla wszystkich typów zdarzeń -->
+            <form th:action="@{'/events/product-event/save'}" th:object="${productEvent}" method="post" id="eventForm">
+                <input type="hidden" th:field="*{id}" />
+                <input type="hidden" th:field="*{product.id}" />
+
+                <div class="field-group">
+                    <label class="inline">Ilość</label>
+                    <input type="number" th:field="*{quantity}" class="w200" required />
                 </div>
-                <table>
-                    <thead>
-                    <tr>
-                        <th>Nazwa</th>
-                        <th>Opis</th>
-                        <th>Ile jest/Ile ma byc</th>
-                        <th>Zmiana Stanu</th>
-                        <th>Akcja</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="item : ${cart.items}" th:if="${item.product != null}">
-                        <td th:text="${item.product.name}"></td>
-                        <td th:text="${item.product.description}"></td>
-                        <td>
-                            <label th:text="|${(productInCar[item.id] ?: 0)} / ${item.quantity}|" ></label>
-                        </td>
-                        <form method="post" th:action="@{'/events/product-event/' + ${car.id}}" th:object="${productEvent}">
-                            <td>
-                                <label>
-                                    <input class="w100" type="number" placeholder="Ilosc" th:field="*{quantity}">
-                                    <input type="text" placeholder="Komentarz" th:field="*{comment}">
-                                </label>
-                            </td>
-                            <td>
-                                <input type="hidden" name="product.id" th:value="${item.product.id}" />
-                                <button class="btn-complete" name="type" value="TRANSFER">Dodaj</button><br>
-                                <button class="btn-return" name="type" value="RETURN">Zwrot</button><br>
-                                <button class="btn-use" name="type" value="CONSUMPTION">Zużyj</button>
-                            </td>
-                        </form>
 
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <div class="tools-container" th:if="${car.cart != null}">
-            <div class="table-header">
-                <label class="table-title">Narzedzia</label>
-            </div>
-            <div th:each="cart : ${car.cart}" >
-                <div class="table-header">
-                    <label th:text="|Koszyk: ${cart.name}|" class="table-title"></label>
+                <div class="field-group" id="grp-unitPrice">
+                    <label class="inline">Cena jednostkowa</label>
+                    <input type="number" step="0.01" th:field="*{unitPrice}" class="w200" />
                 </div>
-                <table>
-                    <thead>
-                    <tr>
-                        <th>Nazwa</th>
-                        <th>Opis</th>
-                        <th>Ilosc</th>
-                        <th>Zmiana Stanu</th>
-                        <th>Akcja</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="item : ${cart.items}" th:if="${item.stockPosition != null}">
-                        <td th:text="${item.stockPosition.name}"></td>
-                        <td th:text="${item.stockPosition.description}"></td>
-                        <td>
-                            <label th:text="|${item.quantity} / ${item.quantity}|" ></label>
-                        </td>
-                        <td>
-                            <select th:each="i : ${#numbers.sequence(1, item.quantity)}" >
-                                <option th:each="tool : ${item.stockPosition.tools}" th:text="|${tool.code} / ${tool.name}|"></option>
-                            </select>
 
-                        </td>
-                        <td>
-                            <a  class="btn-delete">Zwrot</a>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+                <div class="field-group">
+                    <label class="inline">Komentarz</label>
+                    <textarea th:field="*{comment}" class="w200"></textarea>
+                </div>
 
-        <div  th:object="${car}" th:if="${car.id != null }">
-            <div class="table-header">
-                <label class="table-title">Koszty:</label>
-                <a th:href="@{'/cars/cost/add/' + ${car.id}}" class="btn-add">Dodaj</a>
-            </div>
-            <table>
-                <thead>
-                <tr>
-                    <th>Opis</th>
-                    <th>Cena</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="cost : ${car.costs}"
-                    th:attr="onclick=|window.location.href='/cars/cost/edit/${cost.id}'|">
-                    <td th:text="${cost.description}"></td>
-                    <td th:text="${cost.cost}"></td>
-                </tr>
-                </tbody>
-            </table>
-            <div class="table-header">
-                <label class="table-title">Historia:</label>
-            </div>
-            <table>
-                <thead>
-                <tr>
-                    <th>Opis</th>
-                    <th>Nazwa</th>
-                    <th>Miejsce</th>
-                    <th>Od</th>
-                    <th>Do</th>
-                    <th>Użytkownik</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="task : ${tasks}">
-                    <td th:text="${task.description}"></td>
-                    <td th:text="${task.name}"></td>
-                    <td th:text="${task.place.name}"></td>
-                    <td th:text="${task.dateFrom}"></td>
-                    <td th:text="${task.dateTo}"></td>
-                    <td>
-                        <label th:each="user : ${task.users}"
-                               th:text="${user.firstname + ' ' + user.lastName}"></label>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+                <div class="field-group">
+                    <label class="inline">Data i czas</label>
+                    <input type="datetime-local" th:field="*{timestamp}"
+                           th:text="${#temporals.format(productEvent.timestamp, 'yyyy-MM-dd''T''HH:mm')}" required />
+                </div>
+
+                <!-- Typ zdarzenia -->
+                <div class="field-group" id="grp-eventType">
+                    <label class="inline">Typ</label>
+                    <select th:field="*{eventType}" id="eventType" required>
+                        <option value="" disabled selected>-- wybierz typ zdarzenia --</option>
+                        <option th:each="t : ${eventTypes}" th:value="${t}" th:text="${t}"></option>
+                    </select>
+                </div>
+
+                <!-- FROM -->
+                <div class="field-group" id="grp-fromType">
+                    <label class="inline">Źródło (From)</label>
+                    <select th:field="*{fromLocationType}" id="fromType">
+                        <option value="" disabled selected>-- wybierz typ źródła --</option>
+                        <option th:each="l : ${locationTypes}" th:value="${l}" th:text="${l}"></option>
+                    </select>
+                </div>
+
+                <div class="field-group" id="grp-fromCar">
+                    <label class="inline">Auto źródłowe</label>
+                    <select th:field="*{fromLocationCode}" id="fromCar">
+                        <option value="" disabled selected>-- wybierz auto --</option>
+                        <option th:each="c : ${cars}" th:value="${c.id}"
+                                th:text="${c.name + ' | ' + (c.registration ?: '')}"></option>
+                    </select>
+                </div>
+
+                <div class="field-group" id="grp-fromTask">
+                    <label class="inline">Zadanie źródłowe</label>
+                    <select th:field="*{fromLocationCode}" id="fromTask">
+                        <option value="" disabled selected>-- wybierz zadanie --</option>
+                        <option th:each="t : ${tasks}" th:value="${t.id}" th:text="${t.name}"></option>
+                    </select>
+                </div>
+
+                <!-- TO -->
+                <div class="field-group" id="grp-toType">
+                    <label class="inline">Cel (To)</label>
+                    <select th:field="*{toLocationType}" id="toType">
+                        <option value="" disabled selected>-- wybierz typ celu --</option>
+                        <option th:each="l : ${locationTypes}" th:value="${l}" th:text="${l}"></option>
+                    </select>
+                </div>
+
+                <div class="field-group" id="grp-toCar">
+                    <label class="inline">Auto docelowe</label>
+                    <select th:field="*{toLocationCode}" id="toCar">
+                        <option value="" disabled selected>-- wybierz auto --</option>
+                        <option th:each="c : ${cars}" th:value="${c.id}"
+                                th:text="${c.name + ' | ' + (c.registration ?: '')}"></option>
+                    </select>
+                </div>
+
+                <div class="field-group" id="grp-toTask">
+                    <label class="inline">Zadanie docelowe</label>
+                    <select th:field="*{toLocationCode}" id="toTask">
+                        <option value="" disabled selected>-- wybierz zadanie --</option>
+                        <option th:each="t : ${tasks}" th:value="${t.id}" th:text="${t.name}"></option>
+                    </select>
+                </div>
+
+                <button type="submit" class="submit-btn">Zapisz</button>
+            </form>
         </div>
     </div>
 </div>
 
+<script>
+    // Dopasowane do backendu
+    const EVENT = {
+        DELIVERY: 'DELIVERY',
+        TRANSFER: 'TRANSFER',
+        RETURN: 'RETURN',
+        USED: 'USED',
+        LOST: 'LOST',
+        DELETE: 'DELETE',
+        TRANSFER_CAR_TO_CAR: 'TRANSFER_CAR_TO_CAR'
+    };
+
+    const LOC = {
+        WAREHOUSE: 'WAREHOUSE',
+        CAR: 'CAR',
+        TASK: 'TASK'
+    };
+
+    const el = id => document.getElementById(id);
+    const hasValue = v => v !== null && v !== undefined && v !== '';
+
+    function setVisible(groupEl, controlEl, visible) {
+        if (!groupEl) return;
+        groupEl.classList.toggle('hidden', !visible);
+        if (controlEl) {
+            controlEl.disabled = !visible;
+        }
+    }
+
+    function lockType(selectEl, lockedValue) {
+        if (!selectEl) return;
+        selectEl.value = lockedValue;
+        selectEl.setAttribute('data-locked', 'true');
+        selectEl.disabled = true;
+    }
+    function unlockType(selectEl) {
+        if (!selectEl) return;
+        selectEl.removeAttribute('data-locked');
+        selectEl.disabled = false;
+    }
+
+    function updateFromSide() {
+        const ft = el('fromType').value;
+        setVisible(el('grp-fromCar'),  el('fromCar'),  ft === LOC.CAR);
+        setVisible(el('grp-fromTask'), el('fromTask'), ft === LOC.TASK);
+        if (ft === '' || ft === LOC.WAREHOUSE) {
+            setVisible(el('grp-fromCar'),  el('fromCar'),  false);
+            setVisible(el('grp-fromTask'), el('fromTask'), false);
+        }
+    }
+
+    function updateToSide() {
+        const tt = el('toType').value;
+        setVisible(el('grp-toCar'),  el('toCar'),  tt === LOC.CAR);
+        setVisible(el('grp-toTask'), el('toTask'), tt === LOC.TASK);
+        if (tt === '' || tt === LOC.WAREHOUSE) {
+            setVisible(el('grp-toCar'),  el('toCar'),  false);
+            setVisible(el('grp-toTask'), el('toTask'), false);
+        }
+    }
+
+    function hideAllLocation() {
+        // odblokuj przed ukryciem (żeby można było ustawić wartości wg trybu)
+        unlockType(el('fromType'));
+        unlockType(el('toType'));
+
+        setVisible(el('grp-fromType'), el('fromType'), false);
+        setVisible(el('grp-fromCar'),  el('fromCar'),  false);
+        setVisible(el('grp-fromTask'), el('fromTask'), false);
+
+        setVisible(el('grp-toType'),   el('toType'),   false);
+        setVisible(el('grp-toCar'),    el('toCar'),    false);
+        setVisible(el('grp-toTask'),   el('toTask'),   false);
+    }
+
+    function updateUI() {
+        const type = el('eventType').value;
+
+        // Cena jednostkowa: sens głównie przy DELIVERY
+        setVisible(el('grp-unitPrice'), el('unitPrice'), type === EVENT.DELIVERY);
+
+        hideAllLocation();
+
+        switch (type) {
+            case EVENT.DELIVERY:
+                // przyjęcie do magazynu (TO=WAREHOUSE), bez kodów
+                lockType(el('toType'), LOC.WAREHOUSE);
+                setVisible(el('grp-toType'), el('toType'), true);
+                updateToSide();
+                // FROM nieużywany
+                break;
+
+            case EVENT.TRANSFER:
+                // na sztywno: WAREHOUSE -> CAR
+                lockType(el('fromType'), LOC.WAREHOUSE);
+                lockType(el('toType'),   LOC.CAR);
+                setVisible(el('grp-fromType'), el('fromType'), true);
+                setVisible(el('grp-toType'),   el('toType'),   true);
+                updateFromSide(); // schowa kody FROM
+                updateToSide();   // pokaże wybór auta docelowego
+                break;
+
+            case EVENT.RETURN:
+                // na sztywno: CAR -> WAREHOUSE
+                lockType(el('fromType'), LOC.CAR);
+                lockType(el('toType'),   LOC.WAREHOUSE);
+                setVisible(el('grp-fromType'), el('fromType'), true);
+                setVisible(el('grp-toType'),   el('toType'),   true);
+                updateFromSide(); // pokaże wybór auta źródłowego
+                updateToSide();   // schowa kody TO
+                break;
+
+            case EVENT.TRANSFER_CAR_TO_CAR:
+                // na sztywno: CAR -> CAR (od razu pokaż oba auta)
+                lockType(el('fromType'), LOC.CAR);
+                lockType(el('toType'),   LOC.CAR);
+                setVisible(el('grp-fromType'), el('fromType'), true);
+                setVisible(el('grp-toType'),   el('toType'),   true);
+                updateFromSide(); // pokaże fromCar
+                updateToSide();   // pokaże toCar
+                break;
+
+            case EVENT.USED:
+            case EVENT.LOST:
+            case EVENT.DELETE:
+                // tylko FROM, można wybrać CAR/TASK/WAREHOUSE; TASK widoczny tylko gdy FROM=TASK
+                setVisible(el('grp-fromType'), el('fromType'), true);
+                updateFromSide();
+                // TO nieużywany
+                break;
+
+            default:
+                // domyślnie nic poza typem
+                break;
+        }
+    }
+
+    function validateBeforeSubmit(e) {
+        const type = el('eventType').value;
+        const fromType = el('fromType').value;
+        const toType   = el('toType').value;
+
+        if (!type) {
+            e.preventDefault();
+            alert('Wybierz typ zdarzenia.');
+            return false;
+        }
+
+        const needFrom = [EVENT.RETURN, EVENT.USED, EVENT.LOST, EVENT.DELETE, EVENT.TRANSFER, EVENT.TRANSFER_CAR_TO_CAR].includes(type);
+        const needTo   = [EVENT.TRANSFER, EVENT.RETURN, EVENT.TRANSFER_CAR_TO_CAR, EVENT.DELIVERY].includes(type);
+
+        if (needFrom && !fromType) {
+            e.preventDefault();
+            alert('Wybierz źródło (From).');
+            return false;
+        }
+        if (needTo && !toType) {
+            e.preventDefault();
+            alert('Wybierz cel (To).');
+            return false;
+        }
+
+        // Kody lokalizacji gdy wymagane
+        if (fromType === LOC.CAR && el('fromCar').disabled === false && !el('fromCar').value) {
+            e.preventDefault();
+            alert('Wybierz auto źródłowe.');
+            return false;
+        }
+        if (fromType === LOC.TASK && el('fromTask').disabled === false && !el('fromTask').value) {
+            e.preventDefault();
+            alert('Wybierz zadanie źródłowe.');
+            return false;
+        }
+        if (toType === LOC.CAR && el('toCar').disabled === false && !el('toCar').value) {
+            e.preventDefault();
+            alert('Wybierz auto docelowe.');
+            return false;
+        }
+        if (toType === LOC.TASK && el('toTask').disabled === false && !el('toTask').value) {
+            e.preventDefault();
+            alert('Wybierz zadanie docelowe.');
+            return false;
+        }
+
+        if (type === EVENT.TRANSFER_CAR_TO_CAR
+            && fromType === LOC.CAR && toType === LOC.CAR
+            && hasValue(el('fromCar').value) && el('fromCar').value === el('toCar').value) {
+            e.preventDefault();
+            alert('Auto źródłowe i docelowe nie mogą być takie same.');
+            return false;
+        }
+        return true;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        el('eventType').addEventListener('change', updateUI);
+        el('fromType').addEventListener('change', updateFromSide);
+        el('toType').addEventListener('change', updateToSide);
+        el('eventForm').addEventListener('submit', validateBeforeSubmit);
+
+        updateUI();
+    });
+</script>
 </body>
 </html>

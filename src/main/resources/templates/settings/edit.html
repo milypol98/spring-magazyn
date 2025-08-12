@@ -1,97 +1,135 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-    <link rel="stylesheet" th:href="@{/css/general.css}" />
+    <title>Profil użytkownika</title>
 
+    <!-- Ogólny styl -->
+    <link rel="stylesheet" th:href="@{/css/general.css}" />
+    <!-- Styl dedykowany dla zakładki profilu -->
+    <link rel="stylesheet" th:href="@{/css/settings.css}" />
 </head>
 <body>
-<h1>
-    <label>Ustawienia</label>
-    <a th:href="@{/dashboard}" class="btn-main">Strona glowna</a>
-    <a th:href="@{/warehouses}" class="btn-main">Magazyn</a>
-    <a th:href="@{/tasks}" class="btn-main">Task</a>
-    <a th:href="@{/cars}" class="btn-main">Auta</a>
-    <a th:href="@{/places}" class="btn-main">Miejsca</a>
-    <a th:href="@{/users}" class="btn-main">Pracownicy</a>
-    <a th:href="@{/profile}" class="btn-main">Ustawienia</a>
-</h1>
+
+<div th:replace="~{fragments/navBar :: navbar}"></div>
+
 <div class="top-row">
-    <div class="side-by-side">
-        <div class="tools-container">
-            <div class="table-header">
-                <label class="table-title">Edytuj:</label>
+    <div class="side-by-side profile-layout">
+        <!-- LEWA KOLUMNA: DANE UŻYTKOWNIKA -->
+        <div class="container">
+            <div class="form-header">
+                <label class="form-title">Twoje dane</label>
             </div>
-            <form th:action="@{/profile/edit}" th:object="${user}" method="post">
-                <div>
-                    <label for="firstname">Imię</label>
-                    <input type="text" id="firstname" th:field="*{firstname}" />
+
+            <form th:action="@{/profile/edit}" th:object="${user}" method="post" class="profile-form" novalidate>
+                <label for="firstname">Imię</label>
+                <input type="text" id="firstname" th:field="*{firstname}" placeholder="Wpisz imię" required />
+
+                <label for="lastName">Nazwisko</label>
+                <input type="text" id="lastName" th:field="*{lastName}" placeholder="Wpisz nazwisko" required />
+
+                <label for="email">E‑mail</label>
+                <input type="email" id="email" th:field="*{email}" placeholder="np. jan.kowalski@example.com" required />
+
+                <label for="phone">Telefon</label>
+                <input type="text" id="phone" th:field="*{phone}" placeholder="np. 500600700" inputmode="numeric" />
+
+                <label for="description">Opis</label>
+                <textarea id="description" th:field="*{description}" placeholder="Krótka informacja o Tobie (opcjonalnie)"></textarea>
+
+                <!-- Pole roli wyświetlane informacyjnie (bez możliwości edycji) -->
+                <label>Rola</label>
+                <input type="text" th:value="${user.role}" readonly class="readonly" aria-readonly="true"/>
+
+                <!-- Przyciski akcji -->
+                <div class="buttons">
+                    <button type="submit" class="submit-btn">Zapisz zmiany</button>
+                    <button type="reset" class="btn-cancel">Wyczyść</button>
                 </div>
 
-                <div>
-                    <label for="lastName">Nazwisko</label>
-                    <input type="text" id="lastName" th:field="*{lastName}" />
-                </div>
-
-                <div>
-                    <label for="email">E‑mail</label>
-                    <input type="email" id="email" th:field="*{email}" />
-                </div>
-
-                <div>
-                    <label for="phone">Telefon</label>
-                    <input type="text" id="phone" th:field="*{phone}" />
-                </div>
-
-                <div>
-                    <label for="description">Opis</label>
-                    <textarea id="description" th:field="*{description}"></textarea>
-                </div>
-
-                <button type="submit">Zapisz</button>
+                <!-- Miejsce na komunikaty walidacji klienta -->
+                <div class="hint">Pola z gwiazdką są wymagane.</div>
             </form>
         </div>
-        <div class="tools-container">
+
+        <!-- PRAWA KOLUMNA: ZADANIA UŻYTKOWNIKA -->
+        <div class="container">
             <div class="table-header">
-                <label class="table-title">Wykonywane Prace:</label>
+                <label class="table-title">Wykonywane prace</label>
+
+                <div class="tasks-tools">
+                    <input id="taskSearch" class="table-search" type="search" placeholder="Szukaj po nazwie/opisie…" />
+                    <label class="toggle-only-inprogress">
+                        <input id="onlyInProgress" type="checkbox" />
+                        <span>Tylko „w trakcie”</span>
+                    </label>
+                </div>
             </div>
-            <table class="w1200">
+
+            <table class="w1200 tasks-table">
                 <thead>
                 <tr>
-                    <th>Nazwa</th>
-                    <th>Opis</th>
-                    <th>Data od</th>
-                    <th>Status do</th>
-                    <th>Miejsce</th>
-                    <th>Pracownicy</th>
-                    <th>Auto</th>
+                    <th class="w20">Nazwa</th>
+                    <th class="w30">Opis</th>
+                    <th class="w10">Data od</th>
+                    <th class="w10">Data do</th>
+\                    <th class="w10">Status</th>
+                    <th class="w15">Zasoby</th>
                 </tr>
                 </thead>
-                <tbody>
+                <tbody id="tasksTbody">
                 <tr th:each="task : ${tasks}"
-                    th:attr="onclick=|window.location.href='/tasks/edit/${task.id}'|"
+                    th:attr="data-name=${task.name}, data-desc=${task.description}, onclick=|window.location.href='/tasks/edit/${task.id}'|"
+                    th:classappend="${task.status != null and task.status.toString() == 'IN_PROGRESS'} ? 'row--in-progress' : ''"
                     class="clickable-row">
+
                     <td th:text="${task.name}"></td>
                     <td th:text="${task.description}"></td>
                     <td th:text="${task.dateFrom}"></td>
                     <td th:text="${task.dateTo}"></td>
-                    <td th:text="${task.place.name}"></td>
                     <td>
-                        <label th:each="user : ${task.users}"
-                               th:text="${user.firstname + ' ' + user.lastName + ', '}"></label>
+                        <span class="status-badge"
+                              th:text="${task.status != null ? task.status : 'UNKNOWN'}"
+                              th:classappend="${task.status != null} ? ${' status-' + task.status.toString().toLowerCase()} : ' status-unknown'">
+                        </span>
                     </td>
                     <td>
-                        <label th:each="car : ${task.cars}"
-                               th:text="${car.name  + ', '}"></label>
+                        <div class="resources">
+                            <div class="res-row">
+                                <span class="res-label">Pracownicy:</span>
+                                <span class="res-values">
+                                    <span th:each="u, uiStat : ${task.users}"
+                                          th:text="${u.firstname + ' ' + u.lastName + (uiStat.last ? '' : ', ')}"></span>
+                                </span>
+                            </div>
+                            <div class="res-row">
+                                <span class="res-label">Auta:</span>
+                                <span class="res-values">
+                                    <span th:each="car, ciStat : ${task.cars}"
+                                          th:text="${car.name + (ciStat.last ? '' : ', ')}"></span>
+                                </span>
+                            </div>
+                        </div>
                     </td>
                 </tr>
                 </tbody>
             </table>
+
+            <div class="legend">
+                <span class="legend-item">
+                    <span class="legend-dot legend-inprogress"></span> W trakcie
+                </span>
+                <span class="legend-item">
+                    <span class="legend-dot legend-completed"></span> Zakończone
+                </span>
+                <span class="legend-item">
+                    <span class="legend-dot legend-planned"></span> Zaplanowane
+                </span>
+            </div>
         </div>
     </div>
 </div>
 
-
+<script th:src="@{/js/settings.js}"></script>
 </body>
 </html>

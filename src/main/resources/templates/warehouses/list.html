@@ -6,40 +6,33 @@
 </head>
 <body>
 <h1>
-    <a th:href="@{/dashboard}" class="btn-main">Strona glowna</a>
-    <a th:href="@{/warehouses}" class="btn-main">Magazyn</a>
-    <a th:href="@{/tasks}" class="btn-main">Task</a>
-    <a th:href="@{/cars}" class="btn-main">Auta</a>
-    <a th:href="@{/places}" class="btn-main">Miejsca</a>
-    <a th:href="@{/users}" class="btn-main">Pracownicy</a>
-    <a th:href="@{/profile}" class="btn-main">Ustawienia</a>
+<div th:replace="~{fragments/navBar :: navbar}"></div>
+
 </h1>
-<h2>
-    <label>Magazyn</label>
-</h2>
 <div class="top-row">
     <div class="side-by-side">
-        <div class="tools-container">
+        <div class="container">
             <div class="table-header">
-                <label class="table-title">Narzędzia</label>
+                <label class="table-title">Produkty</label>
+                <input type="text" class="table-search" placeholder="Szukaj..." data-target="#productsTable">
                 <a href="/warehouses/products/add" class="btn-add">Dodaj</a>
             </div>
 
-            <table>
+            <table id="productsTable">
                 <thead>
                 <tr>
-                    <th>Nazwa</th>
-                    <th>Opis</th>
-                    <th>Stan Magazynu</th>
-                    <th>Stan Calkowity</th>
+                    <th data-sort="text">Pozycja</th>
+                    <th data-sort="text">Opis</th>
+                    <th data-sort="number">Stan Magazynu</th>
+                    <th data-sort="number">Stan Calkowity</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="p : ${products}"
                     th:attr="onclick=|window.location.href='/warehouses/products/${p.id}'|"
                     class="clickable-row">
+                    <td th:text="${p.position}"></td>
                     <td th:text="${p.name}"></td>
-                    <td th:text="${p.description}"></td>
                     <td th:text="${(countProductWarehouse[p.id] ?: 0)}"
                         th:classappend="${(countProductWarehouse[p.id] ?: 0) < p.minStock} ? 'low-stock'">
                     </td>
@@ -51,19 +44,20 @@
             </table>
         </div>
 
-        <div class="products-container">
+        <div class="container">
             <div class="table-header">
-                <label class="table-title">Produkty</label>
+                <label class="table-title">Narzędzia</label>
+                <input type="text" class="table-search" placeholder="Szukaj..." data-target="#toolsTable">
                 <a href="/warehouses/stocks/tools" class="btn-add">Dodaj</a>
             </div>
 
-            <table>
+            <table id="toolsTable">
                 <thead>
                 <tr>
-                    <th>Nazwa</th>
-                    <th>Opis</th>
-                    <th>Stan Magazynu</th>
-                    <th>Stan Calkowity</th>
+                    <th data-sort="text">Pozycja</th>
+                    <th data-sort="text">Opis</th>
+                    <th data-sort="number">Stan Magazynu</th>
+                    <th data-sort="number">Stan Calkowity</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -82,35 +76,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="products-container">
-            <div class="full-width-container">
-                <div class="table-header">
-                    <label class="table-title">Wyladunek</label>
-                </div>
-                <table>
-                    <thead>
-                    <tr>
-                        <th>L.P.</th>
-                        <th>Nazwa</th>
-                        <th>Opis</th>
-                        <th>Data od</th>
-                        <th>Data do</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="p,iter : ${tasksPacked}"
-                        th:attr="onclick=|window.location.href='/warehouses/products/edit/${p.id}'|"
-                        class="clickable-row">
-                        <td th:text="${iter.index + 1}"></td>
-                        <td th:text="${p.name}"></td>
-                        <td th:text="${p.description}"></td>
-                        <td th:text="${p.dateTo}"></td>
-                        <td th:text="${p.dateFrom}"></td>
-
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
+        <div class="container">
             <div class="full-width-container">
                 <div class="table-header">
                     <label class="table-title">Zaladunek</label>
@@ -126,7 +92,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="p,iter : ${tasksUnpacked}"
+                    <tr th:each="p,iter : ${tasksPacked}"
                         th:attr="onclick=|window.location.href='/warehouses/products/edit/${p.id}'|"
                         class="clickable-row">
                         <td th:text="${iter.index + 1}"></td>
@@ -165,6 +131,6 @@
     </div>
 </div>
 
-
+<script src="/js/main.js"></script>
 </body>
 </html>

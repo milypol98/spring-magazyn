@@ -1,0 +1,46 @@
+package com.milypol.security.user;
+
+import com.milypol.security.task.TaskService;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+@Controller
+public class UserController {
+    private final UserService userService;
+    private final TaskService taskService;
+
+    public UserController(UserService userService, TaskService taskService) {
+        this.userService = userService;
+        this.taskService = taskService;
+    }
+    //pracownicy admin
+    @GetMapping("/users")
+    public String showUserPage(Model model){
+        model.addAttribute("users", userService.getAllUsers());
+        return "workers/list";
+    }
+    @GetMapping("/users/edit/{id}")
+    public String editUser(@PathVariable Integer id , Model model){
+        model.addAttribute("user", userService.getUserById(id));
+        model.addAttribute("tasks",taskService.getAllTasksByUserId(id));
+        return "settings/edit";
+    }
+    //pracownicy admin // ten uzytkownik
+    @GetMapping("/profile")
+    public String editForm(Model model, Authentication authentication){
+        String email = authentication.getName();
+        User user = userService.getUserByEmail(email);
+        model.addAttribute("user", userService.getUserById(user.getId()));
+        model.addAttribute("tasks",taskService.getAllTasksByUserId(user.getId()));
+        return "settings/edit";
+    }
+    //pracownicy admin
+//    @PostMapping("/delete/{id}")
+//    public String deleteUser(@PathVariable Integer id){
+//        userService.deleteUser(id);
+//        return "redirect:/users";
+//    }
+
+}

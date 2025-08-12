@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.milypol.security.car.Car;
 import com.milypol.security.product.Product;
 import com.milypol.security.task.Task;
+import com.milypol.security.user.User;
+import com.milypol.security.warehouse.Warehouse;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,22 +29,24 @@ public class ProductEvent {
 
 
     @Enumerated(EnumType.STRING)
-    private LocationType locationType;
+    private LocationType fromLocationType;
+    private Integer fromLocationCode;
 
     @Enumerated(EnumType.STRING)
-    private ProductEventType type;
+    private LocationType toLocationType;
+    private Integer toLocationCode;
+
+    @Enumerated(EnumType.STRING)
+    private ProductEventType eventType;
 
     private LocalDateTime timestamp;
 
     private String comment;
     private Double unitPrice;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "car_id")
-    @JsonIgnore
-    private Car car;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "job_id")
+    @JoinColumn(name = "user_id")
     @JsonIgnore
-    private Task task;
+    private User user;
+
 }

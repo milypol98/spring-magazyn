@@ -6,5 +6,8 @@ import lombok.Getter;
 public enum ToolStatus {
     STOCK,
     USE,
-    REPAIR
+    REPAIR,
+    INACTIVE,
+    DELETED
+
 }

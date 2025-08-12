@@ -1,7 +1,7 @@
 package com.milypol.security.stockPosition;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.milypol.security.product.Product;
+import com.milypol.security.warehouse.Warehouse;
 import com.milypol.security.tool.Tool;
 import jakarta.persistence.*;
 import lombok.*;
@@ -25,4 +25,9 @@ public class StockPosition {
     @EqualsAndHashCode.Exclude     // wyklucz z equals() i hashCode()
     private List<Tool> tools;
     private Integer minStock;
+    private Integer alarmStock;
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "warehouse_id")
+    private Warehouse warehouse;
+
 }

@@ -6,5 +6,5 @@ import java.util.List;
 import java.util.Objects;
 
 public interface StockPositionRepo extends JpaRepository<StockPosition, Integer> {
-
+    List<StockPosition> findAllByWarehouse_Id(Integer warehouseId);
 }

@@ -31,4 +31,9 @@ public class StockPositionServiceImpl implements StockPositionService{
     public void deleteStockPosition(Integer id) {
         stockPositionRepo.deleteById(id);
     }
+
+    @Override
+    public List<StockPosition> getAllStockPositionsByWarehouseId(Integer warehouseId) {
+        return stockPositionRepo.findAllByWarehouse_Id(warehouseId);
+    }
 }

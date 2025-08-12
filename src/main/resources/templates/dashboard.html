@@ -6,7 +6,7 @@
     <link rel="stylesheet" th:href="@{/css/dashboard.css}" />
 </head>
 <body>
-<h2>Witaj na stronie chronionej!</h2>
+
 <p>Jesteś zalogowany jako:
     <strong th:text="${#authentication.name}">email@example.com</strong>
 </p>
@@ -18,12 +18,13 @@
 </form>
 
 <div class="container">
-    <a th:href="@{/warehouses}" class="box">Magazyn</a>
+    <a th:href="@{/warehouses/1}" class="box">Magazyn</a>
     <a th:href="@{/tasks}" class="box">Task</a>
     <a th:href="@{/cars}" class="box">Auto</a>
-    <a th:href="@{/places}" class="box">Miejsca</a>
     <a th:href="@{/users}" class="box">Pracownicy</a>
     <a th:href="@{/profile}" class="box">Ustawienia</a>
+    <a th:href="@{/invoices}" class="box">Faktury</a>
+    <a th:href="@{/companies}" class="box">Firmy</a>
 </div>
 </body>
 </html>

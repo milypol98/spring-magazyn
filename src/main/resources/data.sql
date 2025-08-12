@@ -1,4 +1,27 @@
 
+INSERT INTO car (id, name, description, model, color, owner, engine_capacity, brand, vin, registration, course, course_date, timing_system_interval_km, timing_system_course, oil_change_course, oil_change_interval_km, year, review, insured) VALUES
+                                                                                                                                                                                                                                                    (1, NULL, NULL, 'VIVARO', 'biały', 'WINDFORCE', '1997', 'OPEL', 'VXEVFEHTMNZ025526', 'WD 9369S', 98497, '2025-07-27', 110000, 0, 86664, 15000, '2022-01-01', '2025-08-29', '2026-04-01'),
+                                                                                                                                                                                                                                                    (2, NULL, NULL, 'VIVARO', 'biały', 'WINDFORCE', '1997', 'OPEL', 'VXEVFEHTMP7806128', 'WU 9856P', 86605, '2025-07-27', 110000, 0, 82573, 15000, '2023-01-01', '2026-06-25', '2026-04-01'),
+                                                                                                                                                                                                                                                    (3, NULL, NULL, 'VIVARO', 'biały', 'WINDFORCE', '1997', 'OPEL', 'VXEVFEHTMNZ023538', 'WD 9371S', 79750, '2025-07-27', 110000, 0, 68748, 15000, '2022-01-01', '2027-05-19', '2026-04-01'),
+                                                                                                                                                                                                                                                    (4, NULL, NULL, 'VIVARO', 'biały', 'WINDFORCE', '1995', 'OPEL', 'W0LF7A1A1EV644255', 'WGM 9805J', 241801, '2025-07-27', 110000, 0, 238368, 15000, '2014-01-01', '2026-01-24', '2026-04-01'),
+                                                                                                                                                                                                                                                    (5, NULL, NULL, 'TRANSPORTER T4 TDI', 'biały', 'RM', '2461', 'VOLKSWAGEN', 'WV1ZZZ70Z3H019713', 'WGM 7521K', 328509, '2025-07-27', 110000, 0, 321669, 15000, '2003-01-01', '2026-04-03', '2025-10-11'),
+                                                                                                                                                                                                                                                    (6, NULL, NULL, 'TRANSPORTER T4 TDI', 'biały', 'RM', '2461', 'VOLKSWAGEN', 'WV1ZZZ70Z2H059843', 'WGM 7435K', 303036, '2025-03-23', 110000, 0, 303036, 15000, '2002-01-01', '2026-03-24', '2026-05-16'),
+                                                                                                                                                                                                                                                    (7, NULL, NULL, 'TRANSPORTER T4 TDI', 'biały', 'RM', '2461', 'VOLKSWAGEN', 'WV1ZZZ70Z3H011385', 'WGM 7436K', 347731, '2025-07-27', 110000, 0, 347731, 15000, '2002-01-01', '2025-12-03', '2026-04-18'),
+                                                                                                                                                                                                                                                    (8, NULL, NULL, 'TRANSPORTER T4 TDI', 'biały', 'RM', '2461', 'VOLKSWAGEN', 'WV1ZZZ70Z3X024193', 'WGM 7439K', 254891, '2025-07-27', 110000, 0, 246169, 15000, '2002-01-01', '2025-11-04', '2025-09-22'),
+                                                                                                                                                                                                                                                    (9, NULL, NULL, 'TRANSPORTER T4 TDI', 'czarny', 'RM', '2461', 'VOLKSWAGEN', 'WV1ZZZ70ZXH118573', 'WGM 7437K', 492955, '2024-02-22', 10000, 487955, 487955, 10000, '1999-01-01', '2024-07-19', '2026-05-17'),
+                                                                                                                                                                                                                                                    (10, NULL, NULL, 'VITO 109 CDI', 'biały', 'RM', '2148', 'MERCEDES-BENZ', 'WDF63960113542826', 'SB 7305L', 260133, '2025-07-27', 10000, 255133, 255133, 10000, '2009-01-01', '2026-02-21', '2026-04-27'),
+                                                                                                                                                                                                                                                    (11, NULL, NULL, 'TRANSIT', 'biały', 'W&P MEBLE', '1995', 'FORD', 'WF0EXXTTRERA04100', 'SCI 6343L', 47000, '2025-07-27', 10000, 42000, 42000, 10000, '2024-01-01', '2027-09-13', '2025-09-12'),
+                                                                                                                                                                                                                                                    (12, NULL, NULL, 'DAILY', 'biały', 'M. BUDZISZEWSKA', '2998', 'IVECO', 'ZCFC535C2R5610493', 'WGM 6125L', 45993, '2025-07-27', 10000, 40993, 40993, 10000, '2024-01-01', '2027-09-26', '2025-09-25'),
+                                                                                                                                                                                                                                                    (13, NULL, NULL, 'DAILY', 'biały', 'M. BUDZISZEWSKA', '2998', 'IVECO', 'ZCFC535C7R5611266', 'WGM 6097L', 45740, '2025-07-27', 10000, 40740, 40740, 10000, '2024-01-01', '2027-09-26', '2025-09-25'),
+                                                                                                                                                                                                                                                    (14, NULL, NULL, 'TRANSIT', 'biały', 'D. CZARNECKI', NULL, 'FORD', 'WF0KXXTTGKJJ07576', 'GKA 0416E', NULL, NULL, 10000, NULL, NULL, 10000, '2018-01-01', '2025-09-23', '2025-10-08'),
+                                                                                                                                                                                                                                                    (15, NULL, NULL, 'DAILY', 'szary', 'S. JANCZURA', NULL, 'IVECO', NULL, 'WGM 5862L', NULL, NULL, 10000, NULL, NULL, 10000, '2024-01-01', NULL, NULL),
+                                                                                                                                                                                                                                                    (16, NULL, NULL, 'DAILY', 'biały', 'SPÓŁKOWE', NULL, 'IVECO', NULL, 'ST 2178W', NULL, NULL, 10000, NULL, NULL, 10000, '2023-01-01', NULL, NULL),
+                                                                                                                                                                                                                                                    (17, NULL, NULL, 'TRAFFIC', 'biały', 'A. ZEMAN', NULL, 'RENAULT', NULL, 'SB 890GE', NULL, NULL, 10000, NULL, NULL, 10000, '2014-01-01', NULL, NULL),
+                                                                                                                                                                                                                                                    (18, NULL, NULL, 'TRANSPORTER T5', 'biały', 'D. CZARNECKI', NULL, 'VOLKSWAGEN', 'WV2ZZZ7HZ7H053766', 'SB 985FM', 417697, '2025-07-26', 10000, 412697, 412697, 10000, '2006-01-01', '2025-10-21', '2025-10-23'),
+                                                                                                                                                                                                                                                    (19, NULL, NULL, 'TRAFFIC', 'biały', 'R. KONIOR', NULL, 'RENAULT', NULL, 'SZY 87163', NULL, NULL, 10000, NULL, NULL, 10000, '2019-01-01', NULL, NULL),
+                                                                                                                                                                                                                                                    (20, NULL, NULL, 'VITO 113 CDI', 'niebieski', 'WINDFORCE', '2143', 'MERCEDES-BENZ', 'WDF63960313688181', 'ZST 8395C', 314858, '2025-07-26', 10000, 309858, 309858, 10000, '2011-01-01', '2026-03-20', '2026-03-24'),
+                                                                                                                                                                                                                                                    (21, NULL, NULL, 'DAILY', 'biały', 'D. CZARNECKI', NULL, 'IVECO', 'ZCFCB35B005599061', 'SB 613GT', NULL, NULL, 10000, NULL, NULL, 10000, '2023-01-01', '2027-03-24', '2026-03-26'),
+                                                                                                                                                                                                                                                    (22, NULL, NULL, 'TRANSIT', 'granatowy', 'W&P MEBLE', NULL, 'FORD', NULL, 'SCI 4681M', NULL, NULL, 10000, NULL, NULL, 10000, '2020-01-01', NULL, NULL);
 INSERT INTO place (id, address_id, latitude, longitude, description, name) VALUES
                                                                                (1, 1, 52.1234, 19.1234, 'Główne wejście na farmę wiatrową A',          'Wejście A'),
                                                                                (2, 2, 52.1250, 19.1300, 'Teren serwisowy turbiny nr 1',               'Serwis T1'),
@@ -19,21 +42,9 @@ INSERT INTO cart (id, description, name) VALUES
                                              (5, 'Akcesoria do inspekcji czujników wibracji',           'Koszyk Diagnostyka');
 
 
-INSERT INTO stock_position (id, min_stock, description, name) VALUES
-                                                                  (7, 20, 'Zestawy narzędzi serwisowych', 'A07'),
-                                                                  (22, 10, 'Zestawy do diagnostyki i pomiarów', 'C02');
-
-INSERT INTO car (id, insured, review, year, brand, color, description, model, name, registration) VALUES
-                                                                                                      (1, '2024-01-15', '2024-06-01', '2018-01-01', 'Ford',     'Biały', 'Van serwisowy do turbin',           'Transit',      'Serwis Van 1', 'WPL12345'),
-                                                                                                      (2, '2024-02-20', '2024-05-20', '2019-01-01', 'Mercedes', 'Niebieski', 'Ciężarówka do transportu części',    'Sprinter',     'Transporter 2','WPL23456'),
-                                                                                                      (3, '2024-03-10', '2024-07-10', '2020-01-01', 'Iveco',    'Szary',  'Pojazd do montażu wież',             'Daily',        'Wieża Truck 3','WPL34567'),
-                                                                                                      (4, '2024-04-05', '2024-04-30', '2017-01-01', 'MAN',      'Czarny', 'Ciężarówka chłodnicza',              'TGL',          'Chłodnia 4',   'WPL45678'),
-                                                                                                      (5, '2024-05-01', '2024-08-01', '2021-01-01', 'Volvo',    'Biały',  'Pojazd diagnostyczny',               'FL',           'Diagnostyka 5','WPL56789'),
-                                                                                                      (6, '2024-06-12', '2024-09-12', '2016-01-01', 'Renault',  'Zielony','Bus serwisowy dla zespołu',         'Master',       'Bus Serwis 6', 'WPL67890'),
-                                                                                                      (7, '2024-07-08', '2024-10-08', '2015-01-01', 'Peugeot',  'Biały',  'Pojazd do wymiany łopat',            'Boxer',        'Łopaty 7',     'WPL78901'),
-                                                                                                      (8, '2024-08-15', '2024-11-15', '2022-01-01', 'Citroën',  'Niebieski','Bus transportowy narzędzi',         'Jumper',       'Narzędzia 8',  'WPL89012'),
-                                                                                                      (9, '2024-09-20', '2025-01-20', '2014-01-01', 'Fiat',     'Szary',  'Pojazd do pomiarów wibracji',        'Ducato',       'Wibracje 9',   'WPL90123'),
-                                                                                                      (10,'2024-10-30', '2025-02-28', '2023-01-01', 'Volkswagen','Biały', 'Bus do montażu paneli sterujących',  'Crafter',      'Panele 10',    'WPL01234');
+INSERT INTO stock_position (id, min_stock, description, name,warehouse_id) VALUES
+                                                                               (7, 20, 'Zestawy narzędzi serwisowych', 'A07',1),
+                                                                               (22, 10, 'Zestawy do diagnostyki i pomiarów', 'C02',1);
 
 INSERT INTO car_cost (id, car_id, cost, date_from, date_to, description) VALUES
                                                                              (1,  1,  500.00, '2024-01-10', '2024-01-15', 'Przegląd układu hamulcowego'),
@@ -79,39 +90,37 @@ INSERT INTO car_cost (id, car_id, cost, date_from, date_to, description) VALUES
 
 -- car_product (relacje między samochodami a produktami)
 
-INSERT INTO product (id, min_stock, code, description, name, position) VALUES
-                                                                           (1, 10, 'P-A01-001', 'Łopata turbiny model A', 'Łopata A', 'A01'),
-                                                                           (2, 10, 'P-A02-001', 'Silnik 12kW do turbiny', 'Silnik 12kW', 'A02'),
-                                                                           (3, 10, 'P-A03-001', 'Łożysko kulkowe 6205', 'Łożysko 6205', 'A03'),
-                                                                           (4, 10, 'P-A04-001', 'Czujnik temperatury PT100', 'Czujnik PT100', 'A04'),
-                                                                           (5, 10, 'P-A05-001', 'Stalowa rama wieży', 'Rama wieży', 'A05'),
-                                                                           (6, 10, 'P-A06-001', 'Kabel zasilający 3x2.5mm²', 'Kabel 2.5mm²', 'A06'),
-                                                                           (8, 10, 'P-A08-001', 'Olej syntetyczny 5L', 'Olej 5L', 'A08'),
-                                                                           (9, 10, 'P-A09-001', 'Zawór hydrauliczny 24V', 'Zawór 24V', 'A09'),
-                                                                           (10, 10, 'P-A10-001', 'Wentylator chłodzący', 'Wentylator', 'A10'),
+INSERT INTO product (id, min_stock, code, description, name, position, warehouse_id)
+VALUES (1, 10, 'P-A01-001', 'Łopata turbiny model A', 'Łopata A', 'A01', 1),
+       (2, 10, 'P-A02-001', 'Silnik 12kW do turbiny', 'Silnik 12kW', 'A02', 1),
+       (3, 10, 'P-A03-001', 'Łożysko kulkowe 6205', 'Łożysko 6205', 'A03', 1),
+       (4, 10, 'P-A04-001', 'Czujnik temperatury PT100', 'Czujnik PT100', 'A04', 1),
+       (5, 10, 'P-A05-001', 'Stalowa rama wieży', 'Rama wieży', 'A05', 1),
+       (6, 10, 'P-A06-001', 'Kabel zasilający 3x2.5mm²', 'Kabel 2.5mm²', 'A06', 1),
+       (8, 10, 'P-A08-001', 'Olej syntetyczny 5L', 'Olej 5L', 'A08', 1),
+       (9, 10, 'P-A09-001', 'Zawór hydrauliczny 24V', 'Zawór 24V', 'A09', 1),
+       (10, 10, 'P-A10-001', 'Wentylator chłodzący', 'Wentylator', 'A10', 1),
 
-                                                                           (11, 10, 'P-B01-001', 'Wirnik zapasowy', 'Wirnik', 'B01'),
-                                                                           (12, 10, 'P-B02-001', 'Koło zębate przekładni', 'Koło zębate', 'B02'),
-                                                                           (13, 10, 'P-B03-001', 'Czujnik wibracji BOSCH', 'Czujnik BOSCH', 'B03'),
-                                                                           (14, 10, 'P-B04-001', 'Lampa awaryjna LED', 'Lampa LED', 'B04'),
-                                                                           (15, 10, 'P-B05-001', 'Śruba M12x80', 'Śruba M12', 'B05'),
-                                                                           (16, 10, 'P-B06-001', 'Panel operatorski Siemens', 'Panel Siemens', 'B06'),
-                                                                           (17, 10, 'P-B07-001', 'Bezpiecznik 32A', 'Bezpiecznik 32A', 'B07'),
-                                                                           (18, 10, 'P-B08-001', 'Zawór kulowy pneumatyczny', 'Zawór kulowy', 'B08'),
-                                                                           (19, 10, 'P-B09-001', 'Pianka izolacyjna', 'Pianka', 'B09'),
-                                                                           (20, 10, 'P-B10-001', 'Moduł komunikacyjny LTE', 'Moduł LTE', 'B10'),
+       (11, 10, 'P-B01-001', 'Wirnik zapasowy', 'Wirnik', 'B01', 1),
+       (12, 10, 'P-B02-001', 'Koło zębate przekładni', 'Koło zębate', 'B02', 1),
+       (13, 10, 'P-B03-001', 'Czujnik wibracji BOSCH', 'Czujnik BOSCH', 'B03', 1),
+       (14, 10, 'P-B04-001', 'Lampa awaryjna LED', 'Lampa LED', 'B04', 1),
+       (15, 10, 'P-B05-001', 'Śruba M12x80', 'Śruba M12', 'B05', 1),
+       (16, 10, 'P-B06-001', 'Panel operatorski Siemens', 'Panel Siemens', 'B06', 1),
+       (17, 10, 'P-B07-001', 'Bezpiecznik 32A', 'Bezpiecznik 32A', 'B07', 1),
+       (18, 10, 'P-B08-001', 'Zawór kulowy pneumatyczny', 'Zawór kulowy', 'B08', 1),
+       (19, 10, 'P-B09-001', 'Pianka izolacyjna', 'Pianka', 'B09', 1),
+       (20, 10, 'P-B10-001', 'Moduł komunikacyjny LTE', 'Moduł LTE', 'B10', 1),
 
-                                                                           (21, 10, 'P-C01-001', 'Adapter 12V-24V', 'Adapter 12V-24V', 'C01'),
-                                                                           (23, 10, 'P-C03-001', 'Osłona silnika', 'Osłona', 'C03'),
-                                                                           (24, 10, 'P-C04-001', 'Farba antykorozyjna szara', 'Farba szara', 'C04'),
-                                                                           (25, 10, 'P-C05-001', 'Akumulator AGM 12V', 'Akumulator AGM', 'C05'),
-                                                                           (26, 10, 'P-C06-001', 'Sterownik PLC S7-1200', 'PLC S7', 'C06'),
-                                                                           (27, 10, 'P-C07-001', 'Rura stalowa gięta', 'Rura stalowa', 'C07'),
-                                                                           (28, 10, 'P-C08-001', 'Czujnik otwarcia', 'Czujnik otwarcia', 'C08'),
-                                                                           (29, 10, 'P-C09-001', 'Filtr oleju', 'Filtr oleju', 'C09'),
-                                                                           (30, 10, 'P-C10-001', 'Instrukcja montażu', 'Instrukcja montażu', 'C10');
-
-
+       (21, 10, 'P-C01-001', 'Adapter 12V-24V', 'Adapter 12V-24V', 'C01', 1),
+       (23, 10, 'P-C03-001', 'Osłona silnika', 'Osłona', 'C03', 1),
+       (24, 10, 'P-C04-001', 'Farba antykorozyjna szara', 'Farba szara', 'C04', 1),
+       (25, 10, 'P-C05-001', 'Akumulator AGM 12V', 'Akumulator AGM', 'C05', 1),
+       (26, 10, 'P-C06-001', 'Sterownik PLC S7-1200', 'PLC S7', 'C06', 1),
+       (27, 10, 'P-C07-001', 'Rura stalowa gięta', 'Rura stalowa', 'C07', 1),
+       (28, 10, 'P-C08-001', 'Czujnik otwarcia', 'Czujnik otwarcia', 'C08', 1),
+       (29, 10, 'P-C09-001', 'Filtr oleju', 'Filtr oleju', 'C09', 1),
+       (30, 10, 'P-C10-001', 'Instrukcja montażu', 'Instrukcja montażu', 'C10', 1);
 INSERT INTO task (id, place_id, date_from, date_to, description, name, status) VALUES
                                                                                    (1,    1,  '2024-06-01', '2024-06-05', 'Dostawa łopat turbin na farmę A',             'Dostawa łopat',            'TO_BE_PACKED'),
                                                                                    (2,    2,  '2024-06-06', '2024-06-10', 'Transport zestawu narzędzi do serwisu T1',    'Transport narzędzi',        'IN_PROGRESS'),

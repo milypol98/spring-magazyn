@@ -4,5 +4,5 @@ package com.milypol.security.productEvent;
 public enum LocationType {
     WAREHOUSE,
     CAR,
-    JOB
+    TASK
 }

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pl">
+<head>
+    <meta charset="UTF-8" />
+    <title>Firmy - lista</title>
+    <link rel="stylesheet" th:href="@{/css/companies.css}" />
+</head>
+<body>
+<header class="page-header">
+    <h1>Firmy</h1>
+    <div class="actions">
+        <a th:href="@{/companies/new}" class="btn btn-primary">+ Dodaj firmę</a>
+    </div>
+</header>
+
+<section th:if="${message}" class="flash">
+    <span th:text="${message}">Operacja zakończona pomyślnie</span>
+</section>
+
+<section class="filters">
+    <form th:action="@{/companies}" method="get" class="filters-form">
+        <div class="row">
+            <label>
+                Szukaj
+                <input type="text" name="q" th:value="${query}" placeholder="nazwa firmy..." />
+            </label>
+            <button type="submit" class="btn">Filtruj</button>
+            <a th:href="@{/companies}" class="btn btn-secondary">Wyczyść</a>
+        </div>
+    </form>
+</section>
+
+<section class="list-container">
+    <div th:if="${companies == null or #lists.isEmpty(companies)}" class="empty-state">
+        Brak firm do wyświetlenia.
+    </div>
+
+    <table th:if="${companies != null and !#lists.isEmpty(companies)}" class="table table-striped">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nazwa</th>
+            <th>Telefon</th>
+            <th>NIP</th>
+            <th>REGON</th>
+            <th>E-mail</th>
+            <th>Miejscowość</th>
+            <th>Akcje</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="c : ${companies}">
+            <td th:text="${c.id}">1</td>
+            <!-- Komórka z nazwą: klik prowadzi do szczegółów -->
+            <td>
+                <a th:href="@{|/companies/${c.id}|}" th:text="${c.name}">Nazwa firmy</a>
+            </td>
+            <td th:text="${c.phoneNumber ?: '—'}">123 456 789</td>
+            <td th:text="${c.nip ?: '—'}">1234567890</td>
+            <td th:text="${c.regon ?: '—'}">123456789</td>
+            <td th:text="${c.email ?: '—'}">biuro@example.com</td>
+            <td th:text="${c.address != null ? c.address.city : '—'}">Warszawa</td>
+            <!-- Akcje: dodany przycisk „Szczegóły” (jeśli chcesz, możesz go usunąć, skoro nazwa już linkuje) -->
+            <td class="actions">
+                <a class="btn btn-small" th:href="@{|/companies/${c.id}|}">Szczegóły</a>
+                <a class="btn btn-small" th:href="@{|/companies/${c.id}/edit|}">Edytuj</a>
+                <form th:action="@{|/companies/${c.id}/delete|}" method="post" class="inline-form" data-confirm="Usunąć tę firmę?">
+                    <button type="submit" class="btn btn-danger btn-small">Usuń</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</section>
+
+<script th:src="@{/js/companies.js}"></script>
+</body>
+</html>

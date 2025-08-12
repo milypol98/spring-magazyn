@@ -1,43 +1,330 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="pl">
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" th:href="@{/css/general.css}" />
+    <style>
+        .hidden { display: none !important; }
+        .field-group { margin: 8px 0; }
+        label.inline { margin-right: 8px; }
+        .w200 { width: 200px; }
+    </style>
 </head>
 <body>
 <h1>
-    <label>Dostawy</label>
-    <a th:href="@{/dashboard}" class="btn-main">Strona glowna</a>
-    <a th:href="@{/warehouses}" class="btn-main">Magazyn</a>
-    <a th:href="@{/tasks}" class="btn-main">Task</a>
-    <a th:href="@{/cars}" class="btn-main">Auta</a>
-    <a th:href="@{/places}" class="btn-main">Miejsca</a>
-    <a th:href="@{/users}" class="btn-main">Pracownicy</a>
-    <a th:href="@{/profile}" class="btn-main">Ustawienia</a>
+    <div th:replace="~{fragments/navBar :: navbar}"></div>
 </h1>
+
 <div class="top-row">
     <div class="side-by-side">
-        <div class="tools-container w1200">
+        <div class="container w1200">
             <div class="table-header">
                 <label class="table-title" th:text="|Produkt: ${product.name}|"></label>
             </div>
-            <form th:action="@{'/events/delivery'}" th:object="${productEvent}"  method="post">
+
+            <!-- Ogólny endpoint dla wszystkich typów zdarzeń -->
+            <form th:action="@{'/events/product-event/save'}" th:object="${productEvent}" method="post" id="eventForm">
                 <input type="hidden" th:field="*{id}" />
                 <input type="hidden" th:field="*{product.id}" />
 
-                <label>ilość</label>
-                <input type="text" th:field="*{quantity}" />
-                <label>Cena jednostkowa</label>
-                <input type="text" th:field="*{unitPrice}" />
-                <label>Komentarz</label>
-                <textarea th:field="*{comment}"></textarea>
-                <label>Data i czas:</label>
-                <input type="datetime-local" th:field="*{timestamp}"
-                       th:text="${#temporals.format(productEvent.timestamp, 'yyyy-MM-dd''T''HH:mm')}" required />
+                <div class="field-group">
+                    <label class="inline">Ilość</label>
+                    <input type="number" th:field="*{quantity}" class="w200" required />
+                </div>
+
+                <div class="field-group" id="grp-unitPrice">
+                    <label class="inline">Cena jednostkowa</label>
+                    <input type="number" step="0.01" th:field="*{unitPrice}" class="w200" />
+                </div>
+
+                <div class="field-group">
+                    <label class="inline">Komentarz</label>
+                    <textarea th:field="*{comment}" class="w200"></textarea>
+                </div>
+
+                <div class="field-group">
+                    <label class="inline">Data i czas</label>
+                    <input type="datetime-local" th:field="*{timestamp}"
+                           th:text="${#temporals.format(productEvent.timestamp, 'yyyy-MM-dd''T''HH:mm')}" required />
+                </div>
+
+                <!-- Typ zdarzenia -->
+                <div class="field-group" id="grp-eventType">
+                    <label class="inline">Typ</label>
+                    <select th:field="*{eventType}" id="eventType" required>
+                        <option value="" disabled selected>-- wybierz typ zdarzenia --</option>
+                        <option th:each="t : ${eventTypes}" th:value="${t}" th:text="${t}"></option>
+                    </select>
+                </div>
+
+                <!-- FROM -->
+                <div class="field-group" id="grp-fromType">
+                    <label class="inline">Źródło (From)</label>
+                    <select th:field="*{fromLocationType}" id="fromType">
+                        <option value="" disabled selected>-- wybierz typ źródła --</option>
+                        <option th:each="l : ${locationTypes}" th:value="${l}" th:text="${l}"></option>
+                    </select>
+                </div>
+
+                <div class="field-group" id="grp-fromCar">
+                    <label class="inline">Auto źródłowe</label>
+                    <select th:field="*{fromLocationCode}" id="fromCar">
+                        <option value="" disabled selected>-- wybierz auto --</option>
+                        <option th:each="c : ${cars}" th:value="${c.id}"
+                                th:text="${c.name + ' | ' + (c.registration ?: '')}"></option>
+                    </select>
+                </div>
+
+                <div class="field-group" id="grp-fromTask">
+                    <label class="inline">Zadanie źródłowe</label>
+                    <select th:field="*{fromLocationCode}" id="fromTask">
+                        <option value="" disabled selected>-- wybierz zadanie --</option>
+                        <option th:each="t : ${tasks}" th:value="${t.id}" th:text="${t.name}"></option>
+                    </select>
+                </div>
+
+                <!-- TO -->
+                <div class="field-group" id="grp-toType">
+                    <label class="inline">Cel (To)</label>
+                    <select th:field="*{toLocationType}" id="toType">
+                        <option value="" disabled selected>-- wybierz typ celu --</option>
+                        <option th:each="l : ${locationTypes}" th:value="${l}" th:text="${l}"></option>
+                    </select>
+                </div>
+
+                <div class="field-group" id="grp-toCar">
+                    <label class="inline">Auto docelowe</label>
+                    <select th:field="*{toLocationCode}" id="toCar">
+                        <option value="" disabled selected>-- wybierz auto --</option>
+                        <option th:each="c : ${cars}" th:value="${c.id}"
+                                th:text="${c.name + ' | ' + (c.registration ?: '')}"></option>
+                    </select>
+                </div>
+
+                <div class="field-group" id="grp-toTask">
+                    <label class="inline">Zadanie docelowe</label>
+                    <select th:field="*{toLocationCode}" id="toTask">
+                        <option value="" disabled selected>-- wybierz zadanie --</option>
+                        <option th:each="t : ${tasks}" th:value="${t.id}" th:text="${t.name}"></option>
+                    </select>
+                </div>
+
                 <button type="submit" class="submit-btn">Zapisz</button>
             </form>
         </div>
     </div>
 </div>
+
+<script>
+    // Typy zdarzeń (dopasuj do backendu)
+    const EVENT = {
+        DELIVERY: 'DELIVERY',
+        TRANSFER: 'TRANSFER',
+        RETURN: 'RETURN',
+        USED: 'USED',
+        LOST: 'LOST',
+        DELETE: 'DELETE',
+        TRANSFER_CAR_TO_CAR: 'TRANSFER_CAR_TO_CAR'
+    };
+
+    // Typy lokalizacji (dopasuj do backendu)
+    const LOC = {
+        WAREHOUSE: 'WAREHOUSE',
+        CAR: 'CAR',
+        TASK: 'TASK'
+    };
+
+    const el = id => document.getElementById(id);
+    const hasValue = v => v !== null && v !== undefined && v !== '';
+
+    function setVisible(groupEl, controlEl, visible) {
+        if (!groupEl) return;
+        groupEl.classList.toggle('hidden', !visible);
+        if (controlEl) {
+            controlEl.disabled = !visible;
+            if (!visible) {
+                // nie czyścimy jawnie, pozwalamy Thymeleaf/serwerowi nadpisać gdy trzeba
+            }
+        }
+    }
+
+    function updateFromSide() {
+        const ft = el('fromType').value;
+        setVisible(el('grp-fromCar'),  el('fromCar'),  ft === LOC.CAR);
+        setVisible(el('grp-fromTask'), el('fromTask'), ft === LOC.TASK);
+        if (ft === '' || ft === LOC.WAREHOUSE) {
+            setVisible(el('grp-fromCar'),  el('fromCar'),  false);
+            setVisible(el('grp-fromTask'), el('fromTask'), false);
+        }
+    }
+
+    function updateToSide() {
+        const tt = el('toType').value;
+        setVisible(el('grp-toCar'),  el('toCar'),  tt === LOC.CAR);
+        setVisible(el('grp-toTask'), el('toTask'), tt === LOC.TASK);
+        if (tt === '' || tt === LOC.WAREHOUSE) {
+            setVisible(el('grp-toCar'),  el('toCar'),  false);
+            setVisible(el('grp-toTask'), el('toTask'), false);
+        }
+    }
+
+    function hideAllLocation() {
+        setVisible(el('grp-fromType'), el('fromType'), false);
+        setVisible(el('grp-fromCar'),  el('fromCar'),  false);
+        setVisible(el('grp-fromTask'), el('fromTask'), false);
+        setVisible(el('grp-toType'),   el('toType'),   false);
+        setVisible(el('grp-toCar'),    el('toCar'),    false);
+        setVisible(el('grp-toTask'),   el('toTask'),   false);
+    }
+
+    function updateUI() {
+        const eventType = el('eventType').value;
+
+        // Cena jednostkowa ma sens głównie dla DELIVERY (opcjonalnie też inne przypadki)
+        setVisible(el('grp-unitPrice'), el('unitPrice'), eventType === EVENT.DELIVERY);
+
+        hideAllLocation();
+
+        switch (eventType) {
+            case EVENT.DELIVERY:
+                // przyjęcie do magazynu
+                el('fromType').value = '';
+                el('toType').value = LOC.WAREHOUSE;
+                setVisible(el('grp-toType'), el('toType'), true);
+                updateFromSide();
+                updateToSide();
+                break;
+
+            case EVENT.TRANSFER:
+                // magazyn -> auto
+                el('fromType').value = LOC.WAREHOUSE;
+                setVisible(el('grp-fromType'), el('fromType'), true);
+
+                if (!hasValue(el('toType').value) || el('toType').value === LOC.WAREHOUSE) {
+                    el('toType').value = LOC.CAR;
+                }
+                setVisible(el('grp-toType'), el('toType'), true);
+                updateFromSide();
+                updateToSide();
+                break;
+
+            case EVENT.RETURN:
+                // auto -> magazyn
+                if (!hasValue(el('fromType').value) || el('fromType').value === LOC.WAREHOUSE) {
+                    el('fromType').value = LOC.CAR;
+                }
+                setVisible(el('grp-fromType'), el('fromType'), true);
+
+                el('toType').value = LOC.WAREHOUSE;
+                setVisible(el('grp-toType'), el('toType'), true);
+                updateFromSide();
+                updateToSide();
+                break;
+
+            case EVENT.TRANSFER_CAR_TO_CAR:
+                // auto -> auto
+                if (!hasValue(el('fromType').value) || el('fromType').value !== LOC.CAR) {
+                    el('fromType').value = LOC.CAR;
+                }
+                if (!hasValue(el('toType').value) || el('toType').value !== LOC.CAR) {
+                    el('toType').value = LOC.CAR;
+                }
+                setVisible(el('grp-fromType'), el('fromType'), true);
+                setVisible(el('grp-toType'),   el('toType'),   true);
+                updateFromSide();
+                updateToSide();
+                break;
+
+            case EVENT.USED:
+                // zużycie: tylko FROM (CAR albo TASK)
+                setVisible(el('grp-fromType'), el('fromType'), true);
+                if (!hasValue(el('fromType').value) || el('fromType').value === LOC.WAREHOUSE) {
+                    el('fromType').value = LOC.CAR;
+                }
+                updateFromSide();
+                break;
+
+            case EVENT.LOST:
+            case EVENT.DELETE:
+                // ubytek/korekta: tylko FROM (CAR/TASK/WAREHOUSE)
+                setVisible(el('grp-fromType'), el('fromType'), true);
+                updateFromSide();
+                break;
+
+            default:
+                // domyślnie nic nie pokazujemy poza typem
+                break;
+        }
+    }
+
+    function validateBeforeSubmit(e) {
+        const eventType = el('eventType').value;
+        const fromType = el('fromType').value;
+        const toType   = el('toType').value;
+
+        // Proste walidacje UX (backend też powinien weryfikować!)
+        if (!eventType) {
+            e.preventDefault();
+            alert('Wybierz typ zdarzenia.');
+            return false;
+        }
+
+        const needFrom = [EVENT.RETURN, EVENT.USED, EVENT.LOST, EVENT.DELETE, EVENT.TRANSFER, EVENT.TRANSFER_CAR_TO_CAR].includes(eventType);
+        const needTo   = [EVENT.TRANSFER, EVENT.RETURN, EVENT.TRANSFER_CAR_TO_CAR, EVENT.DELIVERY].includes(eventType);
+
+        if (needFrom && !fromType) {
+            e.preventDefault();
+            alert('Wybierz źródło (From).');
+            return false;
+        }
+        if (needTo && !toType) {
+            e.preventDefault();
+            alert('Wybierz cel (To).');
+            return false;
+        }
+
+        // Kody lokalizacji gdy wymagane
+        if (fromType === LOC.CAR && el('fromCar').disabled === false && !el('fromCar').value) {
+            e.preventDefault();
+            alert('Wybierz auto źródłowe.');
+            return false;
+        }
+        if (fromType === LOC.TASK && el('fromTask').disabled === false && !el('fromTask').value) {
+            e.preventDefault();
+            alert('Wybierz zadanie źródłowe.');
+            return false;
+        }
+        if (toType === LOC.CAR && el('toCar').disabled === false && !el('toCar').value) {
+            e.preventDefault();
+            alert('Wybierz auto docelowe.');
+            return false;
+        }
+        if (toType === LOC.TASK && el('toTask').disabled === false && !el('toTask').value) {
+            e.preventDefault();
+            alert('Wybierz zadanie docelowe.');
+            return false;
+        }
+
+        // Transfer auto->auto: zabezpiecz, żeby nie wybrać tego samego auta
+        if (eventType === EVENT.TRANSFER_CAR_TO_CAR
+            && el('fromType').value === LOC.CAR && el('toType').value === LOC.CAR
+            && hasValue(el('fromCar').value) && el('fromCar').value === el('toCar').value) {
+            e.preventDefault();
+            alert('Auto źródłowe i docelowe nie mogą być takie same.');
+            return false;
+        }
+        return true;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        el('eventType').addEventListener('change', updateUI);
+        el('fromType').addEventListener('change', updateFromSide);
+        el('toType').addEventListener('change', updateToSide);
+        el('eventForm').addEventListener('submit', validateBeforeSubmit);
+
+        // Inicjalizacja
+        updateUI();
+    });
+</script>
 </body>
 </html>

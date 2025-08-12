@@ -27,8 +27,6 @@ public class User  {
     @Column(nullable = false)
     private String password;
     private Long phone;
-    @ManyToOne
-    private Address address;
     private String description;
     @Column(nullable = false, unique = true)
     private String email;

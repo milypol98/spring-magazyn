@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pl">
+<head>
+    <meta charset="UTF-8" />
+    <title>Faktura - dodaj/edytuj</title>
+    <link rel="stylesheet" th:href="@{/css/invoices.css}" />
+</head>
+<body>
+<header class="page-header">
+    <h1>Dodaj fakturę</h1>
+    <div class="actions">
+        <a th:href="@{/invoices}" class="btn btn-secondary">← Wróć do listy</a>
+    </div>
+</header>
+
+<section class="form-wrapper">
+    <div th:if="${error}" class="alert alert-error" th:text="${error}">Wystąpił błąd</div>
+
+    <form th:action="@{/invoices/save}" method="post" enctype="multipart/form-data" class="form">
+        <div class="form-grid">
+            <label>
+                Nr faktury
+                <input type="text" name="nrFaktury" th:value="${nrFaktury}" placeholder="np. FV/01/2025" required />
+            </label>
+
+            <label>
+                Nazwa (kontrahent / tytuł)
+                <input type="text" name="nazwa" th:value="${nazwa}" placeholder="np. Acme Sp. z o.o." required />
+            </label>
+
+            <label>Firma (opcjonalnie)
+                <select name="companyId">
+                    <option th:each="c : ${companies}"
+                            th:value="${c.id}"
+                            th:text="${c.name}"
+                            th:selected="${companyId != null and companyId == c.id}">
+                    </option>
+                </select>
+                <small>
+                    <a th:href="@{/companies/new}" target="_blank">Dodaj nową firmę</a>
+                </small>
+            </label>
+
+            <label>
+                Waluta
+                <input type="text" name="currency" th:value="${currency}" placeholder="np. PLN" />
+            </label>
+
+            <label>
+                Netto
+                <input type="number" step="0.01" name="totalNet" th:value="${totalNet}" placeholder="0.00" />
+            </label>
+
+            <label>
+                VAT
+                <input type="number" step="0.01" name="totalVat" th:value="${totalVat}" placeholder="0.00" />
+            </label>
+
+            <label>
+                Brutto
+                <input type="number" step="0.01" name="totalGross" th:value="${totalGross}" placeholder="0.00" />
+            </label>
+
+            <label class="file-input">
+                Plik (PDF/skan)
+                <input type="file" name="plik" accept=".pdf,image/*" required />
+            </label>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Zapisz</button>
+            <a th:href="@{/invoices}" class="btn btn-secondary">Anuluj</a>
+        </div>
+    </form>
+</section>
+
+<script th:src="@{/js/invoices.js}"></script>
+</body>
+</html>

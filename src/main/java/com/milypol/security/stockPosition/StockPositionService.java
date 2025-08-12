@@ -7,4 +7,5 @@ public interface StockPositionService {
     StockPosition getStockPositionById(Integer id);
     StockPosition saveStockPosition(StockPosition stockPosition);
     void deleteStockPosition(Integer id);
+    List<StockPosition> getAllStockPositionsByWarehouseId(Integer warehouseId);
 }

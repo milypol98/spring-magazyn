@@ -1,9 +1,9 @@
 package com.milypol.security.cart;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.milypol.security.cartItem.CartItem;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
@@ -19,7 +19,9 @@ public class Cart {
     private String description;
     private String name;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "cart_id")
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore                    // ignoruj pole podczas serializacji JSON (REST, Thymeleaf)
+    @ToString.Exclude              // wyklucz z generowanego toString()
+    @EqualsAndHashCode.Exclude     // wyklucz z equals() i hashCode()
     private List<CartItem> items;
 }

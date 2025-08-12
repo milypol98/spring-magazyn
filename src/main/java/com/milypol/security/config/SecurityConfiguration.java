@@ -50,8 +50,8 @@ public class SecurityConfiguration {
                                 "/images/**",
                                 "/h2-console/**"
                         ).permitAll()
-                        .requestMatchers("/warehouse/**").authenticated()
-                        .anyRequest().authenticated() // ✅ na końcu
+                        .requestMatchers("/warehouses/**").hasAuthority("ADMIN") // Dostęp tylko dla roli ADMIN
+                        .anyRequest().authenticated()
                 )
 
                 // Formularz logowania

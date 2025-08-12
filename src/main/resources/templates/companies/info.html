@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pl">
+<head>
+    <meta charset="UTF-8" />
+    <title>Szczegóły firmy</title>
+    <link rel="stylesheet" th:href="@{/css/companies.css}" />
+</head>
+<body>
+<header class="page-header">
+    <h1>Szczegóły firmy</h1>
+    <div class="actions">
+        <a th:href="@{/companies}" class="btn btn-secondary">← Wróć do listy</a>
+    </div>
+</header>
+
+<section th:if="${company != null}" class="details">
+    <dl class="details-grid">
+        <dt>ID</dt>
+        <dd th:text="${company.id}">1</dd>
+
+        <dt>Nazwa</dt>
+        <dd th:text="${#strings.defaultString(company?.name, '—')}">—</dd>
+
+        <dt>Telefon</dt>
+        <dd th:text="${#strings.defaultString(company?.phoneNumber, '—')}">—</dd>
+
+        <dt>E-mail</dt>
+        <dd>
+            <a th:if="${!#strings.isEmpty(company?.email)}"
+               th:href="${'mailto:' + company.email}"
+               th:text="${company.email}">—</a>
+            <span th:if="${#strings.isEmpty(company?.email)}">—</span>
+        </dd>
+
+        <dt>Strona WWW</dt>
+        <dd>
+            <a th:if="${!#strings.isEmpty(company?.website)}"
+               th:href="${company.website}"
+               th:text="${company.website}"
+               target="_blank" rel="noopener">—</a>
+            <span th:if="${#strings.isEmpty(company?.website)}">—</span>
+        </dd>
+
+        <dt>NIP</dt>
+        <dd th:text="${#strings.defaultString(company?.nip, '—')}">—</dd>
+
+        <dt>REGON</dt>
+        <dd th:text="${#strings.defaultString(company?.regon, '—')}">—</dd>
+
+        <dt>Opis</dt>
+        <dd th:text="${#strings.defaultString(company?.description, '—')}">—</dd>
+
+        <dt>Adres</dt>
+        <dd>
+            <div th:if="${company.address != null}">
+                <div>
+                    <span th:text="${#strings.defaultString(company.address?.street, '')}">Ulica</span>
+                    <span th:text="${#strings.defaultString(company.address?.buildingNumber, '')}">1</span>
+                    <span th:if="${!#strings.isEmpty(company.address?.apartmentNumber)}"
+                          th:text="${'/' + company.address.apartmentNumber}">/1</span>
+                </div>
+                <div>
+                    <span th:text="${#strings.defaultString(company.address?.postalCode, '')}">00-000</span>
+                    <span th:text="${#strings.defaultString(company.address?.city, '')}">Miasto</span>
+                </div>
+                <div th:text="${#strings.defaultString(company.address?.country, '')}">Kraj</div>
+            </div>
+            <span th:if="${company.address == null}">—</span>
+        </dd>
+
+        <dt>Utworzono</dt>
+        <dd th:text="${company.createdAt != null ? #temporals.format(company.createdAt, 'yyyy-MM-dd HH:mm') : '—'}">—</dd>
+
+        <dt>Aktualizowano</dt>
+        <dd th:text="${company.updatedAt != null ? #temporals.format(company.updatedAt, 'yyyy-MM-dd HH:mm') : '—'}">—</dd>
+    </dl>
+
+    <div class="details-actions">
+        <a class="btn btn-primary" th:href="@{|/companies/${company.id}/edit|}">Edytuj</a>
+        <form th:action="@{|/companies/${company.id}/delete|}" method="post" class="inline-form" data-confirm="Usunąć tę firmę?">
+            <button type="submit" class="btn btn-danger">Usuń</button>
+        </form>
+    </div>
+</section>
+
+<section th:if="${company == null}" class="empty-state">
+    Nie znaleziono firmy.
+</section>
+
+<script th:src="@{/js/companies.js}"></script>
+</body>
+</html>
