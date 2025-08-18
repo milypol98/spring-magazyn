@@ -1,56 +1,83 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="pl">
 <head>
     <meta charset="UTF-8" />
     <title>Logowanie</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" th:href="@{/css/login.css}" />
 </head>
 <body>
+<div class="bg-ornament" aria-hidden="true"></div>
 
-<div class="login-wrapper">
-    <h1>
-        <img style="display: flex; align-items: center; width: 360px" src="/images/logo.png" alt="Logo" />
-    </h1>
-    <h2>Logowanie</h2>
+<main class="login-wrapper">
+    <section class="login-card">
+        <header class="login-header">
+            <img class="logo" src="/images/logo.png" alt="Logo" />
+            <h1>Witaj ponownie</h1>
+            <p class="subtitle">Zaloguj się, aby przejść do panelu</p>
+        </header>
 
-    <div th:if="${loginError}" class="message error">
-        <p th:text="${loginError}"></p>
-    </div>
-
-    <div th:if="${logoutMsg}" class="message success">
-        <p th:text="${logoutMsg}"></p>
-    </div>
-
-    <div th:if="${registeredMsg}" class="message success">
-        <p th:text="${registeredMsg}"></p>
-    </div>
-
-    <form th:action="@{/perform_login}" method="post" class="login-form">
-        <div class="form-group">
-            <label for="email">E-mail:</label>
-            <input type="email"
-                   id="email"
-                   name="email"
-                   placeholder="Wpisz e-mail"
-                   required />
+        <div class="messages">
+            <div th:if="${loginError}" class="message error" id="loginError">
+                <span class="icon">⚠️</span>
+                <p th:text="${loginError}">Nieprawidłowy e-mail lub hasło.</p>
+            </div>
+            <div th:if="${logoutMsg}" class="message success">
+                <span class="icon">✅</span>
+                <p th:text="${logoutMsg}">Zostałeś wylogowany.</p>
+            </div>
+            <div th:if="${registeredMsg}" class="message success">
+                <span class="icon">✅</span>
+                <p th:text="${registeredMsg}">Rejestracja zakończona. Zaloguj się.</p>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="password">Hasło:</label>
-            <input type="password"
-                   id="password"
-                   name="password"
-                   placeholder="Wpisz hasło"
-                   required />
-        </div>
-        <div class="form-group">
-            <button type="submit">Zaloguj</button>
-        </div>
-    </form>
 
-    <p class="register-link">
-        Nie masz konta?
-        <a th:href="@{/register}">Zarejestruj się!</a>
-    </p>
-</div>
+        <form th:action="@{/perform_login}" method="post" class="login-form" novalidate>
+            <div class="form-group">
+                <label for="email">E-mail</label>
+                <div class="input-wrap">
+                    <span class="input-icon" aria-hidden="true">📧</span>
+                    <input type="email"
+                           id="email"
+                           name="email"
+                           placeholder="twoj.email@firma.pl"
+                           autocomplete="username"
+                           required
+                           autofocus />
+                </div>
+                <small class="hint">Użyj służbowego adresu e-mail.</small>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Hasło</label>
+                <div class="input-wrap">
+                    <span class="input-icon" aria-hidden="true">🔒</span>
+                    <input type="password"
+                           id="password"
+                           name="password"
+                           placeholder="••••••••"
+                           autocomplete="current-password"
+                           required />
+                    <button type="button" class="reveal" id="togglePassword" aria-label="Pokaż hasło">👁️</button>
+                </div>
+                <small class="hint caps hidden" id="capsHint">Włączony Caps Lock</small>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary w100">Zaloguj</button>
+            </div>
+        </form>
+
+        <footer class="login-footer">
+            <p class="register-link">
+                Nie masz konta?
+                <a th:href="@{/register}" class="link">Zarejestruj się</a>
+            </p>
+        </footer>
+    </section>
+    <p class="copyright">© <span id="yearNow"></span> — Panel operacyjny</p>
+</main>
+
+<script th:src="@{/js/login.js}"></script>
 </body>
 </html>

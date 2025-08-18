@@ -22,6 +22,17 @@ public class CartsController {
         this.productService = productService;
         this.cartItemService = cartItemService;
     }
+    @GetMapping
+    public String list(Model model) {
+        model.addAttribute("carts", cartService.getAllCarts());
+        return "carts/list";
+    }
+
+    @GetMapping("/{id}")
+    public String info(@PathVariable Integer id, Model model) {
+        model.addAttribute("cart", cartService.getCartById(id));
+        return "carts/info";
+    }
 
     @GetMapping("/add")
     public String addCart(Model model) {

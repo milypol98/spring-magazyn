@@ -19,6 +19,7 @@ public class Product {
     private Integer id;
     private String code;
     private String name;
+    private String category;
     private String description;
     private Integer minStock;
     private Integer alarmStock;

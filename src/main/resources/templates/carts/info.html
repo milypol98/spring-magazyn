@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pl">
+<head>
+    <meta charset="UTF-8" />
+    <title>Szczegóły koszyka</title>
+    <link rel="stylesheet" th:href="@{/css/carts.css}" />
+</head>
+<body>
+
+<header class="page-header">
+    <nav class="breadcrumbs" aria-label="breadcrumb">
+        <a th:href="@{/}" class="crumb">Strona główna</a>
+        <span class="sep">/</span>
+        <a th:href="@{/carts}" class="crumb">Koszyki</a>
+        <span class="sep">/</span>
+        <span class="crumb current">Szczegóły</span>
+    </nav>
+    <div class="header-row">
+        <h1 class="page-title">Szczegóły koszyka</h1>
+        <div class="header-tools">
+            <a th:href="@{/carts}" class="btn">← Wróć</a>
+            <a th:href="@{/carts/edit/{id}(id=${cart.id})}" class="btn btn-primary">Edytuj</a>
+        </div>
+    </div>
+</header>
+
+<main class="content">
+    <section class="card">
+        <div class="details-grid">
+            <div class="detail">
+                <div class="label">ID</div>
+                <div class="value" th:text="${cart.id}">1</div>
+            </div>
+            <div class="detail">
+                <div class="label">Nazwa</div>
+                <div class="value" th:text="${#strings.defaultString(cart.name,'—')}">—</div>
+            </div>
+            <div class="detail">
+                <div class="label">Opis</div>
+                <div class="value" th:text="${#strings.defaultString(cart.description,'—')}">—</div>
+            </div>
+            <div class="detail">
+                <div class="label">Liczba pozycji</div>
+                <div class="value" th:text="${#lists.size(cart.items)}">0</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="card">
+        <div class="table-header">
+            <label class="table-title">Pozycje w koszyku</label>
+        </div>
+        <div class="table-wrapper">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Typ</th>
+                    <th>Nazwa</th>
+                    <th>Ilość</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="ci : ${cart.items}">
+                    <td th:text="${ci.product != null ? 'Produkt' : 'StockPosition'}">Typ</td>
+                    <td>
+                        <span th:if="${ci.product != null}" th:text="${ci.product.name}">Produkt</span>
+                        <span th:if="${ci.stockPosition != null}" th:text="${ci.stockPosition.name}">Pozycja</span>
+                    </td>
+                    <td th:text="${ci.quantity}">1</td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(cart.items)}">
+                    <td colspan="3">Koszyk jest pusty.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+
+<script th:src="@{/js/carts.js}"></script>
+</body>
+</html>

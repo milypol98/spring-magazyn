@@ -1,118 +1,77 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="pl">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <link rel="stylesheet" th:href="@{/css/general.css}" />
-
+    <meta charset="UTF-8" />
+    <title th:text="${task.id} != null ? 'Edytuj zadanie' : 'Dodaj zadanie'">Zadanie</title>
+    <link rel="stylesheet" th:href="@{/css/tasks.css}" />
 </head>
 <body>
-<h1>
+<header class="page-header">
+    <h1 th:text="${task.id} != null ? 'Edytuj zadanie' : 'Dodaj zadanie'">Zadanie</h1>
+</header>
 
-<div th:replace="~{fragments/navBar :: navbar}"></div>
+<section class="form-container">
+    <form th:action="@{/tasks/save}" method="post" th:object="${task}" novalidate class="edit-form">
+        <input type="hidden" th:field="*{id}" />
 
-</h1>
-<div class="top-row">
-    <div class="side-by-side">
-        <div class="container">
-            <div class="table-header">
-                <label class="table-title">Edytuj:</label>
-            </div>
-            <form th:action="@{'/tasks/save'}" th:object="${task}" method="post">
-                <input type="hidden" th:field="*{id}" />
+        <div class="form-row">
+            <label>Nazwa <span class="req">*</span>
+                <input type="text" th:field="*{name}" maxlength="150" required />
+            </label>
+            <div class="field-hint" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Błąd</div>
+        </div>
 
-                <label>Nazwa:</label>
-                <input type="text" th:field="*{name}" />
+        <div class="form-row">
+            <label>Opis
+                <input type="text" th:field="*{description}" maxlength="255" />
+            </label>
+            <div class="field-hint" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Błąd</div>
+        </div>
 
-                <label>Opis:</label>
-                <textarea th:field="*{description}"></textarea>
-
-                <label>Data od:</label>
+        <div class="form-row">
+            <label>Data od
+                <input type="date" th:field="*{dateFrom}" />
+            </label>
+            <label>Data do
                 <input type="date" th:field="*{dateTo}" />
-
-                <label>Data do:</label>
-                <input type="date" th:field="*{dateFrom}" />
-
-                <label>Data do</label>
-                <input type="date" th:field="*{dateFrom}" />
-
-                <label>
-                    <a href="/users" class="btn-add">Pracownicy</a>
-                </label>
-                <div class="car-grid">
-                    <label th:each="u : ${allUsers}">
-                        <input type="checkbox" th:value="${u.id}" th:field="*{users}" />
-                        <span th:text="${u.firstname + ' ' + u.lastName}"></span>
-                    </label>
-                </div>
-
-                <label>
-                    <a href="/places" class="btn-add">Miejsca</a>
-                </label>
-                <div class="car-grid">
-                    <label th:each="p : ${allPlaces}">
-                        <input type="checkbox" th:value="${p.id}" th:field="*{place}" />
-                        <span th:text="${p.name + ' ' + p.address}"></span>
-                    </label>
-                </div>
-
-                <label>
-                    <a href="/cars" class="btn-add">Samochody</a>
-                </label>
-                <div class="car-grid">
-                    <label th:each="c : ${allCars}">
-                        <input type="checkbox" th:value="${c.id}" th:field="*{cars}" />
-                        <span th:text="${c.name}"></span>
-                    </label>
-                </div>
-                <button type="submit" class="submit-btn">Zapisz</button>
-            </form>
+            </label>
+            <div class="field-hint" th:if="${#fields.hasErrors('dateRangeValid')}" th:errors="*{dateRangeValid}">Błąd</div>
         </div>
-        <div class="container">
-            <div class="table-header">
-                <label th:text="${productTask}">Zrealizowane</label>
-            </div>
-<!--            <table>-->
-<!--                <thead>-->
-<!--                <tr>-->
-<!--                    <th>Nazwa</th>-->
-<!--                    <th>Opis</th>-->
-<!--                </tr>-->
-<!--                </thead>-->
-<!--                <tbody>-->
-<!--                <tr th:each="productTask : ${productTask}">-->
-<!--                    <td th:text="${productTask.id}"></td>-->
-<!--                    <td th:text="${productTask.description}"></td>-->
-<!--                    <td th:text="${productTask.quantity}"></td>-->
-<!--                </tr>-->
-<!--                </tbody>-->
-<!--            </table>-->
+
+        <div class="form-row">
+            <label>Status <span class="req">*</span>
+                <select th:field="*{status}" required>
+                    <option th:each="s: ${T(com.milypol.security.task.TaskStatus).values()}"
+                            th:value="${s}"
+                            th:text="${s}">OPEN</option>
+                </select>
+            </label>
+            <div class="field-hint" th:if="${#fields.hasErrors('status')}" th:errors="*{status}">Błąd</div>
         </div>
-        <div class="container">
-            <div class="table-header">
-                <label>Raporty</label>
-                <a th:href="@{'/tasks/raports/add/' + ${task.id}}" class="btn-add">Dodaj</a>
-            </div>
-            <table>
-                <thead>
-                <tr>
-                    <th>Opis</th>
-                    <th>Dzien</th>
-                    <th>Data wpyniecia</th>
-                    <th>Godziny przepracowane</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="item : ${taskRaports}">
-                    <td th:text="${item.description}"></td>
-                    <td th:text="${item.date}"></td>
-                    <td th:text="${item.dateComeIn}"></td>
-                    <td th:text="${item.hour}"></td>
-                </tr>
-                </tbody>
-            </table>
+
+        <div class="form-row">
+            <label>Użytkownicy (CTRL/CMD aby zaznaczyć wiele)
+                <select th:field="*{users}" multiple size="6">
+                    <option th:each="u : ${allUsers}" th:value="${u.id}" th:text="${u.firstname}">User</option>
+                </select>
+            </label>
         </div>
-    </div>
-</div>
+
+        <div class="form-row">
+            <label>Auta (CTRL/CMD aby zaznaczyć wiele)
+                <select th:field="*{cars}" multiple size="6">
+                    <option th:each="c : ${allCars}" th:value="${c.id}" th:text="${c.name}">Car</option>
+                </select>
+            </label>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Zapisz</button>
+            <a th:href="@{/tasks}" class="btn btn-secondary">Anuluj</a>
+        </div>
+    </form>
+</section>
+
+<script th:src="@{/js/tasks.js}"></script>
 </body>
 </html>

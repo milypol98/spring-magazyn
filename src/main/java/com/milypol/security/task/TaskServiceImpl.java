@@ -1,6 +1,9 @@
 package com.milypol.security.task;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -54,6 +57,12 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public Optional<Task> getTaskByCarIdAndDate(Integer carId, LocalDate date) {
         return taskRepo.findTaskByCarIdAndCurrentDateBetween(carId, date);
+    }
+    @Override
+    @Transactional(readOnly = true)
+    public Page<Task> search(String q, TaskStatus status, Integer userId, LocalDate fromDate, LocalDate toDate, Pageable pageable) {
+        String query = (q == null || q.isBlank()) ? null : q.trim();
+        return taskRepo.search(query, status, userId, fromDate, toDate, pageable);
     }
 
 

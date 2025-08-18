@@ -1,72 +1,107 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="pl">
 <head>
     <meta charset="UTF-8" />
     <title>Rejestracja</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" th:href="@{/css/register.css}" />
 </head>
 <body>
+<div class="bg-ornament" aria-hidden="true"></div>
 
-<div class="register-wrapper">
-    <h1>
-        <img style="display: flex; align-items: center; width: 380px" src="/images/logo.png" alt="Logo" />
-    </h1>
-    <h2>Rejestracja</h2>
+<main class="reg-wrapper">
+    <section class="reg-card">
+        <header class="reg-header">
+            <img class="logo" src="/images/logo.png" alt="Logo" />
+            <h1>Utwórz konto</h1>
+            <p class="subtitle">Wypełnij dane, aby rozpocząć</p>
+        </header>
 
-    <div th:if="${registrationError}" class="message error">
-        <p th:text="${registrationError}"></p>
-    </div>
-
-    <!-- Formularz wiąże się z obiektem registrationRequest -->
-    <form th:action="@{/register}" th:object="${registrationRequest}" method="post" class="register-form">
-        <div class="form-group">
-            <label for="email">E-mail:</label>
-            <input
-                    type="email"
-                    id="email"
-                    th:field="*{email}"
-                    placeholder="Wpisz e-mail"
-                    required />
-            <div th:if="${#fields.hasErrors('email')}" class="field-error">
-                <p th:errors="*{email}">Błąd adresu e-mail</p>
+        <div class="messages">
+            <div th:if="${registerError}" class="message error" id="regError">
+                <span class="icon">⚠️</span>
+                <p th:text="${registerError}">Wystąpił błąd rejestracji.</p>
+            </div>
+            <div th:if="${registerSuccess}" class="message success" id="regSuccess">
+                <span class="icon">✅</span>
+                <p th:text="${registerSuccess}">Konto utworzone. Możesz się zalogować.</p>
             </div>
         </div>
 
-        <div class="form-group">
-            <label for="password">Hasło:</label>
-            <input
-                    type="password"
-                    id="password"
-                    th:field="*{password}"
-                    placeholder="Wpisz hasło"
-                    required />
-            <div th:if="${#fields.hasErrors('password')}" class="field-error">
-                <p th:errors="*{password}">Błąd hasła</p>
+        <form th:action="@{/register}" method="post" class="reg-form" novalidate>
+            <div class="form-group">
+                <label for="email">E-mail</label>
+                <div class="input-wrap">
+                    <span class="input-icon" aria-hidden="true">📧</span>
+                    <input type="email"
+                           id="email"
+                           name="email"
+                           placeholder="twoj.email@firma.pl"
+                           autocomplete="username"
+                           required
+                           autofocus />
+                </div>
+                <small class="hint">Użyj służbowego adresu e-mail.</small>
             </div>
-        </div>
 
-        <div class="form-group">
-            <label for="confirmPassword">Potwierdź hasło:</label>
-            <input
-                    type="password"
-                    id="confirmPassword"
-                    th:field="*{confirmPassword}"
-                    placeholder="Potwierdź hasło"
-                    required />
-            <div th:if="${#fields.hasErrors('confirmPassword')}" class="field-error">
-                <p th:errors="*{confirmPassword}">Błąd potwierdzenia hasła</p>
+            <div class="form-group">
+                <label for="password">Hasło</label>
+                <div class="input-wrap">
+                    <span class="input-icon" aria-hidden="true">🔒</span>
+                    <input type="password"
+                           id="password"
+                           name="password"
+                           placeholder="••••••••"
+                           autocomplete="new-password"
+                           minlength="8"
+                           required />
+                    <button type="button" class="reveal" id="togglePwd" aria-label="Pokaż hasło">👁️</button>
+                </div>
+                <div class="strength" aria-live="polite">
+                    <div class="bar" id="strengthBar"></div>
+                    <span class="label" id="strengthLabel">Siła: —</span>
+                </div>
+                <small class="hint caps hidden" id="capsHint">Włączony Caps Lock</small>
+                <small class="hint">Min. 8 znaków, zalecane litery, cyfry i znak specjalny.</small>
             </div>
-        </div>
 
-        <div class="form-group">
-            <button type="submit">Zarejestruj</button>
-        </div>
-    </form>
+            <div class="form-group">
+                <label for="confirmPassword">Powtórz hasło</label>
+                <div class="input-wrap">
+                    <span class="input-icon" aria-hidden="true">✅</span>
+                    <input type="password"
+                           id="confirmPassword"
+                           name="confirmPassword"
+                           placeholder="Powtórz hasło"
+                           autocomplete="new-password"
+                           required />
+                    <button type="button" class="reveal" id="togglePwd2" aria-label="Pokaż hasło">👁️</button>
+                </div>
+                <small class="hint" id="matchInfo">Hasła muszą być identyczne.</small>
+            </div>
 
-    <p class="login-link">
-        Masz już konto?
-        <a th:href="@{/login}">Zaloguj się!</a>
-    </p>
-</div>
+            <div class="form-group inline">
+                <label class="checkbox">
+                    <input type="checkbox" id="terms" required />
+                    <span>Akceptuję regulamin i politykę prywatności</span>
+                </label>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary w100" id="submitBtn" disabled>Utwórz konto</button>
+            </div>
+        </form>
+
+        <footer class="reg-footer">
+            <p>Masz już konto?
+                <a th:href="@{/login}" class="link">Zaloguj się</a>
+            </p>
+        </footer>
+    </section>
+
+    <p class="copyright">© <span id="yearNow"></span> — Panel operacyjny</p>
+</main>
+
+<script th:src="@{/js/registers.js}"></script>
 </body>
 </html>

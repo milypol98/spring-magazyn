@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pl">
+<head>
+    <meta charset="UTF-8" />
+    <title>Koszyki</title>
+    <link rel="stylesheet" th:href="@{/css/carts.css}" />
+</head>
+<body>
+
+<header class="page-header">
+    <nav class="breadcrumbs" aria-label="breadcrumb">
+        <a th:href="@{/}" class="crumb">Strona główna</a>
+        <span class="sep">/</span>
+        <span class="crumb current">Koszyki</span>
+    </nav>
+    <div class="header-row">
+        <h1 class="page-title">Koszyki</h1>
+        <div class="header-tools">
+            <a th:href="@{/carts/add}" class="btn btn-primary">+ Nowy koszyk</a>
+        </div>
+    </div>
+</header>
+
+<main class="content">
+    <section class="card">
+        <div class="table-header">
+            <label class="table-title">Lista koszyków</label>
+            <input id="cartSearch" class="table-search" type="search" placeholder="Szukaj po nazwie/opisie…" />
+        </div>
+
+        <div class="table-wrapper">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nazwa</th>
+                    <th>Opis</th>
+                    <th>Liczba pozycji</th>
+                    <th>Akcje</th>
+                </tr>
+                </thead>
+                <tbody id="cartsTbody">
+                <tr th:each="c : ${carts}"
+                    class="clickable-row"
+                    th:attr="data-href=@{/carts/{id}(id=${c.id})}, data-name=${c.name}, data-desc=${c.description}">
+                    <td th:text="${c.id}">1</td>
+                    <td>
+                        <a th:href="@{/carts/{id}(id=${c.id})}" th:text="${c.name}">Nazwa</a>
+                    </td>
+                    <td th:text="${#strings.defaultString(c.description,'—')}">—</td>
+                    <td th:text="${#lists.size(c.items)}">0</td>
+                    <td class="actions">
+                        <a class="btn btn-small" th:href="@{/carts/{id}(id=${c.id})}">Szczegóły</a>
+                        <a class="btn btn-small" th:href="@{/carts/edit/{id}(id=${c.id})}">Edytuj</a>
+                        <form th:action="@{/carts/delete/{id}(id=${c.id})}" method="post" class="inline-form" data-confirm="Usunąć ten koszyk?">
+                            <button type="submit" class="btn btn-danger btn-small">Usuń</button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(carts)}">
+                    <td colspan="5">Brak koszyków.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+
+<script th:src="@{/js/carts.js}"></script>
+</body>
+</html>

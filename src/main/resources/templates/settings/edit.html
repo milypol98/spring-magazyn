@@ -3,15 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <title>Profil użytkownika</title>
-
-    <!-- Ogólny styl -->
-    <link rel="stylesheet" th:href="@{/css/general.css}" />
-    <!-- Styl dedykowany dla zakładki profilu -->
     <link rel="stylesheet" th:href="@{/css/settings.css}" />
 </head>
 <body>
 
-<div th:replace="~{fragments/navBar :: navbar}"></div>
+<!-- Pasek jak w firms/fakturach: breadcrumbs + tytuł -->
+<header class="page-header">
+    <nav class="breadcrumbs" aria-label="breadcrumb">
+        <a th:href="@{/}" class="crumb">Strona główna</a>
+        <span class="sep">/</span>
+        <a th:href="@{/users}" class="crumb">Pracownicy</a>
+        <span class="sep">/</span>
+        <span class="crumb current">Ustawienia użytkownika</span>
+    </nav>
+    <h1 class="page-title">Ustawienia użytkownika</h1>
+</header>
 
 <div class="top-row">
     <div class="side-by-side profile-layout">
@@ -21,7 +27,9 @@
                 <label class="form-title">Twoje dane</label>
             </div>
 
-            <form th:action="@{/profile/edit}" th:object="${user}" method="post" class="profile-form" novalidate>
+            <form th:action="@{/users/edit}" th:object="${user}" method="post" class="profile-form" novalidate>
+                <input type="hidden" th:field="*{id}" />
+
                 <label for="firstname">Imię</label>
                 <input type="text" id="firstname" th:field="*{firstname}" placeholder="Wpisz imię" required />
 
@@ -37,22 +45,69 @@
                 <label for="description">Opis</label>
                 <textarea id="description" th:field="*{description}" placeholder="Krótka informacja o Tobie (opcjonalnie)"></textarea>
 
-                <!-- Pole roli wyświetlane informacyjnie (bez możliwości edycji) -->
+                <!-- Adres: osobne pola nr budynku i nr lokalu -->
+                <fieldset class="address-fieldset">
+                    <legend>Adres</legend>
+                    <div class="grid-2">
+                        <div>
+                            <label for="country">Kraj</label>
+                            <input type="text" id="country" th:field="*{address.country}" placeholder="np. Polska" />
+                        </div>
+                        <div>
+                            <label for="city">Miasto</label>
+                            <input type="text" id="city" th:field="*{address.city}" placeholder="np. Warszawa" />
+                        </div>
+                        <div>
+                            <label for="postalCode">Kod pocztowy</label>
+                            <input type="text" id="postalCode" th:field="*{address.postalCode}" placeholder="00-000" />
+                        </div>
+                        <div>
+                            <label for="street">Ulica</label>
+                            <input type="text" id="street" th:field="*{address.street}" placeholder="np. Prosta" />
+                        </div>
+                        <div>
+                            <label for="buildingNumber">Nr budynku</label>
+                            <input type="text" id="buildingNumber" th:field="*{address.buildingNumber}" placeholder="np. 12" />
+                        </div>
+                        <div>
+                            <label for="apartmentNumber">Nr lokalu</label>
+                            <input type="text" id="apartmentNumber" th:field="*{address.apartmentNumber}" placeholder="np. 3" />
+                        </div>
+                    </div>
+                </fieldset>
+
+                <!-- Zmiana hasła -->
+                <fieldset class="password-fieldset">
+                    <legend>Zmiana hasła</legend>
+                    <label class="toggle-password">
+                        <input id="changePassword" type="checkbox" />
+                        <span>Chcę zmienić hasło</span>
+                    </label>
+
+                    <div id="passwordFields" class="password-fields hidden">
+                        <label for="newPassword">Nowe hasło</label>
+                        <input type="password" id="newPassword" name="newPassword" placeholder="Wpisz nowe hasło" minlength="8" />
+
+                        <label for="confirmPassword">Powtórz nowe hasło</label>
+                        <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Powtórz nowe hasło" minlength="8" />
+                        <div class="hint">Hasło pozostanie niezmienione, jeśli nie zaznaczysz opcji powyżej.</div>
+                    </div>
+                </fieldset>
+
+                <!-- Rola (readonly) -->
                 <label>Rola</label>
                 <input type="text" th:value="${user.role}" readonly class="readonly" aria-readonly="true"/>
 
-                <!-- Przyciski akcji -->
                 <div class="buttons">
                     <button type="submit" class="submit-btn">Zapisz zmiany</button>
                     <button type="reset" class="btn-cancel">Wyczyść</button>
                 </div>
 
-                <!-- Miejsce na komunikaty walidacji klienta -->
                 <div class="hint">Pola z gwiazdką są wymagane.</div>
             </form>
         </div>
 
-        <!-- PRAWA KOLUMNA: ZADANIA UŻYTKOWNIKA -->
+        <!-- PRAWA KOLUMNA: ZADANIA -->
         <div class="container">
             <div class="table-header">
                 <label class="table-title">Wykonywane prace</label>
@@ -73,7 +128,7 @@
                     <th class="w30">Opis</th>
                     <th class="w10">Data od</th>
                     <th class="w10">Data do</th>
-\                    <th class="w10">Status</th>
+                    <th class="w10">Status</th>
                     <th class="w15">Zasoby</th>
                 </tr>
                 </thead>

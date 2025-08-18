@@ -1,134 +1,162 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>Dodaj lub Edytuj Koszyk</title>
-    <link rel="stylesheet" th:href="@{/css/general.css}" />
+    <title th:text="${cart.id} != null ? 'Edytuj koszyk' : 'Dodaj koszyk'">Koszyk</title>
+    <link rel="stylesheet" th:href="@{/css/carts.css}" />
 </head>
 <body>
-<h1>
-    <div th:replace="~{fragments/navBar :: navbar}"></div>
-</h1>
 
-
-
-<div class="top-row">
-    <div class="side-by-side">
-
-        <!-- Formularz koszyka -->
-        <div class="container">
-            <form th:action="@{/carts/save}" method="post" th:object="${cart}">
-                <input type="hidden" th:field="*{id}" />
-                <label for="name">Nazwa:</label>
-                <input type="text" id="name" th:field="*{name}" required />
-                <label for="description">Opis:</label>
-                <textarea id="description" th:field="*{description}" required></textarea>
-                <button type="submit" >Zapisz koszyk</button>
-            </form>
-            <div class="table-header">
-                <input type="text" class="table-search" placeholder="Szukaj..." data-target="#carsTable">
-            </div>
-            <table>
-                <thead>
-                <tr>
-                    <th>Typ</th>
-                    <th>Nazwa</th>
-                    <th>Ilość</th>
-                    <th>Akcja</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="ci : ${cart.items}">
-                    <td th:text="${ci.product != null ? 'Produkt' : 'StockPosition'}">Typ</td>
-                    <td>
-                        <span th:if="${ci.product != null}" th:text="${ci.product.name}">Nazwa produktu</span>
-                        <span th:if="${ci.stockPosition != null}" th:text="${ci.stockPosition.name}">Nazwa pozycji</span>
-                    </td>
-                    <td th:text="${ci.quantity}">1</td>
-                    <td>
-                        <form th:action="@{/carts/items/delete/{id}(id=${ci.id})}" method="post">
-                            <input type="hidden" name="cartId" th:value="${cart.id}" />
-                            <button type="submit" class="btn-use" >Usuń</button>
-                        </form>
-                    </td>
-                </tr>
-                <tr th:if="${#lists.isEmpty(cart.items)}">
-                    <td colspan="4">Koszyk jest pusty</td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Tabela wszystkich produktów -->
-        <div class="container">
-            <div class="table-header">
-                <input type="text" class="table-search" placeholder="Szukaj..." data-target="#carsTable">
-            </div>
-            <table>
-                <thead>
-                <tr>
-                    <th>Kod</th>
-                    <th>Nazwa</th>
-                    <th>Opis</th>
-                    <th>Ilość</th>
-                    <th>Akcja</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="p : ${allProduct}">
-                    <td th:text="${p.code}">P-001</td>
-                    <td th:text="${p.name}">Nazwa</td>
-                    <td th:text="${p.description}">Opis</td>
-                    <td>
-                        <form th:action="@{/carts/items/save}" method="post" th:id="|addForm_${p.id}|">
-                            <input type="hidden" name="cart.id" th:value="${cart.id}" />
-                            <input type="hidden" name="product.id" th:value="${p.id}" />
-                            <input type="number" name="quantity" min="1" value="1" required />
-                        </form>
-                    </td>
-                    <td>
-                        <button type="submit" class="btn-add"  th:attr="form=|addForm_${p.id}|">Dodaj</button>
-                    </td>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Tabela wszystkich stock positions -->
-        <div class="container">
-            <div class="table-header">
-                <input type="text" class="table-search" placeholder="Szukaj..." data-target="#carsTable">
-            </div>
-            <table>
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nazwa</th>
-                    <th>Opis</th>
-                    <th>Ilość</th>
-                    <th>Akcja</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="s : ${allStackPositions}">
-                    <td th:text="${s.id}">1</td>
-                    <td th:text="${s.name}">Pozycja</td>
-                    <td th:text="${s.description}">Opis</td>
-                    <td>
-                        <form th:action="@{/carts/items/save}" method="post" th:id="|addForm_${s.id}|">
-                            <!-- tylko cart.id i stockPosition.id -->
-                            <input type="hidden" name="cart.id" th:value="${cart.id}" />
-                            <input type="hidden" name="stockPosition.id" th:value="${s.id}" />
-                            <input type="number" name="quantity" min="1" value="1" required />
-                        </form>
-                    </td>
-                    <td>
-                        <button type="submit" class="btn-add" th:attr="form=|addForm_${s.id}|">Dodaj</button>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+<header class="page-header">
+    <nav class="breadcrumbs" aria-label="breadcrumb">
+        <a th:href="@{/}" class="crumb">Strona główna</a>
+        <span class="sep">/</span>
+        <a th:href="@{/carts}" class="crumb">Koszyki</a>
+        <span class="sep">/</span>
+        <span class="crumb current" th:text="${cart.id} != null ? 'Edycja' : 'Nowy koszyk'">Edycja</span>
+    </nav>
+    <div class="header-row">
+        <h1 class="page-title" th:text="${cart.id} != null ? 'Edytuj koszyk' : 'Dodaj koszyk'">Koszyk</h1>
+        <div class="header-tools">
+            <a th:href="@{/carts}" class="btn">← Wróć do listy</a>
         </div>
     </div>
-</div>
+</header>
+
+<main class="content">
+    <div class="grid-2">
+        <!-- Formularz koszyka -->
+        <section class="card">
+            <h2 class="section-title">Dane koszyka</h2>
+            <form th:action="@{/carts/save}" method="post" th:object="${cart}" class="edit-form" novalidate>
+                <input type="hidden" th:field="*{id}" />
+                <div class="form-row">
+                    <label>Nazwa <span class="req">*</span>
+                        <input type="text" th:field="*{name}" required maxlength="255" />
+                    </label>
+                </div>
+                <div class="form-row">
+                    <label>Opis
+                        <textarea th:field="*{description}" rows="3" maxlength="2000"></textarea>
+                    </label>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Zapisz</button>
+                </div>
+            </form>
+
+            <h3 class="section-subtitle">Pozycje w koszyku</h3>
+            <div class="table-wrapper">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Typ</th>
+                        <th>Nazwa</th>
+                        <th>Ilość</th>
+                        <th>Akcja</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="ci : ${cart.items}">
+                        <td th:text="${ci.product != null ? 'Produkt' : 'StockPosition'}">Typ</td>
+                        <td>
+                            <span th:if="${ci.product != null}" th:text="${ci.product.name}">Produkt</span>
+                            <span th:if="${ci.stockPosition != null}" th:text="${ci.stockPosition.name}">Pozycja</span>
+                        </td>
+                        <td th:text="${ci.quantity}">1</td>
+                        <td>
+                            <form th:action="@{/carts/items/delete/{id}(id=${ci.id})}" method="post">
+                                <input type="hidden" name="cartId" th:value="${cart.id}" />
+                                <button type="submit" class="btn btn-danger btn-small">Usuń</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(cart.items)}">
+                        <td colspan="4">Koszyk jest pusty.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Dodawanie produktów -->
+        <section class="card">
+            <div class="table-header">
+                <h2 class="section-title">Produkty</h2>
+                <input type="text" class="table-search" placeholder="Szukaj produktu…" data-target="#productsTbody">
+            </div>
+            <div class="table-wrapper">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Kod</th>
+                        <th>Nazwa</th>
+                        <th>Opis</th>
+                        <th>Ilość</th>
+                        <th>Akcja</th>
+                    </tr>
+                    </thead>
+                    <tbody id="productsTbody">
+                    <tr th:each="p : ${allProduct}">
+                        <td th:text="${p.code}">P-001</td>
+                        <td th:text="${p.name}">Nazwa</td>
+                        <td th:text="${p.description}">Opis</td>
+                        <td>
+                            <form th:action="@{/carts/items/save}" method="post" th:id="|addProd_${p.id}|">
+                                <input type="hidden" name="cart.id" th:value="${cart.id}" />
+                                <input type="hidden" name="product.id" th:value="${p.id}" />
+                                <input type="number" name="quantity" min="1" value="1" required />
+                            </form>
+                        </td>
+                        <td>
+                            <button type="submit" class="btn btn-small" th:attr="form=|addProd_${p.id}|">Dodaj</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Dodawanie pozycji magazynowych -->
+        <section class="card">
+            <div class="table-header">
+                <h2 class="section-title">Pozycje magazynowe</h2>
+                <input type="text" class="table-search" placeholder="Szukaj pozycji…" data-target="#stocksTbody">
+            </div>
+            <div class="table-wrapper">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nazwa</th>
+                        <th>Opis</th>
+                        <th>Ilość</th>
+                        <th>Akcja</th>
+                    </tr>
+                    </thead>
+                    <tbody id="stocksTbody">
+                    <tr th:each="s : ${allStackPositions}">
+                        <td th:text="${s.id}">1</td>
+                        <td th:text="${s.name}">Pozycja</td>
+                        <td th:text="${s.description}">Opis</td>
+                        <td>
+                            <form th:action="@{/carts/items/save}" method="post" th:id="|addStock_${s.id}|">
+                                <input type="hidden" name="cart.id" th:value="${cart.id}" />
+                                <input type="hidden" name="stockPosition.id" th:value="${s.id}" />
+                                <input type="number" name="quantity" min="1" value="1" required />
+                            </form>
+                        </td>
+                        <td>
+                            <button type="submit" class="btn btn-small" th:attr="form=|addStock_${s.id}|">Dodaj</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+</main>
+
+<script th:src="@{/js/carts.js}"></script>
 </body>
 </html>

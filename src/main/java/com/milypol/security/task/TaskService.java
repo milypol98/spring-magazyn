@@ -1,5 +1,8 @@
 package com.milypol.security.task;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -15,4 +18,6 @@ public interface TaskService {
 
     List<Task> getAllTasksByStatus(TaskStatus status);
     Optional<Task> getTaskByCarIdAndDate(Integer carId, LocalDate date);
+    Page<Task> search(String q, TaskStatus status, Integer userId, LocalDate fromDate, LocalDate toDate, Pageable pageable);
+
 }

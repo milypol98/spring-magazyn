@@ -1,30 +1,164 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="pl">
 <head>
     <meta charset="UTF-8" />
-    <title>Dashboard</title>
+    <title>Panel główny</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" th:href="@{/css/dashboard.css}" />
 </head>
 <body>
+<header class="page-header">
+    <div class="brand">
+        <div class="logo" aria-hidden="true">🔷</div>
+        <div class="titles">
+            <h1>Panel główny</h1>
+            <p class="subtitle">Szybki dostęp do najważniejszych modułów</p>
+        </div>
+    </div>
 
-<p>Jesteś zalogowany jako:
-    <strong th:text="${#authentication.name}">email@example.com</strong>
-</p>
-<p>Twoja rola:
-    <strong th:each="auth : ${#authentication.authorities}" th:text="${auth.authority}">ROLE_USER</strong>
-</p>
-<form th:action="@{/logout}" method="post">
-    <button type="submit">Wyloguj</button>
-</form>
+    <div class="user">
+        <div class="hello">
+            <span class="muted">Zalogowano jako</span>
+            <strong th:text="${#authentication.name}">email@example.com</strong>
+        </div>
+        <div class="roles">
+            <span class="muted">Rola</span>
+            <strong th:each="auth : ${#authentication.authorities}" th:text="${auth.authority}" class="role-badge">ROLE_USER</strong>
+        </div>
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" class="btn btn-secondary">Wyloguj</button>
+        </form>
+    </div>
+</header>
 
-<div class="container">
-    <a th:href="@{/warehouses/1}" class="box">Magazyn</a>
-    <a th:href="@{/tasks}" class="box">Task</a>
-    <a th:href="@{/cars}" class="box">Auto</a>
-    <a th:href="@{/users}" class="box">Pracownicy</a>
-    <a th:href="@{/profile}" class="box">Ustawienia</a>
-    <a th:href="@{/invoices}" class="box">Faktury</a>
-    <a th:href="@{/companies}" class="box">Firmy</a>
-</div>
+<main class="content">
+    <section class="hero card">
+        <div class="hero-left">
+            <h2>Witaj ponownie!</h2>
+            <p class="muted">Zacznij od jednego z szybkich skrótów poniżej lub wyszukaj moduł.</p>
+            <div class="quick-actions">
+                <a th:href="@{/invoices}" class="btn btn-primary">Przejdź do Faktur</a>
+                <a th:href="@{/companies}" class="btn">Przejdź do Firm</a>
+                <a th:href="@{/tasks}" class="btn">Zobacz Zadania</a>
+            </div>
+        </div>
+        <div class="hero-right">
+            <div class="clock" id="liveClock" aria-live="polite">--:--</div>
+            <div class="stats">
+                <div class="stat">
+                    <span class="label">Dzisiaj</span>
+                    <span class="value" id="todayDate">—</span>
+                </div>
+                <div class="stat">
+                    <span class="label">Sesja</span>
+                    <span class="value">Aktywna</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="tools card">
+        <div class="tools-header">
+            <h3>Moduły</h3>
+            <div class="right">
+                <input id="moduleSearch" class="table-search" type="text" placeholder="Szukaj modułu..." autocomplete="off" />
+                <button id="toggleDensity" class="btn btn-secondary btn-small" type="button" aria-pressed="false">Kompaktowy</button>
+            </div>
+        </div>
+
+        <div class="tiles" id="tilesGrid">
+            <a th:href="@{/warehouses/1}" class="tile" data-keywords="magazyn stany towar">
+                <div class="icon">🏭</div>
+                <div class="tile-body">
+                    <h4>Magazyn</h4>
+                    <p class="muted">Stany, przepływy i lokalizacje</p>
+                </div>
+            </a>
+
+            <a th:href="@{/tasks}" class="tile" data-keywords="zadania task prace">
+                <div class="icon">✅</div>
+                <div class="tile-body">
+                    <h4>Taski</h4>
+                    <p class="muted">Zadania i realizacje</p>
+                </div>
+            </a>
+
+            <a th:href="@{/cars}" class="tile" data-keywords="auta pojazdy flota">
+                <div class="icon">🚗</div>
+                <div class="tile-body">
+                    <h4>Auta</h4>
+                    <p class="muted">Flota i dostępność</p>
+                </div>
+            </a>
+
+            <a th:href="@{/users}" class="tile" data-keywords="użytkownicy pracownicy role">
+                <div class="icon">👤</div>
+                <div class="tile-body">
+                    <h4>Pracownicy</h4>
+                    <p class="muted">Uprawnienia i konta</p>
+                </div>
+            </a>
+
+            <a th:href="@{/users/edit}" class="tile" data-keywords="ustawienia profil konto">
+                <div class="icon">⚙️</div>
+                <div class="tile-body">
+                    <h4>Ustawienia</h4>
+                    <p class="muted">Preferencje i profil</p>
+                </div>
+            </a>
+
+            <a th:href="@{/invoices}" class="tile" data-keywords="faktury dokumenty sprzedaż">
+                <div class="icon">📄</div>
+                <div class="tile-body">
+                    <h4>Faktury</h4>
+                    <p class="muted">Wystawianie i lista</p>
+                </div>
+            </a>
+
+            <a th:href="@{/companies}" class="tile" data-keywords="firmy kontrahenci klienci">
+                <div class="icon">🏢</div>
+                <div class="tile-body">
+                    <h4>Firmy</h4>
+                    <p class="muted">Kontrahenci i dane</p>
+                </div>
+            </a>
+            <a th:href="@{/carts}" class="tile" data-keywords="koszyk zakupy produkty">
+                <div class="icon">🛒</div>
+                <div class="tile-body">
+                    <h4>Koszyk</h4>
+                    <p class="muted">Zestawy</p>
+                </div>
+            </a>
+        </div>
+
+        <div id="emptyState" class="empty-state hidden">
+            Brak wyników. Spróbuj innego hasła.
+        </div>
+    </section>
+
+    <section class="cards-inline">
+        <article class="mini card">
+            <h3>Ostatnio używane</h3>
+            <ul class="mini-list" id="recentList">
+                <!-- wypełniane skryptem na podstawie kliknięć -->
+            </ul>
+        </article>
+
+        <article class="mini card">
+            <h3>Podpowiedzi</h3>
+            <ul class="tips">
+                <li>Użyj pola „Szukaj modułu…”, aby szybko przefiltrować kafelki.</li>
+                <li>Przełącz „Kompaktowy”, aby zmienić gęstość siatki.</li>
+                <li>Kliknięte moduły pojawiają się w „Ostatnio używane”.</li>
+            </ul>
+        </article>
+    </section>
+</main>
+
+<footer class="page-footer">
+    <span class="muted">© <span id="yearNow"></span> — Panel operacyjny</span>
+</footer>
+
+<script th:src="@{/js/dashboard.js}"></script>
 </body>
 </html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pl">
+<head>
+    <meta charset="UTF-8" />
+    <title th:text="'Zadanie #' + ${task.id}">Zadanie</title>
+    <link rel="stylesheet" th:href="@{/css/tasks.css}" />
+</head>
+<body>
+<header class="page-header">
+    <h1>
+        <span th:text="${task.name}">Nazwa zadania</span>
+        <small class="muted">#<span th:text="${task.id}">1</span></small>
+    </h1>
+    <div class="actions">
+        <a th:href="@{|/tasks/edit/${task.id}|}" class="btn">Edytuj</a>
+        <a th:href="@{/tasks}" class="btn btn-secondary">Wróć</a>
+        <form th:action="@{|/tasks/delete/${task.id}|}" method="post" class="inline-form" data-confirm="Usunąć to zadanie?">
+            <button type="submit" class="btn btn-danger">Usuń</button>
+        </form>
+    </div>
+</header>
+
+<section class="details">
+    <dl class="details-grid">
+        <dt>Nazwa</dt><dd th:text="${task.name}">Nazwa</dd>
+        <dt>Opis</dt><dd th:text="${task.description ?: '—'}">Opis</dd>
+        <dt>Data od</dt><dd th:text="${task.dateFrom ?: '—'}">2025-01-01</dd>
+        <dt>Data do</dt><dd th:text="${task.dateTo ?: '—'}">2025-01-10</dd>
+        <dt>Status</dt><dd th:text="${task.status}">OPEN</dd>
+        <dt>Użytkownicy</dt>
+        <dd>
+            <span th:each="u : ${task.users}" class="chip" th:text="${u.firstname}">user</span>
+            <span th:if="${#lists.isEmpty(task.users)}">—</span>
+        </dd>
+        <dt>Auta</dt>
+        <dd>
+            <span th:each="c : ${task.cars}" class="chip" th:text="${c.name}">car</span>
+            <span th:if="${#lists.isEmpty(task.cars)}">—</span>
+        </dd>
+    </dl>
+</section>
+
+<section class="used-products">
+    <h2>Zużyte produkty na tym zadaniu</h2>
+    <div th:if="${#lists.isEmpty(usedEvents)}" class="empty-state">
+        Brak zarejestrowanych zużyć.
+    </div>
+    <table th:if="${!#lists.isEmpty(usedEvents)}" class="table table-striped">
+        <thead>
+        <tr>
+            <th>Data</th>
+            <th>Produkt</th>
+            <th>Ilość</th>
+            <th>Cena jedn.</th>
+            <th>Użytkownik</th>
+            <th>Komentarz</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="e : ${usedEvents}">
+            <td th:text="${#temporals.format(e.timestamp, 'yyyy-MM-dd HH:mm')}">2025-01-02 10:00</td>
+            <td th:text="${e.product != null ? e.product.name : '—'}">Produkt</td>
+            <td th:text="${e.quantity}">1</td>
+            <td th:text="${e.unitPrice != null ? #numbers.formatDecimal(e.unitPrice, 1, 'POINT', 2, 'COMMA') : '—'}">10,00</td>
+            <td th:text="${e.user != null ? e.user.username : '—'}">Użytkownik</td>
+            <td th:text="${e.comment ?: '—'}">Komentarz</td>
+        </tr>
+        </tbody>
+    </table>
+</section>
+
+<script th:src="@{/js/tasks.js}"></script>
+</body>
+</html>

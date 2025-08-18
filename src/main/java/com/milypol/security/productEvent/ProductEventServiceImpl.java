@@ -101,6 +101,17 @@ public class ProductEventServiceImpl implements ProductEventService{
                 });
     }
 
+    @Override
+    public List<ProductEvent> findUsedForTask(Integer taskId) {
+        if (taskId == null) return List.of();
+        return productEventRepo.findByEventTypeAndToLocationTypeAndToLocationCodeOrderByTimestampDesc(
+                ProductEventType.USED,
+                LocationType.TASK,
+                taskId
+        );
+    }
+
+
     private Integer parseIntOrNull(String s) {
         try {
             return s == null ? null : Integer.valueOf(s);

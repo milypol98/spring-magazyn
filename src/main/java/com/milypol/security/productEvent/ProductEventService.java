@@ -14,4 +14,6 @@ public interface ProductEventService {
                                Map<String, String> allParams,
                                String type,
                                String comment);
+    List<ProductEvent> findUsedForTask(Integer taskId);
+
 }

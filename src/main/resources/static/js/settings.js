@@ -1,61 +1,102 @@
-// profile.js – logika UI dla zakładki profilu
+// settings.js – logika UI dla zakładki ustawień/profilu
 (function () {
     const tbody = document.getElementById('tasksTbody');
     const search = document.getElementById('taskSearch');
     const onlyInProgress = document.getElementById('onlyInProgress');
 
-    if (!tbody) return;
+    // Zadania: wyszukiwarka + filtr "w trakcie"
+    if (tbody) {
+        const rows = Array.from(tbody.querySelectorAll('tr'));
 
-    const rows = Array.from(tbody.querySelectorAll('tr'));
+        function matchesSearch(row, term) {
+            if (!term) return true;
+            const name = (row.getAttribute('data-name') || '').toLowerCase();
+            const desc = (row.getAttribute('data-desc') || '').toLowerCase();
+            return name.includes(term) || desc.includes(term);
+        }
 
-    function matchesSearch(row, term) {
-        if (!term) return true;
-        const name = (row.getAttribute('data-name') || '').toLowerCase();
-        const desc = (row.getAttribute('data-desc') || '').toLowerCase();
-        return name.includes(term) || desc.includes(term);
+        function isInProgress(row) {
+            return row.classList.contains('row--in-progress');
+        }
+
+        function applyFilters() {
+            const term = (search?.value || '').trim().toLowerCase();
+            const onlyIP = !!onlyInProgress?.checked;
+
+            rows.forEach(row => {
+                const okSearch = matchesSearch(row, term);
+                const okIP = !onlyIP || isInProgress(row);
+                row.style.display = (okSearch && okIP) ? '' : 'none';
+            });
+        }
+
+        search?.addEventListener('input', applyFilters);
+        onlyInProgress?.addEventListener('change', applyFilters);
+        search?.addEventListener('keydown', (e) => { if (e.key === 'Enter') e.preventDefault(); });
     }
 
-    function isInProgress(row) {
-        return row.classList.contains('row--in-progress');
-    }
-
-    function applyFilters() {
-        const term = (search?.value || '').trim().toLowerCase();
-        const onlyIP = !!onlyInProgress?.checked;
-
-        rows.forEach(row => {
-            const okSearch = matchesSearch(row, term);
-            const okIP = !onlyIP || isInProgress(row);
-            row.style.display = (okSearch && okIP) ? '' : 'none';
-        });
-    }
-
-    search?.addEventListener('input', applyFilters);
-    onlyInProgress?.addEventListener('change', applyFilters);
-
-    // Ulepszenie UX: Enter w polu wyszukiwania nie przeładowuje strony
-    search?.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') e.preventDefault();
-    });
-
-    // Prosta walidacja klienta dla formularza profilu
+    // Formularz: walidacja oraz obsługa zmiany hasła
     const form = document.querySelector('form.profile-form');
+    const changePassword = document.getElementById('changePassword');
+    const passwordFields = document.getElementById('passwordFields');
+    const newPassword = document.getElementById('newPassword');
+    const confirmPassword = document.getElementById('confirmPassword');
+
+    function togglePasswordFields() {
+        if (!changePassword || !passwordFields) return;
+        const enabled = changePassword.checked;
+        passwordFields.classList.toggle('hidden', !enabled);
+        if (newPassword && confirmPassword) {
+            newPassword.disabled = !enabled;
+            confirmPassword.disabled = !enabled;
+            if (!enabled) {
+                newPassword.value = '';
+                confirmPassword.value = '';
+                newPassword.classList.remove('invalid');
+                confirmPassword.classList.remove('invalid');
+            }
+        }
+    }
+
+    changePassword?.addEventListener('change', togglePasswordFields);
+    togglePasswordFields();
+
     if (form) {
         form.addEventListener('submit', (e) => {
+            // Wymagane: firstname, lastName, email
             const required = Array.from(form.querySelectorAll('[required]'));
             let valid = true;
             required.forEach(el => {
-                if (!el.value || (el.type === 'email' && !/^\S+@\S+\.\S+$/.test(el.value))) {
+                const v = (el.value || '').trim();
+                if (!v || (el.type === 'email' && !/^\S+@\S+\.\S+$/.test(v))) {
                     el.classList.add('invalid');
                     valid = false;
                 } else {
                     el.classList.remove('invalid');
                 }
             });
+
+            // Jeśli zmieniamy hasło: sprawdź długość i zgodność
+            if (changePassword?.checked) {
+                const pw = (newPassword?.value || '').trim();
+                const pw2 = (confirmPassword?.value || '').trim();
+                if (pw.length < 8) {
+                    newPassword?.classList.add('invalid');
+                    valid = false;
+                } else {
+                    newPassword?.classList.remove('invalid');
+                }
+                if (pw !== pw2) {
+                    confirmPassword?.classList.add('invalid');
+                    valid = false;
+                } else {
+                    confirmPassword?.classList.remove('invalid');
+                }
+            }
+
             if (!valid) {
                 e.preventDefault();
-                // ewentualnie: przewinięcie do pierwszego błędu
-                required.find(el => el.classList.contains('invalid'))?.focus();
+                (form.querySelector('.invalid') || form).focus();
             }
         });
     }

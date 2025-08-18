@@ -1,57 +1,71 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="pl">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <link rel="stylesheet" th:href="@{/css/general.css}" />
-
+    <meta charset="UTF-8" />
+    <title>Pracownicy</title>
+    <link rel="stylesheet" th:href="@{/css/workers.css}" />
 </head>
 <body>
-<h1>
-<div th:replace="~{fragments/navBar :: navbar}"></div>
 
-</h1>
-
-<div class="top-row">
-    <div class="side-by-side">
-        <div class="container">
-            <div class="table-header">
-                <label class="table-title">Lista pracowników:</label>
-            </div>
-    <table>
-        <thead>
-        <tr>
-            <th>Nazwisko</th>
-            <th>Imię</th>
-            <th>nr. Telefonu</th>
-            <th>Kraj</th>
-            <th>Miasto</th>
-            <th>Kod Pocztowy</th>
-            <th>Ulica</th>
-            <th>Numer Domu/Lokalu</th>
-            <th>Opis</th>
-            <th>Email</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="user : ${users}"
-            th:attr="onclick=|window.location.href='/users/edit/${user.id}'|"
-            class="clickable-row">
-            <td th:text="${user.lastName}"></td>
-            <td th:text="${user.firstname}"></td>
-            <td th:text="${user.phone}"></td>
-            <td th:text="${user.address.country}"></td>
-            <td th:text="${user.address.city}"></td>
-            <td th:text="${user.address.postalCode}"></td>
-            <td th:text="${user.address.street}"></td>
-            <td th:text="${user.address.number}"></td>
-            <td th:text="${user.description}"></td>
-            <td th:text="${user.email}"></td>
-        </tr>
-        </tbody>
-    </table>
+<header class="page-header">
+    <nav class="breadcrumbs" aria-label="breadcrumb">
+        <a th:href="@{/dashboard}" class="crumb">Strona główna</a>
+        <span class="sep">/</span>
+        <span class="crumb current">Pracownicy</span>
+    </nav>
+    <div class="header-row">
+        <h1 class="page-title">Pracownicy</h1>
+        <div class="header-tools">
+            <input id="userSearch" class="table-search" type="search" placeholder="Szukaj po imieniu, nazwisku, e‑mailu…" />
         </div>
     </div>
-</div>
+</header>
+
+<main class="content">
+    <section class="card">
+        <div class="table-header">
+            <label class="table-title">Lista pracowników</label>
+        </div>
+
+        <div class="table-wrapper">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Nazwisko</th>
+                    <th>Imię</th>
+                    <th>Telefon</th>
+                    <th>Kraj</th>
+                    <th>Miasto</th>
+                    <th>Kod pocztowy</th>
+                    <th>Ulica</th>
+                    <th>Nr budynku</th>
+                    <th>Nr lokalu</th>
+                    <th>Opis</th>
+                    <th>Email</th>
+                </tr>
+                </thead>
+                <tbody id="usersTbody">
+                <tr th:each="u : ${users}"
+                    class="clickable-row"
+                    th:attr="data-name=${(u.firstname + ' ' + u.lastName)}, data-email=${u.email}, onclick=|window.location.href='/users/edit/${u.id}'|">
+                    <td th:text="${u.lastName}">Nowak</td>
+                    <td th:text="${u.firstname}">Jan</td>
+                    <td th:text="${u.phone}">500600700</td>
+                    <td th:text="${u.address != null ? u.address.country : ''}">Polska</td>
+                    <td th:text="${u.address != null ? u.address.city : ''}">Warszawa</td>
+                    <td th:text="${u.address != null ? u.address.postalCode : ''}">00-000</td>
+                    <td th:text="${u.address != null ? u.address.street : ''}">Prosta</td>
+                    <td th:text="${u.address != null ? u.address.buildingNumber : ''}">12</td>
+                    <td th:text="${u.address != null ? u.address.apartmentNumber : ''}">3</td>
+                    <td th:text="${u.description}">Opis</td>
+                    <td th:text="${u.email}">email@example.com</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+
+<script th:src="@{/js/workers.js}"></script>
 </body>
 </html>

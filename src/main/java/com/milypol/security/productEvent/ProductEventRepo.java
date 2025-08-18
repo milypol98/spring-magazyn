@@ -37,4 +37,11 @@ public interface ProductEventRepo extends JpaRepository<ProductEvent, Integer> {
     GROUP BY pe.product_id
     """, nativeQuery = true)
     List<ProductEventCountProjection> calculateProductBalanceInCar();
+
+    List<ProductEvent> findByEventTypeAndToLocationTypeAndToLocationCodeOrderByTimestampDesc(
+            ProductEventType eventType,
+            LocationType toLocationType,
+            Integer toLocationCode
+    );
+
 }
