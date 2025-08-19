@@ -35,12 +35,6 @@
     <section class="hero card">
         <div class="hero-left">
             <h2>Witaj ponownie!</h2>
-            <p class="muted">Zacznij od jednego z szybkich skrótów poniżej lub wyszukaj moduł.</p>
-            <div class="quick-actions">
-                <a th:href="@{/invoices}" class="btn btn-primary">Przejdź do Faktur</a>
-                <a th:href="@{/companies}" class="btn">Przejdź do Firm</a>
-                <a th:href="@{/tasks}" class="btn">Zobacz Zadania</a>
-            </div>
         </div>
         <div class="hero-right">
             <div class="clock" id="liveClock" aria-live="polite">--:--</div>
@@ -90,7 +84,28 @@
                     <p class="muted">Flota i dostępność</p>
                 </div>
             </a>
+            <a th:href="@{/carts}" class="tile" data-keywords="koszyk zakupy produkty">
+                <div class="icon">🛒</div>
+                <div class="tile-body">
+                    <h4>Koszyk</h4>
+                    <p class="muted">Zestawy</p>
+                </div>
+            </a>
+            <a th:href="@{/invoices}" class="tile" data-keywords="faktury dokumenty sprzedaż">
+                <div class="icon">📄</div>
+                <div class="tile-body">
+                    <h4>Faktury</h4>
+                    <p class="muted">Wystawianie i lista</p>
+                </div>
+            </a>
 
+            <a th:href="@{/companies}" class="tile" data-keywords="firmy kontrahenci klienci">
+                <div class="icon">🏢</div>
+                <div class="tile-body">
+                    <h4>Firmy</h4>
+                    <p class="muted">Kontrahenci i dane</p>
+                </div>
+            </a>
             <a th:href="@{/users}" class="tile" data-keywords="użytkownicy pracownicy role">
                 <div class="icon">👤</div>
                 <div class="tile-body">
@@ -107,28 +122,8 @@
                 </div>
             </a>
 
-            <a th:href="@{/invoices}" class="tile" data-keywords="faktury dokumenty sprzedaż">
-                <div class="icon">📄</div>
-                <div class="tile-body">
-                    <h4>Faktury</h4>
-                    <p class="muted">Wystawianie i lista</p>
-                </div>
-            </a>
 
-            <a th:href="@{/companies}" class="tile" data-keywords="firmy kontrahenci klienci">
-                <div class="icon">🏢</div>
-                <div class="tile-body">
-                    <h4>Firmy</h4>
-                    <p class="muted">Kontrahenci i dane</p>
-                </div>
-            </a>
-            <a th:href="@{/carts}" class="tile" data-keywords="koszyk zakupy produkty">
-                <div class="icon">🛒</div>
-                <div class="tile-body">
-                    <h4>Koszyk</h4>
-                    <p class="muted">Zestawy</p>
-                </div>
-            </a>
+
         </div>
 
         <div id="emptyState" class="empty-state hidden">

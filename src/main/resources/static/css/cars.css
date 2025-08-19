@@ -58,7 +58,8 @@ body {
 .btn-primary{ background: linear-gradient(180deg, var(--primary), #1d4ed8); border:none; color:#fff }
 .btn-primary:hover{ filter:brightness(1.05) }
 .btn-danger{ background:#fee2e2; border:1px solid #ef4444; color:#b91c1c }
-.btn-danger:hover{ background:#fecaca }
+.btn-danger:hover{ background: #e44d4d
+}
 
 .content { padding: 0 24px 24px; }
 .card {
@@ -196,3 +197,29 @@ body {
 @media (max-width: 700px){
     .details-grid, .details-grid.two-cols{ grid-template-columns: 1fr; }
 }
+/* costEdit – małe dodatki do formularza kosztu */
+.input-with-prefix {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+.input-with-prefix .prefix {
+    position: absolute;
+    left: 10px;
+    font-size: 12px;
+    color: var(--muted);
+    pointer-events: none;
+}
+.input-with-prefix input {
+    padding-left: 48px !important; /* miejsce na prefix PLN */
+}
+
+.hint {
+    display: block;
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+/* kolory ostrzeżeń używane przez JS (jeśli nie masz – można użyć poniższych) */
+.sev-red { color: #c1121f; font-weight: 600; }

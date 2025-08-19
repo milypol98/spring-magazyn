@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Profil użytkownika</title>
-    <link rel="stylesheet" th:href="@{/css/settings.css}" />
+    <link rel="stylesheet" th:href="@{/css/general.css}" />
 </head>
 <body>
 
@@ -20,171 +20,198 @@
 </header>
 
 <div class="top-row">
-    <div class="side-by-side profile-layout">
-        <!-- LEWA KOLUMNA: DANE UŻYTKOWNIKA -->
-        <div class="container">
-            <div class="form-header">
-                <label class="form-title">Twoje dane</label>
-            </div>
+    <section class="side-by-side ">
+        <div class="section-box span-2">
+            <form th:action="@{/users/add}"
+                  th:object="${user}"
+                  method="post">
 
-            <form th:action="@{/users/edit}" th:object="${user}" method="post" class="profile-form" novalidate>
-                <input type="hidden" th:field="*{id}" />
-
-                <label for="firstname">Imię</label>
-                <input type="text" id="firstname" th:field="*{firstname}" placeholder="Wpisz imię" required />
-
-                <label for="lastName">Nazwisko</label>
-                <input type="text" id="lastName" th:field="*{lastName}" placeholder="Wpisz nazwisko" required />
-
-                <label for="email">E‑mail</label>
-                <input type="email" id="email" th:field="*{email}" placeholder="np. jan.kowalski@example.com" required />
-
-                <label for="phone">Telefon</label>
-                <input type="text" id="phone" th:field="*{phone}" placeholder="np. 500600700" inputmode="numeric" />
-
-                <label for="description">Opis</label>
-                <textarea id="description" th:field="*{description}" placeholder="Krótka informacja o Tobie (opcjonalnie)"></textarea>
-
-                <!-- Adres: osobne pola nr budynku i nr lokalu -->
-                <fieldset class="address-fieldset">
-                    <legend>Adres</legend>
-                    <div class="grid-2">
-                        <div>
-                            <label for="country">Kraj</label>
-                            <input type="text" id="country" th:field="*{address.country}" placeholder="np. Polska" />
-                        </div>
-                        <div>
-                            <label for="city">Miasto</label>
-                            <input type="text" id="city" th:field="*{address.city}" placeholder="np. Warszawa" />
-                        </div>
-                        <div>
-                            <label for="postalCode">Kod pocztowy</label>
-                            <input type="text" id="postalCode" th:field="*{address.postalCode}" placeholder="00-000" />
-                        </div>
-                        <div>
-                            <label for="street">Ulica</label>
-                            <input type="text" id="street" th:field="*{address.street}" placeholder="np. Prosta" />
-                        </div>
-                        <div>
-                            <label for="buildingNumber">Nr budynku</label>
-                            <input type="text" id="buildingNumber" th:field="*{address.buildingNumber}" placeholder="np. 12" />
-                        </div>
-                        <div>
-                            <label for="apartmentNumber">Nr lokalu</label>
-                            <input type="text" id="apartmentNumber" th:field="*{address.apartmentNumber}" placeholder="np. 3" />
-                        </div>
-                    </div>
-                </fieldset>
-
-                <!-- Zmiana hasła -->
-                <fieldset class="password-fieldset">
-                    <legend>Zmiana hasła</legend>
-                    <label class="toggle-password">
-                        <input id="changePassword" type="checkbox" />
-                        <span>Chcę zmienić hasło</span>
-                    </label>
-
-                    <div id="passwordFields" class="password-fields hidden">
-                        <label for="newPassword">Nowe hasło</label>
-                        <input type="password" id="newPassword" name="newPassword" placeholder="Wpisz nowe hasło" minlength="8" />
-
-                        <label for="confirmPassword">Powtórz nowe hasło</label>
-                        <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Powtórz nowe hasło" minlength="8" />
-                        <div class="hint">Hasło pozostanie niezmienione, jeśli nie zaznaczysz opcji powyżej.</div>
-                    </div>
-                </fieldset>
-
-                <!-- Rola (readonly) -->
-                <label>Rola</label>
-                <input type="text" th:value="${user.role}" readonly class="readonly" aria-readonly="true"/>
-
-                <div class="buttons">
-                    <button type="submit" class="submit-btn">Zapisz zmiany</button>
-                    <button type="reset" class="btn-cancel">Wyczyść</button>
+                <div th:if="${#fields.hasErrors()}" class="flash" style="border-color:#fca5a5;background:#fef2f2;color:#991b1b;">
+                    Popraw zaznaczone pola formularza.
                 </div>
 
-                <div class="hint">Pola z gwiazdką są wymagane.</div>
+                <div class="form-grid">
+
+                    <div class="field">
+                        <label for="firstname">Imię <span class="req">*</span></label>
+                        <input id="firstname" type="text" th:field="*{firstname}" placeholder="np. Jan" required />
+                        <div class="error" th:if="${#fields.hasErrors('firstname')}" th:errors="*{firstname}">Błąd</div>
+                    </div>
+
+                    <div class="field">
+                        <label for="lastName">Nazwisko <span class="req">*</span></label>
+                        <input id="lastName" type="text" th:field="*{lastName}" placeholder="np. Kowalski" required />
+                        <div class="error" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">Błąd</div>
+                    </div>
+
+                    <div class="field">
+                        <label for="email">E-mail <span class="req">*</span></label>
+                        <input id="email" type="email" th:field="*{email}" placeholder="np. jan.kowalski@example.com" required />
+                        <div class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Błąd</div>
+                    </div>
+
+                    <div class="field">
+                        <label for="phone">Telefon</label>
+                        <input id="phone" type="text" th:field="*{phone}" placeholder="+48 500 600 700" />
+                        <div class="error" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}">Błąd</div>
+                    </div>
+
+                    <div class="field span-2">
+                        <label for="description">Opis</label>
+                        <textarea id="description" th:field="*{description}" rows="4" placeholder="Krótka informacja o użytkowniku..."></textarea>
+                        <div class="error" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Błąd</div>
+                    </div>
+
+                    <div class="section-box span-2">
+                        <div class="section-header">Adres</div>
+                        <div class="subgrid">
+                            <div class="field">
+                                <label for="address.street">Ulica</label>
+                                <input id="address.street" type="text" th:field="*{address.street}" placeholder="np. Prosta" />
+                                <div class="error" th:if="${#fields.hasErrors('address.street')}" th:errors="*{address.street}">Błąd</div>
+                            </div>
+
+                            <div class="field">
+                                <label for="address.buildingNumber">Nr budynku</label>
+                                <input id="address.buildingNumber" type="text" th:field="*{address.buildingNumber}" placeholder="12" />
+                                <div class="error" th:if="${#fields.hasErrors('address.buildingNumber')}" th:errors="*{address.buildingNumber}">Błąd</div>
+                            </div>
+
+                            <div class="field">
+                                <label for="address.apartmentNumber">Nr lokalu</label>
+                                <input id="address.apartmentNumber" type="text" th:field="*{address.apartmentNumber}" placeholder="3" />
+                                <div class="error" th:if="${#fields.hasErrors('address.apartmentNumber')}" th:errors="*{address.apartmentNumber}">Błąd</div>
+                            </div>
+
+                            <div class="field">
+                                <label for="address.postalCode">Kod pocztowy</label>
+                                <input id="address.postalCode" type="text" th:field="*{address.postalCode}" placeholder="00-000" />
+                                <div class="error" th:if="${#fields.hasErrors('address.postalCode')}" th:errors="*{address.postalCode}">Błąd</div>
+                            </div>
+
+                            <div class="field">
+                                <label for="address.city">Miejscowość</label>
+                                <input id="address.city" type="text" th:field="*{address.city}" placeholder="np. Warszawa" />
+                                <div class="error" th:if="${#fields.hasErrors('address.city')}" th:errors="*{address.city}">Błąd</div>
+                            </div>
+
+                            <div class="field">
+                                <label for="address.country">Kraj</label>
+                                <input id="address.country" type="text" th:field="*{address.country}" placeholder="np. Polska" />
+                                <div class="error" th:if="${#fields.hasErrors('address.country')}" th:errors="*{address.country}">Błąd</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div th:if="${user?.id != null}" class="section-box span-2">
+                        <div class="section-header">Zmiana hasła</div>
+                        <div class="subgrid">
+                            <div class="field">
+                                <label for="newPassword">Nowe hasło</label>
+                                <input type="password" id="newPassword" name="newPassword" placeholder="Wpisz nowe hasło" minlength="8" />
+                            </div>
+                            <div class="field">
+                                <label for="confirmPassword">Powtórz nowe hasło</label>
+                                <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Powtórz nowe hasło" minlength="8" />
+                            </div>
+                            <div class="span-2" style="font-size: 0.9em; color: #666;">
+                                Pozostaw puste, jeśli nie chcesz zmieniać hasła.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label for="role">Rola</label>
+                        <input id="role" type="text" th:value="${user.role}" readonly disabled />
+                    </div>
+
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary"
+                            th:text="${user?.id} != null ? 'Zapisz zmiany' : 'Utwórz użytkownika'">Zapisz</button>
+                    <a th:href="@{/users}" class="btn btn-secondary">Anuluj</a>
+                </div>
             </form>
         </div>
 
         <!-- PRAWA KOLUMNA: ZADANIA -->
-        <div class="container">
+        <div class="section-box span-2">
             <div class="table-header">
                 <label class="table-title">Wykonywane prace</label>
-
-                <div class="tasks-tools">
-                    <input id="taskSearch" class="table-search" type="search" placeholder="Szukaj po nazwie/opisie…" />
-                    <label class="toggle-only-inprogress">
-                        <input id="onlyInProgress" type="checkbox" />
-                        <span>Tylko „w trakcie”</span>
-                    </label>
-                </div>
+                <input type="search" class="table-search" placeholder="Szukaj..." data-target-table="#userTaskTable">
             </div>
+            <div class="table-wrapper">
+                <table id="userTaskTable" class="table">
+                    <thead>
+                    <tr>
+                        <th >Nazwa</th>
+                        <th >Opis</th>
+                        <th >Data od</th>
+                        <th >Data do</th>
+                        <th >Status</th>
+                        <th >Zasoby</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="task : ${tasks}"
+                        th:attr="data-name=${task.name}, data-desc=${task.description}, onclick=|window.location.href='/tasks/edit/${task.id}'|"
+                        th:classappend="${task.status != null and task.status.toString() == 'IN_PROGRESS'} ? 'row--in-progress' : ''"
+                        class="clickable-row">
 
-            <table class="w1200 tasks-table">
-                <thead>
-                <tr>
-                    <th class="w20">Nazwa</th>
-                    <th class="w30">Opis</th>
-                    <th class="w10">Data od</th>
-                    <th class="w10">Data do</th>
-                    <th class="w10">Status</th>
-                    <th class="w15">Zasoby</th>
-                </tr>
-                </thead>
-                <tbody id="tasksTbody">
-                <tr th:each="task : ${tasks}"
-                    th:attr="data-name=${task.name}, data-desc=${task.description}, onclick=|window.location.href='/tasks/edit/${task.id}'|"
-                    th:classappend="${task.status != null and task.status.toString() == 'IN_PROGRESS'} ? 'row--in-progress' : ''"
-                    class="clickable-row">
-
-                    <td th:text="${task.name}"></td>
-                    <td th:text="${task.description}"></td>
-                    <td th:text="${task.dateFrom}"></td>
-                    <td th:text="${task.dateTo}"></td>
-                    <td>
+                        <td th:text="${task.name}"></td>
+                        <td th:text="${task.description}"></td>
+                        <td th:text="${task.dateFrom}"></td>
+                        <td th:text="${task.dateTo}"></td>
+                        <td>
                         <span class="status-badge"
                               th:text="${task.status != null ? task.status : 'UNKNOWN'}"
                               th:classappend="${task.status != null} ? ${' status-' + task.status.toString().toLowerCase()} : ' status-unknown'">
                         </span>
-                    </td>
-                    <td>
-                        <div class="resources">
-                            <div class="res-row">
-                                <span class="res-label">Pracownicy:</span>
-                                <span class="res-values">
+                        </td>
+                        <td>
+                            <div class="resources">
+                                <div class="res-row">
+                                    <span class="res-label">Pracownicy:</span>
+                                    <span class="res-values">
                                     <span th:each="u, uiStat : ${task.users}"
                                           th:text="${u.firstname + ' ' + u.lastName + (uiStat.last ? '' : ', ')}"></span>
                                 </span>
-                            </div>
-                            <div class="res-row">
-                                <span class="res-label">Auta:</span>
-                                <span class="res-values">
+                                </div>
+                                <div class="res-row">
+                                    <span class="res-label">Auta:</span>
+                                    <span class="res-values">
                                     <span th:each="car, ciStat : ${task.cars}"
                                           th:text="${car.name + (ciStat.last ? '' : ', ')}"></span>
                                 </span>
+                                </div>
                             </div>
-                        </div>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(tasks)}">
+                        <td colspan="15">Brak zadań do wyświetlenia.</td>
+                    </tr>
+                    </tbody>
+                </table>
 
-            <div class="legend">
-                <span class="legend-item">
-                    <span class="legend-dot legend-inprogress"></span> W trakcie
-                </span>
-                <span class="legend-item">
-                    <span class="legend-dot legend-completed"></span> Zakończone
-                </span>
-                <span class="legend-item">
-                    <span class="legend-dot legend-planned"></span> Zaplanowane
-                </span>
+<!--                <div class="legend">-->
+<!--                <span class="legend-item">-->
+<!--                    <span class="legend-dot legend-inprogress"></span> W trakcie-->
+<!--                </span>-->
+<!--                    <span class="legend-item">-->
+<!--                    <span class="legend-dot legend-completed"></span> Zakończone-->
+<!--                </span>-->
+<!--                    <span class="legend-item">-->
+<!--                    <span class="legend-dot legend-planned"></span> Zaplanowane-->
+<!--                </span>-->
+<!--                </div>-->
             </div>
         </div>
-    </div>
+    </section>
 </div>
 
+<script th:src="@{/js/general.js}"></script>
 <script th:src="@{/js/settings.js}"></script>
+
 </body>
 </html>

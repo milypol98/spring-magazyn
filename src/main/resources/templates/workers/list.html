@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <title>Pracownicy</title>
-    <link rel="stylesheet" th:href="@{/css/workers.css}" />
+    <link rel="stylesheet" th:href="@{/css/general.css}" />
 </head>
 <body>
 
@@ -14,10 +14,7 @@
         <span class="crumb current">Pracownicy</span>
     </nav>
     <div class="header-row">
-        <h1 class="page-title">Pracownicy</h1>
-        <div class="header-tools">
-            <input id="userSearch" class="table-search" type="search" placeholder="Szukaj po imieniu, nazwisku, e‑mailu…" />
-        </div>
+        <h1 class="page-title">Lista Pracowników</h1>
     </div>
 </header>
 
@@ -25,10 +22,14 @@
     <section class="card">
         <div class="table-header">
             <label class="table-title">Lista pracowników</label>
+            <input type="search"
+                   class="table-search"
+                   placeholder="Szukaj..."
+                   data-target-table="#userTable">
         </div>
 
         <div class="table-wrapper">
-            <table class="table">
+            <table id="userTable" class="table">
                 <thead>
                 <tr>
                     <th>Nazwisko</th>
@@ -42,12 +43,11 @@
                     <th>Nr lokalu</th>
                     <th>Opis</th>
                     <th>Email</th>
+                    <th>Akcje</th>
                 </tr>
                 </thead>
                 <tbody id="usersTbody">
-                <tr th:each="u : ${users}"
-                    class="clickable-row"
-                    th:attr="data-name=${(u.firstname + ' ' + u.lastName)}, data-email=${u.email}, onclick=|window.location.href='/users/edit/${u.id}'|">
+                <tr th:each="u : ${users}">
                     <td th:text="${u.lastName}">Nowak</td>
                     <td th:text="${u.firstname}">Jan</td>
                     <td th:text="${u.phone}">500600700</td>
@@ -59,13 +59,20 @@
                     <td th:text="${u.address != null ? u.address.apartmentNumber : ''}">3</td>
                     <td th:text="${u.description}">Opis</td>
                     <td th:text="${u.email}">email@example.com</td>
+                    <td class="actions">
+                        <a class="btn btn-small" th:href="@{|/users/edit/${u.id}|}">Edytuj</a>
+                    </td>
                 </tr>
+                <tr th:if="${#lists.isEmpty(users)}">
+                    <td colspan="15">Brak firm do wyświetlenia.</td>
+                </tr>
+
                 </tbody>
             </table>
         </div>
     </section>
 </main>
 
-<script th:src="@{/js/workers.js}"></script>
+<script th:src="@{/js/general.js}"></script>
 </body>
 </html>

@@ -3,14 +3,22 @@
 <head>
     <meta charset="UTF-8" />
     <title>Szczegóły faktury</title>
-    <link rel="stylesheet" th:href="@{/css/invoices.css}" />
+    <link rel="stylesheet" th:href="@{/css/general.css}" />
 </head>
 <body>
 <header class="page-header">
-    <h1>Szczegóły faktury</h1>
-    <div class="actions">
-        <a th:href="@{/invoices}" class="btn btn-secondary">← Wróć do listy</a>
-        <a th:if="${invoice != null}" class="btn btn-primary" th:href="@{|/invoices/${invoice.id}/download|}">Pobierz</a>
+    <nav class="breadcrumbs" aria-label="breadcrumb">
+        <a th:href="@{/dashboard}" class="crumb">Strona główna</a>
+        <span class="sep">/</span>
+        <a th:href="@{/dashboard}" class="crumb">Faktury</a>
+        <span class="sep">/</span>
+        <span class="crumb current" th:text="${invoice?.id} != null ? 'Edycja faktury' : 'Nowa faktura'">Faktura</span>
+    </nav>
+    <div class="header-row">
+        <h1 class="page-title" th:text="${invoice?.id} != null ? 'Edycja faktury' : 'Nowa faktura'">Lista faktur</h1>
+        <div class="header-tools">
+            <a th:if="${company?.id != null}" class="btn" th:href="@{|/companies/${company.id}|}">Szczegóły</a>
+        </div>
     </div>
 </header>
 
@@ -53,6 +61,6 @@
     Nie znaleziono faktury.
 </section>
 
-<script th:src="@{/js/invoices.js}"></script>
+<script th:src="@{/js/general.js}"></script>
 </body>
 </html>

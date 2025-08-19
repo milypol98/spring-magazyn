@@ -16,8 +16,8 @@
     <div class="header-row">
         <h1 class="page-title">Magazyn</h1>
         <div class="header-tools">
-            <a th:href="@{/warehouses/products/add}" class="btn btn-primary">+ Dodaj produkt</a>
-            <a th:href="@{/warehouses/stocks/tools}" class="btn">Narzędzia</a>
+
+
         </div>
     </div>
 </header>
@@ -28,6 +28,7 @@
         <section class="card">
             <div class="table-header">
                 <label class="table-title">Produkty</label>
+                <a th:href="@{/warehouses/products/add}" class="btn btn-primary">+ Dodaj </a>
                 <input type="text" class="table-search" placeholder="Szukaj produktu…" data-target="#productsTable">
             </div>
 
@@ -64,6 +65,7 @@
         <section class="card">
             <div class="table-header">
                 <label class="table-title">Narzędzia</label>
+                <a th:href="@{/warehouses/stocks/tools}" class="btn btn-primary">+ Dodaj </a>
                 <input type="text" class="table-search" placeholder="Szukaj narzędzia…" data-target="#toolsTable">
             </div>
 

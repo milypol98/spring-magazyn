@@ -260,3 +260,67 @@
     });
   });
 })();
+// cars-cost.js – drobne ulepszenia UX formularza kosztu
+(function () {
+    const cost = document.getElementById('costInput');
+    const from = document.getElementById('dateFrom');
+    const to = document.getElementById('dateTo');
+    const rangeHint = document.getElementById('rangeHint');
+
+    // Formatowanie i walidacja kwoty w locie
+    if (cost) {
+        cost.addEventListener('input', () => {
+            // wymuszamy punkt dziesiętny, brak spacji, tylko cyfry i kropka
+            let v = (cost.value || '').replace(',', '.').replace(/[^\d.]/g, '');
+            // tylko jedna kropka
+            const parts = v.split('.');
+            if (parts.length > 2) v = parts[0] + '.' + parts.slice(1).join('');
+            // ograniczenie do 2 miejsc po przecinku
+            if (v.includes('.')) {
+                const [i, f] = v.split('.');
+                v = i + '.' + (f ?? '').slice(0, 2);
+            }
+            cost.value = v;
+        });
+    }
+
+    function parseDate(value) {
+        if (!value) return null;
+        const d = new Date(value);
+        if (Number.isNaN(d.getTime())) return null;
+        d.setHours(0, 0, 0, 0);
+        return d;
+    }
+
+    function updateRangeHint() {
+        if (!rangeHint) return;
+        const fd = parseDate(from?.value);
+        const td = parseDate(to?.value);
+        if (!fd || !td) {
+            rangeHint.textContent = 'Zakres dat (dni): —';
+            rangeHint.classList.remove('sev-red');
+            return;
+        }
+        const days = Math.round((td - fd) / (24 * 60 * 60 * 1000)) + 1;
+        rangeHint.textContent = days >= 0
+            ? `Zakres dat (dni): ${days}`
+            : `Zakres dat (dni): błąd zakresu`;
+        rangeHint.classList.toggle('sev-red', days < 0);
+    }
+
+    from?.addEventListener('change', updateRangeHint);
+    to?.addEventListener('change', updateRangeHint);
+    updateRangeHint();
+
+    // Prosta ochrona przed wysłaniem z błędnym zakresem
+    const form = document.querySelector('form.edit-form');
+    form?.addEventListener('submit', (e) => {
+        const fd = parseDate(from?.value);
+        const td = parseDate(to?.value);
+        if (fd && td && td < fd) {
+            e.preventDefault();
+            rangeHint?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            rangeHint?.classList.add('sev-red');
+        }
+    });
+})();

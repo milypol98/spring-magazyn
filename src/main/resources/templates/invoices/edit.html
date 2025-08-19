@@ -3,13 +3,19 @@
 <head>
     <meta charset="UTF-8" />
     <title>Faktura - dodaj/edytuj</title>
-    <link rel="stylesheet" th:href="@{/css/invoices.css}" />
+    <link rel="stylesheet" th:href="@{/css/general.css}" />
 </head>
 <body>
 <header class="page-header">
-    <h1>Dodaj fakturę</h1>
-    <div class="actions">
-        <a th:href="@{/invoices}" class="btn btn-secondary">← Wróć do listy</a>
+    <nav class="breadcrumbs" aria-label="breadcrumb">
+        <a th:href="@{/dashboard}" class="crumb">Strona główna</a>
+        <span class="sep">/</span>
+        <a th:href="@{/invoices}" class="crumb">Faktury</a>
+        <span class="sep">/</span>
+        <span class="crumb current" th:text="${invoice?.id} != null ? 'Edycja faktury' : 'Nowa faktura'">Faktura</span>
+    </nav>
+    <div class="header-row">
+        <h1 class="page-title" th:text="${invoice?.id} != null ? 'Edycja faktury' : 'Nowa faktura'">Lista faktur</h1>
     </div>
 </header>
 
@@ -37,7 +43,7 @@
                     </option>
                 </select>
                 <small>
-                    <a th:href="@{/companies/new}" target="_blank">Dodaj nową firmę</a>
+                    <a th:href="@{/companies/add}" target="_blank">Dodaj nową firmę</a>
                 </small>
             </label>
 
@@ -74,6 +80,6 @@
     </form>
 </section>
 
-<script th:src="@{/js/invoices.js}"></script>
+<script th:src="@{/js/general.js}"></script>
 </body>
 </html>

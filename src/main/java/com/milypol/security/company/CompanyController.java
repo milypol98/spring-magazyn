@@ -1,6 +1,7 @@
 package com.milypol.security.company;
 
 import com.milypol.security.address.Address;
+import com.milypol.security.invoice.InvoiceService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -15,16 +16,16 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class CompanyController {
 
     private final CompanyService companyService;
+    private final InvoiceService invoiceService;
 
     @GetMapping
-    public String list(@RequestParam(value = "q", required = false) String q, Model model) {
-        model.addAttribute("companies", companyService.searchByName(q));
-        model.addAttribute("query", q);
+    public String list(Model model) {
+        model.addAttribute("companies", companyService.findAll());
+
         return "companies/list";
     }
 
-    // Zamiast "companies/form" zwracamy "companies/edit"
-    @GetMapping("/new")
+    @GetMapping("/add")
     public String createForm(Model model) {
         Company company = new Company();
         company.setAddress(Address.builder().country("Polska").build());
@@ -49,6 +50,7 @@ public class CompanyController {
         Company company = companyService.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono firmy o id " + id));
         model.addAttribute("company", company);
+        model.addAttribute("invoices", invoiceService.getAllInvoicesByCompanyId(id));
         return "companies/info";
     }
 

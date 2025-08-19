@@ -3,15 +3,25 @@
 <head>
     <meta charset="UTF-8" />
     <title>Faktury - lista</title>
-    <link rel="stylesheet" th:href="@{/css/invoices.css}" />
+    <link rel="stylesheet" th:href="@{/css/general.css}" />
 </head>
 <body>
 <header class="page-header">
-    <h1>Faktury</h1>
-    <div class="actions">
-        <a th:href="@{/invoices/add}" class="btn btn-primary">+ Dodaj fakturę</a>
+    <nav class="breadcrumbs" aria-label="breadcrumb">
+        <a th:href="@{/dashboard}" class="crumb">Strona główna</a>
+        <span class="sep">/</span>
+        <span class="crumb current">Faktury</span>
+    </nav>
+    <div class="header-row">
+        <h1 class="page-title">Lista faktur</h1>
+        <div class="header-tools">
+            <a th:href="@{/invoices/add}" class="btn btn-primary">+ Dodaj fakturę</a>
+        </div>
     </div>
 </header>
+<section th:if="${message}" class="flash">
+    <span th:text="${message}">Operacja zakończona pomyślnie</span>
+</section>
 
 <section class="filters">
     <form th:action="@{/invoices}" method="get" class="filters-form">
@@ -19,6 +29,15 @@
             <label>
                 Szukaj
                 <input type="text" name="q" th:value="${q}" placeholder="numer, nazwa..." />
+            </label>
+            <label>Firma
+                <select name="companyId">
+                    <option th:each="c : ${companies}"
+                            th:value="${c.id}"
+                            th:text="${c.name}"
+                            th:selected="${companyId != null and companyId == c.id}">
+                    </option>
+                </select>
             </label>
             <label>
                 Data od
@@ -37,89 +56,82 @@
                 </select>
             </label>
             <!-- W formularzu filtrów dodaj select firmy -->
-            <label>Firma
-                <select name="companyId">
-                    <option th:each="c : ${companies}"
-                            th:value="${c.id}"
-                            th:text="${c.name}"
-                            th:selected="${companyId != null and companyId == c.id}">
-                    </option>
-                </select>
-            </label>
-            <button type="submit" class="btn">Filtruj</button>
+
+            <button type="submit" class="btn btn-primary">Filtruj</button>
             <a th:href="@{/invoices}" class="btn btn-secondary">Wyczyść</a>
         </div>
     </form>
 </section>
 
-<section class="list-container">
-    <div th:if="${invoices == null}" class="empty-state">
-        Brak faktur do wyświetlenia.
-    </div>
+<main class="content">
+    <section class="card">
+        <div class="table-header">
+            <label class="table-title">Lista faktur</label>
+        </div>
+        <div class="table-wrapper">
+            <table th:if="${invoices != null}" class="table">
+                <thead>
+                <tr>
+                    <th>L.P.</th>
+                    <th>Nr faktury</th>
+                    <th>Nazwa</th>
+                    <th>Firma</th>
+                    <th>Waluta</th>
+                    <th>Netto</th>
+                    <th>VAT</th>
+                    <th>Brutto</th>
+                    <th>Akcje</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="inv, i : ${invoices}">
+                    <td th:text="${i.count}">1</td>
+                    <td th:text="${inv?.invoiceNumber ?: '—'}"></td>
+                    <td th:text="${inv?.name ?: '—'}">Acme</td>
+                    <td>
+                        <span th:if="${inv.company == null}" class="muted">—</span>
+                        <a th:if="${inv.company != null}"
+                           th:href="@{|/companies/${inv.company.id}|}"
+                           th:text="${inv.company.name}">Firma</a>
+                    </td>
+                    <td th:text="${inv?.currency ?: '—'}">PLN</td>
+                    <td th:text="${inv?.totalNet ?: '—'}">0.00</td>
+                    <td th:text="${inv?.totalVat ?: '—'}">0.00</td>
+                    <td th:text="${inv?.totalGross ?: '—'}">0.00</td>
+                    <td class="actions">
+                        <a class="btn btn-small" th:href="@{|/invoices/${inv?.id}|}">Szczegóły</a>
+                        <a class="btn btn-small" th:href="@{|/invoices/${inv?.id}/download|}">Pobierz</a>
+                        <form th:action="@{|/invoices/${inv?.id}/delete|}" method="post" class="inline-form"
+                              onsubmit="return confirm('Usunąć tę fakturę?');">
+                            <button type="submit" class="btn btn-danger btn-small">Usuń</button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(invoices)}">
+                    <td colspan="15">Brak firm do wyświetlenia.</td>
+                </tr>
+                </tbody>
+            </table>
 
-    <table th:if="${invoices != null}" class="table table-striped">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Nr faktury</th>
-            <th>Nazwa</th>
-            <!-- W nagłówku tabeli dodaj kolumnę Firma -->
-            <th>Firma</th>
-            <th>Waluta</th>
-            <th>Netto</th>
-            <th>VAT</th>
-            <th>Brutto</th>
-            <th>Akcje</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="inv : ${invoices.content}">
-            <td th:text="${inv?.id}">1</td>
-            <td>
-                <a th:href="@{|/invoices/${inv?.id}|}"
-                   th:text="${inv?.invoiceNumber ?: '—'}">FV-001</a>
-            </td>
-            <td th:text="${inv?.name ?: '—'}">Acme</td>
-            <!-- W wierszu danych wyświetl nazwę firmy (z linkiem, jeśli przypisana) -->
-            <td>
-                <span th:if="${inv.company == null}" class="muted">—</span>
-                <a th:if="${inv.company != null}"
-                   th:href="@{|/companies/${inv.company.id}|}"
-                   th:text="${inv.company.name}">Firma</a>
-            </td>
-            <td th:text="${inv?.currency ?: '—'}">PLN</td>
-            <td th:text="${inv?.totalNet ?: '—'}">0.00</td>
-            <td th:text="${inv?.totalVat ?: '—'}">0.00</td>
-            <td th:text="${inv?.totalGross ?: '—'}">0.00</td>
-            <td class="actions">
-                <a class="btn btn-small" th:href="@{|/invoices/${inv?.id}|}">Szczegóły</a>
-                <a class="btn btn-small" th:href="@{|/invoices/${inv?.id}/download|}">Pobierz</a>
-                <form th:action="@{|/invoices/${inv?.id}/delete|}" method="post" class="inline-form"
-                      onsubmit="return confirm('Usunąć tę fakturę?');">
-                    <button type="submit" class="btn btn-danger btn-small">Usuń</button>
-                </form>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+            <div th:if="${invoices != null and invoices.totalPages > 1}" class="pagination">
+                <a class="page-btn"
+                   th:classappend="${invoices.first} ? 'disabled'"
+                   th:href="@{/invoices(page=${invoices.number - 1}, size=${size}, q=${q}, dateFrom=${dateFrom}, dateTo=${dateTo})}">&laquo; Poprzednia</a>
 
-    <div th:if="${invoices != null and invoices.totalPages > 1}" class="pagination">
-        <a class="page-btn"
-           th:classappend="${invoices.first} ? 'disabled'"
-           th:href="@{/invoices(page=${invoices.number - 1}, size=${size}, q=${q}, dateFrom=${dateFrom}, dateTo=${dateTo})}">&laquo; Poprzednia</a>
-
-        <span class="page-info">
+                <span class="page-info">
             Strona <span th:text="${invoices.number + 1}">1</span>
             z <span th:text="${invoices.totalPages}">1</span>
             (łącznie: <span th:text="${invoices.totalElements}">0</span>)
         </span>
 
-        <a class="page-btn"
-           th:classappend="${invoices.last} ? 'disabled'"
-           th:href="@{/invoices(page=${invoices.number + 1}, size=${size}, q=${q}, dateFrom=${dateFrom}, dateTo=${dateTo})}">Następna &raquo;</a>
-    </div>
-</section>
+                <a class="page-btn"
+                   th:classappend="${invoices.last} ? 'disabled'"
+                   th:href="@{/invoices(page=${invoices.number + 1}, size=${size}, q=${q}, dateFrom=${dateFrom}, dateTo=${dateTo})}">Następna &raquo;</a>
+            </div>
+        </div>
+    </section>
+</main>
 
-<script th:src="@{/js/invoices.js}"></script>
+<script th:src="@{/js/general.js}"></script>
 </body>
 </html>

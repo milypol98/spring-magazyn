@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="pl">
 <head>
     <meta charset="UTF-8" />
-    <title th:text="|Pojazd: ${car.name}|">Pojazd</title>
+    <title>Szczegóły pojazdu</title>
     <link rel="stylesheet" th:href="@{/css/cars.css}" />
 </head>
 <body>
@@ -16,57 +16,53 @@
         <span class="crumb current">Szczegóły</span>
     </nav>
     <div class="header-row">
-        <h1 class="page-title" th:text="|Pojazd: ${car.name}|">Pojazd</h1>
+        <h1 class="page-title">Szczegóły pojazdu</h1>
         <div class="header-tools">
-            <a th:href="@{/cars/edit/{id}(id=${car.id})}" class="btn btn-primary">Edytuj</a>
             <a th:href="@{/cars}" class="btn">← Wróć</a>
+            <a th:href="@{/cars/edit/{id}(id=${car.id})}" class="btn btn-primary">Edytuj</a>
+            <a th:href="@{/cars/cost/add/{carId}(carId=${car.id})}" class="btn">+ Dodaj koszt</a>
         </div>
     </div>
 </header>
 
 <main class="content">
-    <!-- Karta główna ograniczona szerokością w cars.css -->
     <section class="card">
         <div class="details-grid">
             <div class="detail">
-                <div class="label">Nazwa</div>
-                <div class="value" th:text="${car.name}">—</div>
-            </div>
-            <div class="detail">
-                <div class="label">Właściciel</div>
-                <div class="value" th:text="${car.owner}">—</div>
-            </div>
-            <div class="detail">
-                <div class="label">Marka</div>
-                <div class="value" th:text="${car.brand}">—</div>
-            </div>
-            <div class="detail">
-                <div class="label">Model</div>
-                <div class="value" th:text="${car.model}">—</div>
-            </div>
-            <div class="detail">
-                <div class="label">Kolor</div>
-                <div class="value" th:text="${car.color}">—</div>
+                <div class="label">ID</div>
+                <div class="value" th:text="${car.id}">1</div>
             </div>
             <div class="detail">
                 <div class="label">Rejestracja</div>
-                <div class="value" th:text="${car.registration}">—</div>
+                <div class="value" th:text="${#strings.defaultString(car.registration,'—')}">—</div>
             </div>
             <div class="detail">
                 <div class="label">VIN</div>
-                <div class="value" th:text="${car.vin}">—</div>
+                <div class="value" th:text="${#strings.defaultString(car.vin,'—')}">—</div>
             </div>
             <div class="detail">
-                <div class="label">Pojemność</div>
-                <div class="value" th:text="${car.engineCapacity}">—</div>
+                <div class="label">Marka</div>
+                <div class="value" th:text="${#strings.defaultString(car.brand,'—')}">—</div>
             </div>
             <div class="detail">
-                <div class="label">Przebieg (km)</div>
-                <div class="value" th:text="${car.course}">—</div>
+                <div class="label">Model</div>
+                <div class="value" th:text="${#strings.defaultString(car.model,'—')}">—</div>
             </div>
             <div class="detail">
-                <div class="label">Przebieg z dnia</div>
-                <div class="value" th:text="${car.courseDate}">—</div>
+                <div class="label">Kolor</div>
+                <div class="value" th:text="${#strings.defaultString(car.color,'—')}">—</div>
+            </div>
+            <div class="detail">
+                <div class="label">Właściciel</div>
+                <div class="value" th:text="${#strings.defaultString(car.owner,'—')}">—</div>
+            </div>
+            <div class="detail">
+                <div class="label">Poj. silnika</div>
+                <div class="value" th:text="${#strings.defaultString(car.engineCapacity,'—')}">—</div>
+            </div>
+            <div class="detail">
+                <div class="label">Rok (data)</div>
+                <div class="value" th:text="${car.year}">—</div>
             </div>
             <div class="detail">
                 <div class="label">Ubezpieczenie do</div>
@@ -77,81 +73,65 @@
                 <div class="value" th:text="${car.review}">—</div>
             </div>
             <div class="detail">
-                <div class="label">Rok produkcji</div>
-                <div class="value" th:text="${car.year}">—</div>
+                <div class="label">Przebieg</div>
+                <div class="value" th:text="${car.course}">—</div>
             </div>
             <div class="detail">
-                <div class="label">Rozrząd (przebieg)</div>
-                <div class="value" th:text="${car.timingSystemCourse}">—</div>
+                <div class="label">Przebieg z dnia</div>
+                <div class="value" th:text="${car.courseDate}">—</div>
             </div>
-            <div class="detail">
-                <div class="label">Rozrząd (interwał km)</div>
-                <div class="value" th:text="${car.timingSystemIntervalKm}">—</div>
-            </div>
-            <div class="detail">
-                <div class="label">Olej (przebieg wymiany)</div>
-                <div class="value" th:text="${car.oilChangeCourse}">—</div>
-            </div>
-            <div class="detail">
-                <div class="label">Olej (interwał km)</div>
-                <div class="value" th:text="${car.oilChangeIntervalKm}">—</div>
-            </div>
-            <div class="detail col-span-2">
+            <div class="detail wide">
                 <div class="label">Opis</div>
-                <div class="value" th:text="${car.description}">—</div>
+                <div class="value" th:text="${#strings.defaultString(car.description,'—')}">—</div>
             </div>
         </div>
     </section>
 
-    <section class="card">
-        <div class="table-header">
-            <label class="table-title">Bieżące zadanie</label>
-        </div>
-        <div class="details-grid two-cols">
-            <div class="detail">
-                <div class="label">Nazwa</div>
-                <div class="value" th:text="${currentTaskName != null ? currentTaskName : '—'}">—</div>
-            </div>
-            <div class="detail">
-                <div class="label">Użytkownicy</div>
-                <div class="value" th:text="${currentTaskUsers != null ? currentTaskUsers : '—'}">—</div>
-            </div>
-        </div>
-    </section>
-
+    <!-- Karta: koszty pojazdu -->
     <section class="card">
         <div class="table-header">
             <label class="table-title">Koszty pojazdu</label>
-            <div class="right muted">Liczba pozycji: <strong th:text="${costsCount}">0</strong></div>
+            <!-- Future: proste filtry (zakres dat itp.) -->
         </div>
 
         <div class="table-wrapper">
-            <table class="table table-sortable" id="carCostsTable">
+            <table class="table">
                 <thead>
                 <tr>
-                    <th data-sort="text">ID</th>
-                    <th data-sort="text">Pozycja (toString)</th>
-                    <th data-sort="text">Akcje</th>
+                    <th>Data od</th>
+                    <th>Data do</th>
+                    <th>Opis</th>
+                    <th class="text-right">Kwota</th>
+                    <th>Akcje</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="cc : ${costs}">
-                    <td th:text="${cc.id}">1</td>
-                    <!-- Bezpiecznie pokazujemy toString() obiektu kosztu,
-                         bo nie znamy jego pól (unikamy błędów przy braku getterów) -->
-                    <td th:text="${cc}">Opis kosztu</td>
+                <tr th:each="c : ${costs}">
+                    <td th:text="${c.dateFrom}">2024-01-01</td>
+                    <td th:text="${c.dateTo}">2024-01-31</td>
+                    <td th:text="${#strings.defaultString(c.description,'—')}">—</td>
+                    <td class="text-right" th:text="${#numbers.formatDecimal(c.cost,1,'COMMA',2,'POINT')}">0,00</td>
                     <td class="actions">
-                        <a class="btn btn-primary btn-small" th:href="@{/cars/cost/edit/{id}(id=${cc.id})}">Edytuj</a>
-                        <form th:action="@{/cars/cost/delete/{id}(id=${cc.id})}" method="post" class="inline-form" data-confirm="Usunąć koszt?">
+                        <a class="btn btn-small" th:href="@{/cars/cost/edit/{id}(id=${c.id})}">Edytuj</a>
+                        <form th:action="@{/cars/cost/delete/{id}(id=${c.id})}" method="post" class="inline-form" data-confirm="Usunąć ten koszt?">
                             <input type="hidden" name="carId" th:value="${car.id}" />
                             <button type="submit" class="btn btn-danger btn-small">Usuń</button>
                         </form>
                     </td>
                 </tr>
-                <tr th:if="${costs == null || #lists.isEmpty(costs)}">
-                    <td colspan="3">Brak kosztów dla tego pojazdu.</td>
+                <tr th:if="${#lists.isEmpty(costs)}">
+                    <td colspan="5">Brak kosztów dla tego pojazdu.</td>
                 </tr>
                 </tbody>
+                <tfoot th:if="${!#lists.isEmpty(costs)}">
+                <tr>
+                    <td colspan="3" class="text-right"><strong>Suma</strong></td>
+                    <td class="text-right">
+                        <strong th:text="${#numbers.formatDecimal(totalCost,1,'COMMA',2,'POINT')}">0,00</strong>
+                    </td>
+                    <td></td>
+                </tr>
+                </tfoot>
             </table>
         </div>
     </section>

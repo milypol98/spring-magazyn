@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title th:text="${cart.id} != null ? 'Edytuj koszyk' : 'Dodaj koszyk'">Koszyk</title>
-    <link rel="stylesheet" th:href="@{/css/carts.css}" />
+    <link rel="stylesheet" th:href="@{/css/general.css}" />
 </head>
 <body>
 
@@ -80,7 +80,7 @@
         </section>
 
         <!-- Dodawanie produktów -->
-        <section class="card">
+        <section class="card" th:if="${cart.id} != null">
             <div class="table-header">
                 <h2 class="section-title">Produkty</h2>
                 <input type="text" class="table-search" placeholder="Szukaj produktu…" data-target="#productsTbody">
@@ -112,29 +112,6 @@
                             <button type="submit" class="btn btn-small" th:attr="form=|addProd_${p.id}|">Dodaj</button>
                         </td>
                     </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-        <!-- Dodawanie pozycji magazynowych -->
-        <section class="card">
-            <div class="table-header">
-                <h2 class="section-title">Pozycje magazynowe</h2>
-                <input type="text" class="table-search" placeholder="Szukaj pozycji…" data-target="#stocksTbody">
-            </div>
-            <div class="table-wrapper">
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nazwa</th>
-                        <th>Opis</th>
-                        <th>Ilość</th>
-                        <th>Akcja</th>
-                    </tr>
-                    </thead>
-                    <tbody id="stocksTbody">
                     <tr th:each="s : ${allStackPositions}">
                         <td th:text="${s.id}">1</td>
                         <td th:text="${s.name}">Pozycja</td>
@@ -157,6 +134,6 @@
     </div>
 </main>
 
-<script th:src="@{/js/carts.js}"></script>
+<script th:src="@{/js/general.js}"></script>
 </body>
 </html>

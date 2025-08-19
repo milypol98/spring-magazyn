@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -85,6 +86,11 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public void delete(Long id) {
         invoiceRepo.deleteById(id);
+    }
+
+    @Override
+    public List<Invoice> getAllInvoicesByCompanyId(Long companyId) {
+        return invoiceRepo.findAllByCompany_Id(companyId);
     }
 
     @Override

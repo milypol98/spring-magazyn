@@ -1,50 +1,92 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="pl">
 <head>
-    <meta charset="UTF-8">
-  <link rel="stylesheet" th:href="@{/css/general.css}" />
-
+    <meta charset="UTF-8" />
+    <title th:text="${car_cost.id} != null ? 'Edytuj koszt' : 'Dodaj koszt'">Koszt pojazdu</title>
+    <link rel="stylesheet" th:href="@{/css/cars.css}" />
 </head>
 <body>
-<h1>
-  <label>Koszty</label>
-  <a th:href="@{/dashboard}" class="btn-main">Strona glowna</a>
-  <a th:href="@{/warehouses}" class="btn-main">Magazyn</a>
-  <a th:href="@{/tasks}" class="btn-main">Task</a>
-  <a th:href="@{/cars}" class="btn-main">Auta</a>
-  <a th:href="@{/places}" class="btn-main">Miejsca</a>
-  <a th:href="@{/users}" class="btn-main">Pracownicy</a>
-  <a th:href="@{/profile}" class="btn-main">Ustawienia</a>
-</h1>
-<div class="top-row">
-  <div class="side-by-side">
-    <div class="container w1200">
-      <div class="table-header">
-        <label class="table-title" th:text="|Auto: ${car_cost.car.name}|"></label>
-      </div>
-      <form th:action="@{'/cars/cost/save'}" th:object="${car_cost}"  method="post">
 
-        <input type="hidden" th:field="*{id}" />
-
-        <input type="hidden" th:field="*{car.id}" />
-
-        <label>Opis:</label>
-        <input type="text" th:field="*{description}" />
-
-        <label>Koszty:</label>
-        <input type="text" th:field="*{cost}" />
-
-        <label>Data od</label>
-        <input type="date" th:field="*{dateTo}" />
-
-
-        <label>Data do</label>
-        <input type="date" th:field="*{dateFrom}" />
-
-        <button type="submit" class="submit-btn">Zapisz</button>
-      </form>
+<header class="page-header">
+    <nav class="breadcrumbs" aria-label="breadcrumb">
+        <a th:href="@{/}" class="crumb">Strona główna</a>
+        <span class="sep">/</span>
+        <a th:href="@{/cars}" class="crumb">Pojazdy</a>
+        <span class="sep">/</span>
+        <a th:href="@{/cars/info/{id}(id=${car_cost.car.id})}" class="crumb">Szczegóły pojazdu</a>
+        <span class="sep">/</span>
+        <span class="crumb current" th:text="${car_cost.id} != null ? 'Edytuj koszt' : 'Dodaj koszt'">Koszt</span>
+    </nav>
+    <div class="header-row">
+        <h1 class="page-title" th:text="${car_cost.id} != null ? 'Edytuj koszt' : 'Dodaj koszt'">Koszt pojazdu</h1>
+        <div class="header-tools">
+            <a th:href="@{/cars/info/{id}(id=${car_cost.car.id})}" class="btn">← Wróć</a>
+        </div>
     </div>
-  </div>
-</div>
+</header>
+
+<main class="content">
+    <!-- Karta: kontekst pojazdu -->
+    <section class="card" style="margin-bottom: 14px;">
+        <div class="details-grid two-cols">
+            <div class="detail">
+                <div class="label">Auto</div>
+                <div class="value" th:text="${#strings.defaultString(car_cost.car.name, car_cost.car.registration)}">Nazwa / Rejestracja</div>
+            </div>
+            <div class="detail">
+                <div class="label">Rejestracja</div>
+                <div class="value" th:text="${#strings.defaultString(car_cost.car.registration,'—')}">—</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Karta: formularz kosztu -->
+    <section class="card">
+        <div class="table-header">
+            <label class="table-title">Formularz kosztu</label>
+        </div>
+
+        <form th:action="@{/cars/cost/save}" th:object="${car_cost}" method="post" novalidate class="edit-form">
+            <input type="hidden" th:field="*{id}" />
+            <input type="hidden" th:field="*{car.id}" />
+
+            <div class="grid-2 gap">
+                <div>
+                    <label>Opis</label>
+                    <input type="text" th:field="*{description}" maxlength="255" placeholder="np. Ubezpieczenie OC/AC" />
+                    <span class="hint">Krótki opis kosztu.</span>
+                </div>
+
+                <div>
+                    <label>Kwota (PLN)</label>
+                    <div class="input-with-prefix">
+                        <span class="prefix">PLN</span>
+                        <input id="costInput" type="number" th:field="*{cost}" step="0.01" min="0" placeholder="0.00" />
+                    </div>
+                    <span class="hint">Użyj kropki jako separatora dziesiętnego (np. 1234.56).</span>
+                </div>
+
+                <div>
+                    <label>Data od</label>
+                    <input id="dateFrom" type="date" th:field="*{dateFrom}" />
+                </div>
+
+                <div>
+                    <label>Data do</label>
+                    <input id="dateTo" type="date" th:field="*{dateTo}" />
+                    <span id="rangeHint" class="hint">Zakres dat (dni): —</span>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Zapisz</button>
+                <a th:href="@{/cars/info/{id}(id=${car_cost.car.id})}" class="btn">Anuluj</a>
+            </div>
+        </form>
+    </section>
+</main>
+
+<!-- Lekki JS dla formularza kosztu -->
+<script th:src="@{/js/cars-cost.js}"></script>
 </body>
 </html>

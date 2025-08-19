@@ -4,7 +4,6 @@ import com.milypol.security.carCost.CarCost;
 import com.milypol.security.carCost.CarCostService;
 import com.milypol.security.cart.Cart;
 import com.milypol.security.cart.CartService;
-import com.milypol.security.productEvent.ProductEvent;
 import com.milypol.security.productEvent.ProductEventService;
 import com.milypol.security.task.Task;
 import com.milypol.security.task.TaskService;
@@ -57,17 +56,14 @@ public class CarController {
         var cars = carService.getAllCars();
         model.addAttribute("cars", cars);
 
-        // Proste mapy do szablonu (unikamy wywołań metod na obiektach w Thymeleaf)
         Map<Integer, String> currentTaskNameByCarId = new HashMap<>();
         Map<Integer, String> currentTaskUsersByCarId = new HashMap<>();
         LocalDate today = LocalDate.now();
 
         for (var car : cars) {
-            // 1) Spróbuj „bieżące wg dat” (repo: BETWEEN dateFrom AND dateTo)
             Optional<Task> currentOpt = taskService.getTaskByCarIdAndDate(car.getId(), today);
             Task current = currentOpt.orElse(null);
 
-            // 2) Jeśli brak, weź najświeższe IN_PROGRESS z listy zadań auta
             if (current == null) {
                 List<Task> tasks = taskService.getAllTasksByCarsId(car.getId());
                 if (tasks != null) {
@@ -97,41 +93,6 @@ public class CarController {
         model.addAttribute("currentTaskUsersByCarId", currentTaskUsersByCarId);
 
         return "cars/list";
-    }
-
-    @GetMapping("/info/{id}")
-    public String infoCar(@PathVariable Integer id, Model model) {
-        ProductEvent productEvent = new ProductEvent();
-        var car = carService.getCarById(id);
-        model.addAttribute("car", car);
-        model.addAttribute("tasks", taskService.getAllTasksByCarsId(id));
-        model.addAttribute("productInCar", productEventService.getProductCountInCar(id));
-        model.addAttribute("productEvent", productEvent);
-
-        // Bieżące zadanie (IN_PROGRESS) + użytkownicy w tym zadaniu (string)
-        var tasks = taskService.getAllTasksByCarsId(id);
-        if (tasks != null) {
-            tasks.stream()
-                 .filter(t -> t.getStatus() == TaskStatus.IN_PROGRESS)
-                 .max(Comparator.comparing(Task::getDateFrom, Comparator.nullsLast(Comparator.naturalOrder())))
-                 .ifPresent(t -> {
-                     model.addAttribute("currentTaskName", Optional.ofNullable(t.getName()).orElse("—"));
-                     String users = (t.getUsers() == null || t.getUsers().isEmpty())
-                             ? "—"
-                             : t.getUsers().stream()
-                                 .map(u -> ((u.getFirstname() != null ? u.getFirstname() : "") + " " + (u.getLastName() != null ? u.getLastName() : "")).trim())
-                                 .filter(s -> !s.isBlank())
-                                 .reduce((a,b) -> a + ", " + b)
-                                 .orElse("—");
-                     model.addAttribute("currentTaskUsers", users);
-                 });
-        }
-
-        // Koszty związane z pojazdem (lista + liczba)
-        model.addAttribute("costs", car.getCosts());
-        model.addAttribute("costsCount", car.getCosts() != null ? car.getCosts().size() : 0);
-
-        return "cars/info";
     }
 
     @GetMapping("/add")
@@ -190,5 +151,28 @@ public class CarController {
     public String deleteCostCar(@PathVariable Integer id, @RequestParam("carId") Integer carId){
         carCostService.deleteCarCost(id);
         return "redirect:/cars/edit/" + carId;
+    }
+
+    // NOWE: szczegóły pojazdu + koszty
+    @GetMapping("/info/{id}")
+    public String info(@PathVariable Integer id, Model model) {
+        Car car = carService.getCarById(id);
+        List<CarCost> costs = Optional.ofNullable(car.getCosts()).orElseGet(List::of)
+                .stream()
+                .sorted(Comparator.comparing(CarCost::getDateFrom, Comparator.nullsLast(Comparator.naturalOrder()))
+                        .thenComparing(CarCost::getId, Comparator.nullsLast(Comparator.naturalOrder())))
+                .toList();
+
+        double total = costs.stream()
+                .map(CarCost::getCost)
+                .filter(Objects::nonNull)
+                .mapToDouble(Double::doubleValue)
+                .sum();
+
+        model.addAttribute("car", car);
+        model.addAttribute("costs", costs);
+        model.addAttribute("totalCost", total);
+
+        return "cars/info";
     }
 }

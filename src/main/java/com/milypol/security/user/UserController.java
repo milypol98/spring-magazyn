@@ -47,7 +47,7 @@ public class UserController {
         return "settings/edit";
     }
 
-    @PostMapping("/edit")
+    @PostMapping("/add")
     public String update(@AuthenticationPrincipal UserDetails principal,
                          @Valid @ModelAttribute("user") User form,
                          BindingResult bindingResult,
@@ -86,7 +86,6 @@ public class UserController {
 
         ra.addFlashAttribute("message", "Dane użytkownika zostały zaktualizowane");
 
-        // Jeśli edytowaliśmy siebie -> wróć do /users/edit, jeśli innego -> do /users/edit/{id}
         var isSelf = form.getId() == null || form.getId().equals(targetId);
         return isSelf ? "redirect:/users/edit" : "redirect:/users/edit/" + targetId;
     }
