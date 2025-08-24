@@ -55,10 +55,9 @@ public class CartsController {
     @PostMapping("/save")
     public String saveCart(@ModelAttribute Cart cart) {
         cartService.saveCart(cart);
-        return "redirect:/warehouses";
+        return "redirect:/carts";
     }
 
-    // Jeden endpoint do dodawania z obu tabel – upsert w serwisie
     @PostMapping("/items/save")
     public String saveCartItem(@ModelAttribute CartItem cartItem) {
         CartItem saved = cartItemService.saveCartItem(cartItem);
@@ -68,7 +67,7 @@ public class CartsController {
     @PostMapping("/delete/{id}")
     public String deleteCart(@PathVariable Integer id) {
         cartService.deleteCart(id);
-        return "redirect:/warehouses";
+        return "redirect:/carts";
     }
 
     @PostMapping("/items/delete/{id}")

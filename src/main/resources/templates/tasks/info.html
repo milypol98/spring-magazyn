@@ -3,72 +3,104 @@
 <head>
     <meta charset="UTF-8" />
     <title th:text="'Zadanie #' + ${task.id}">Zadanie</title>
-    <link rel="stylesheet" th:href="@{/css/tasks.css}" />
+    <link rel="stylesheet" th:href="@{/css/general.css}" />
 </head>
 <body>
 <header class="page-header">
-    <h1>
-        <span th:text="${task.name}">Nazwa zadania</span>
-        <small class="muted">#<span th:text="${task.id}">1</span></small>
-    </h1>
-    <div class="actions">
-        <a th:href="@{|/tasks/edit/${task.id}|}" class="btn">Edytuj</a>
-        <a th:href="@{/tasks}" class="btn btn-secondary">Wróć</a>
-        <form th:action="@{|/tasks/delete/${task.id}|}" method="post" class="inline-form" data-confirm="Usunąć to zadanie?">
-            <button type="submit" class="btn btn-danger">Usuń</button>
-        </form>
+    <nav class="breadcrumbs" aria-label="breadcrumb">
+        <a th:href="@{/dashboard}" class="crumb">Strona główna</a>
+        <span class="sep">/</span>
+        <a th:href="@{/tasks}" class="crumb">Zadania</a>
+        <span class="sep">/</span>
+        <span class="crumb current">Szczególy</span>
+    </nav>
+
+    <div class="header-row">
+        <h1 class="page-title">
+            <span th:text="${task.name}">Nazwa zadania</span>
+        </h1>
     </div>
 </header>
 
-<section class="details">
-    <dl class="details-grid">
-        <dt>Nazwa</dt><dd th:text="${task.name}">Nazwa</dd>
-        <dt>Opis</dt><dd th:text="${task.description ?: '—'}">Opis</dd>
-        <dt>Data od</dt><dd th:text="${task.dateFrom ?: '—'}">2025-01-01</dd>
-        <dt>Data do</dt><dd th:text="${task.dateTo ?: '—'}">2025-01-10</dd>
-        <dt>Status</dt><dd th:text="${task.status}">OPEN</dd>
-        <dt>Użytkownicy</dt>
-        <dd>
-            <span th:each="u : ${task.users}" class="chip" th:text="${u.firstname}">user</span>
-            <span th:if="${#lists.isEmpty(task.users)}">—</span>
-        </dd>
-        <dt>Auta</dt>
-        <dd>
-            <span th:each="c : ${task.cars}" class="chip" th:text="${c.name}">car</span>
-            <span th:if="${#lists.isEmpty(task.cars)}">—</span>
-        </dd>
-    </dl>
-</section>
+<main class="content">
 
-<section class="used-products">
-    <h2>Zużyte produkty na tym zadaniu</h2>
-    <div th:if="${#lists.isEmpty(usedEvents)}" class="empty-state">
-        Brak zarejestrowanych zużyć.
-    </div>
-    <table th:if="${!#lists.isEmpty(usedEvents)}" class="table table-striped">
-        <thead>
-        <tr>
-            <th>Data</th>
-            <th>Produkt</th>
-            <th>Ilość</th>
-            <th>Cena jedn.</th>
-            <th>Użytkownik</th>
-            <th>Komentarz</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="e : ${usedEvents}">
-            <td th:text="${#temporals.format(e.timestamp, 'yyyy-MM-dd HH:mm')}">2025-01-02 10:00</td>
-            <td th:text="${e.product != null ? e.product.name : '—'}">Produkt</td>
-            <td th:text="${e.quantity}">1</td>
-            <td th:text="${e.unitPrice != null ? #numbers.formatDecimal(e.unitPrice, 1, 'POINT', 2, 'COMMA') : '—'}">10,00</td>
-            <td th:text="${e.user != null ? e.user.username : '—'}">Użytkownik</td>
-            <td th:text="${e.comment ?: '—'}">Komentarz</td>
-        </tr>
-        </tbody>
-    </table>
-</section>
+    <section class="card">
+        <div class="details-grid">
+            <div class="detail">
+                <div class="label">Nazwa</div>
+                <div class="value" th:text="${task.name}">Nazwa</div>
+            </div>
+            <div class="detail">
+                <div class="label">Opis</div>
+                <div class="value" th:text="${task.description ?: '—'}">Opis</div>
+            </div>
+            <div class="detail">
+                <div class="label">Data od</div>
+                <div class="value" th:text="${task.dateFrom ?: '—'}">2025-01-01</div>
+            </div>
+            <div class="detail">
+                <div class="label">Data do</div>
+                <div class="value" th:text="${task.dateTo ?: '—'}">2025-01-10</div>
+            </div>
+            <div class="detail">
+                <div class="label">Status</div>
+                <div class="value" th:text="${task.status}">OPEN</div>
+            </div>
+            <div class="detail">
+                <div class="label">Użytkownicy</div>
+                <div class="value">
+                    <span th:each="u : ${task.users}" class="chip" th:text="${u.firstname}">user</span>
+                    <span th:if="${#lists.isEmpty(task.users)}">—</span>
+                </div>
+            </div>
+            <div class="detail">
+                <div class="label">Auta</div>
+                <div class="value">
+                    <span th:each="c : ${task.cars}" class="chip" th:text="${c.name}">car</span>
+                    <span th:if="${#lists.isEmpty(task.cars)}">—</span>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<script th:src="@{/js/tasks.js}"></script>
+    <section class="card">
+        <div class="table-header">
+            <label class="table-title">Produkty zużyte</label>
+            <input type="search"
+                   class="table-search"
+                   placeholder="Szukaj..."
+                   data-target-table="#wornOutProducts">
+        </div>
+        <div class="table-wrapper">
+            <table id="wornOutProducts"  class="table table-striped">
+                <thead>
+                <tr>
+                    <th>L.P.</th>
+                    <th>Produkt</th>
+                    <th>Ilość</th>
+                    <th>Cena jedn.</th>
+                    <th>Użytkownik</th>
+                    <th>Komentarz</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="e, i: ${usedEvents}" th:if="${!#lists.isEmpty(usedEvents)}">
+                    <td th:text="${i.count}">1</td>
+                    <td th:text="${e.product != null ? e.product.name : '—'}">Produkt</td>
+                    <td th:text="${e.quantity}">1</td>
+                    <td th:text="${e.unitPrice != null ? #numbers.formatDecimal(e.unitPrice, 1, 'POINT', 2, 'COMMA') : '—'}">10,00</td>
+                    <td th:text="${e.user != null ? e.user.firstname : '—'}">Użytkownik</td>
+                    <td th:text="${e.comment ?: '—'}">Komentarz</td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(usedEvents)}">
+                    <td colspan="15">Brak produktów do wyświetlenia.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+
+<script th:src="@{/js/general.js}"></script>
 </body>
 </html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Użytkonik</title>
+    <link rel="stylesheet" th:href="@{/css/general.css}" />
+</head>
+<body>
+<header class="page-header">
+    <nav class="breadcrumbs" aria-label="breadcrumb">
+        <a th:href="@{/dashboard}" class="crumb">Strona główna</a>
+        <span class="sep">/</span>
+        <a th:href="@{/users}" class="crumb">Pracownicy</a>
+        <span class="sep">/</span>
+        <span class="crumb current" th:text="${user.firstname + ' ' + user.lastName}">Szczegóły</span>
+    </nav>
+    <div class="header-row">
+        <h1 class="page-title" th:text="${user.firstname + ' ' + user.lastName}">Imię i nazwisko</h1>
+    </div>
+</header>
+
+<main class="content">
+
+    <section class="card">
+        <div class="details-grid">
+
+            <div class="detail">
+                <div class="label">Imię</div>
+                <div class="value" th:text="${user.firstname ?: '—'}">Jan</div>
+            </div>
+            <div class="detail">
+                <div class="label">Nazwisko</div>
+                <div class="value" th:text="${user.lastName ?: '—'}">Kowalski</div>
+            </div>
+            <div class="detail">
+                <div class="label">E-mail</div>
+                <div class="value" th:text="${user.email ?: '—'}">jan.kowalski@example.com</div>
+            </div>
+            <div class="detail">
+                <div class="label">Telefon</div>
+                <div class="value" th:text="${user.phone ?: '—'}">+48 500 600 700</div>
+            </div>
+            <div class="detail">
+                <div class="label">Rola</div>
+                <div class="value" th:text="${user.role ?: '—'}">USER</div>
+            </div>
+            <div class="detail span-2">
+                <div class="label">Opis</div>
+                <div class="value" th:text="${user.description ?: '—'}">Krótka informacja o użytkowniku...</div>
+            </div>
+
+            <div class="detail span-2 detail-header">
+                Dane adresowe
+            </div>
+
+            <div class="detail">
+                <div class="label">Ulica i numer</div>
+                <div class="value">
+                    <span th:text="${user.address?.street ?: '—'}"></span>
+                    <span th:if="${user.address?.buildingNumber}" th:text="${' ' + user.address.buildingNumber}"></span>
+                    <span th:if="${user.address?.apartmentNumber}" th:text="${'/' + user.address.apartmentNumber}"></span>
+                </div>
+            </div>
+            <div class="detail">
+                <div class="label">Kod pocztowy i miasto</div>
+                <div class="value">
+                    <span th:text="${user.address?.postalCode ?: '—'}"></span>
+                    <span th:if="${user.address?.city}" th:text="${' ' + user.address.city}"></span>
+                </div>
+            </div>
+            <div class="detail">
+                <div class="label">Kraj</div>
+                <div class="value" th:text="${user.address?.country ?: '—'}">Polska</div>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="card">
+        <div class="table-header">
+            <label class="table-title">Prace wykonywane</label>
+            <input type="search"
+                   class="table-search"
+                   placeholder="Szukaj..."
+                   data-target-table="#userTaskTable">
+        </div>
+            <div class="table-wrapper">
+                <table id="userTaskTable" class="table">
+                    <thead>
+                    <tr>
+                        <th>Nazwa</th>
+                        <th>Opis</th>
+                        <th>Data od</th>
+                        <th>Data do</th>
+                        <th>Status</th>
+                        <th>Zasoby</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="task : ${tasks}"
+                        th:attr="data-name=${task.name}, data-desc=${task.description}"
+                        class="clickable-row"
+                        th:onclick="|window.location.href='@{/tasks/details/{id}(id=${task.id})}'|">
+
+                        <td th:text="${task.name}">Nazwa zadania</td>
+                        <td th:text="${task.description}">Opis zadania</td>
+                        <td th:text="${task.dateFrom}">2025-08-01</td>
+                        <td th:text="${task.dateTo}">2025-08-10</td>
+                        <td>
+                             <span class="status-badge"
+                                   th:text="${task.status != null ? task.status : 'UNKNOWN'}"
+                                   th:classappend="${task.status != null} ? ${' status-' + task.status.toString().toLowerCase()} : ' status-unknown'">
+                             </span>
+                        </td>
+                        <td>
+                            <div class="resources">
+                                <div class="res-row">
+                                    <span class="res-label">Pracownicy:</span>
+                                    <span class="res-values">
+                                        <span th:each="u, uiStat : ${task.users}"
+                                              th:text="${u.firstname + (uiStat.last ? '' : ', ')}"></span>
+                                    </span>
+                                </div>
+                                <div class="res-row">
+                                    <span class="res-label">Auta:</span>
+                                    <span class="res-values">
+                                        <span th:each="car, ciStat : ${task.cars}"
+                                              th:text="${car.name + (ciStat.last ? '' : ', ')}"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(tasks)}">
+                        <td colspan="6" class="empty-state">Ten użytkownik nie ma przypisanych żadnych prac.</td>
+                    </tr>
+                    </tbody>
+                </table>
+        </div>
+    </section>
+
+</main>
+<script th:src="@{/js/general.js}"></script>
+</body>
+</html>

@@ -3,66 +3,75 @@
 <head>
     <meta charset="UTF-8" />
     <title th:text="${task.id} != null ? 'Edytuj zadanie' : 'Dodaj zadanie'">Zadanie</title>
-    <link rel="stylesheet" th:href="@{/css/tasks.css}" />
+    <link rel="stylesheet" th:href="@{/css/general.css}" />
 </head>
 <body>
 <header class="page-header">
-    <h1 th:text="${task.id} != null ? 'Edytuj zadanie' : 'Dodaj zadanie'">Zadanie</h1>
+    <nav class="breadcrumbs" aria-label="breadcrumb">
+        <a th:href="@{/dashboard}" class="crumb">Strona główna</a>
+        <span class="sep">/</span>
+        <a th:href="@{/tasks}" class="crumb">Zadania</a>
+        <span class="sep">/</span>
+        <span class="crumb current" th:text="${task.id != null ? 'Edycja zadania' : 'Nowe zadanie'}">Formularz</span>
+    </nav>
+
+    <div class="header-row">
+        <h1 class="page-title" th:text="${task.id != null ? 'Edytuj zadanie' : 'Dodaj zadanie'}">Zadanie</h1>
+    </div>
 </header>
 
 <section class="form-container">
-    <form th:action="@{/tasks/save}" method="post" th:object="${task}" novalidate class="edit-form">
+    <form th:action="@{/tasks/save}" method="post" th:object="${task}"  class="card form">
         <input type="hidden" th:field="*{id}" />
 
         <div class="form-row">
-            <label>Nazwa <span class="req">*</span>
-                <input type="text" th:field="*{name}" maxlength="150" required />
-            </label>
+            <label>Nazwa <span class="req">*</span></label>
+            <input type="text" th:field="*{name}" maxlength="150" required />
             <div class="field-hint" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Błąd</div>
         </div>
 
         <div class="form-row">
-            <label>Opis
-                <input type="text" th:field="*{description}" maxlength="255" />
-            </label>
+            <label>Opis</label>
+            <textarea th:field="*{description}" maxlength="255"></textarea>
             <div class="field-hint" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Błąd</div>
         </div>
 
-        <div class="form-row">
-            <label>Data od
+        <div class="form-row form-row-split">
+            <div class="form-group">
+                <label>Data od</label>
                 <input type="date" th:field="*{dateFrom}" />
-            </label>
-            <label>Data do
+            </div>
+            <div class="form-group">
+                <label>Data do</label>
                 <input type="date" th:field="*{dateTo}" />
-            </label>
+            </div>
+        </div>
+        <div class="form-row">
             <div class="field-hint" th:if="${#fields.hasErrors('dateRangeValid')}" th:errors="*{dateRangeValid}">Błąd</div>
         </div>
 
         <div class="form-row">
-            <label>Status <span class="req">*</span>
-                <select th:field="*{status}" required>
-                    <option th:each="s: ${T(com.milypol.security.task.TaskStatus).values()}"
-                            th:value="${s}"
-                            th:text="${s}">OPEN</option>
-                </select>
-            </label>
+            <label>Status <span class="req">*</span></label>
+            <select th:field="*{status}" required>
+                <option th:each="s: ${T(com.milypol.security.task.TaskStatus).values()}"
+                        th:value="${s}"
+                        th:text="${s}">OPEN</option>
+            </select>
             <div class="field-hint" th:if="${#fields.hasErrors('status')}" th:errors="*{status}">Błąd</div>
         </div>
 
         <div class="form-row">
-            <label>Użytkownicy (CTRL/CMD aby zaznaczyć wiele)
-                <select th:field="*{users}" multiple size="6">
-                    <option th:each="u : ${allUsers}" th:value="${u.id}" th:text="${u.firstname}">User</option>
-                </select>
-            </label>
+            <label>Użytkownicy <small>(CTRL/CMD aby zaznaczyć wiele)</small></label>
+            <select th:field="*{users}" multiple size="6">
+                <option th:each="u : ${allUsers}" th:value="${u.id}" th:text="${u.firstname}">User</option>
+            </select>
         </div>
 
         <div class="form-row">
-            <label>Auta (CTRL/CMD aby zaznaczyć wiele)
-                <select th:field="*{cars}" multiple size="6">
-                    <option th:each="c : ${allCars}" th:value="${c.id}" th:text="${c.name}">Car</option>
-                </select>
-            </label>
+            <label>Auta <small>(CTRL/CMD aby zaznaczyć wiele)</small></label>
+            <select th:field="*{cars}" multiple size="6">
+                <option th:each="c : ${allCars}" th:value="${c.id}" th:text="${c.name}">Car</option>
+            </select>
         </div>
 
         <div class="form-actions">
@@ -72,6 +81,9 @@
     </form>
 </section>
 
-<script th:src="@{/js/tasks.js}"></script>
+
+
+
+<script th:src="@{/js/general.js}"></script>
 </body>
 </html>

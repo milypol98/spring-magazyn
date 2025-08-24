@@ -1,5 +1,7 @@
 package com.milypol.security.invoice;
 
+import com.milypol.security.address.Address;
+import com.milypol.security.company.Company;
 import com.milypol.security.company.CompanyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
@@ -57,7 +59,6 @@ public class InvoicePageController {
         model.addAttribute("companies", companyService.findAll());
         return "invoices/edit";
     }
-
     @PostMapping("/save")
     public String save(@RequestParam("nrFaktury") String nrFaktury,
                        @RequestParam("nazwa") String nazwa,

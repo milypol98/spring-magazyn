@@ -9,7 +9,7 @@
 
 <header class="page-header">
     <nav class="breadcrumbs" aria-label="breadcrumb">
-        <a th:href="@{/}" class="crumb">Strona główna</a>
+        <a th:href="@{/dashboard}" class="crumb">Strona główna</a>
         <span class="sep">/</span>
         <a th:href="@{/carts}" class="crumb">Koszyki</a>
         <span class="sep">/</span>
@@ -17,10 +17,6 @@
     </nav>
     <div class="header-row">
         <h1 class="page-title">Szczegóły koszyka</h1>
-        <div class="header-tools">
-            <a th:href="@{/carts}" class="btn">← Wróć</a>
-            <a th:href="@{/carts/edit/{id}(id=${cart.id})}" class="btn btn-primary">Edytuj</a>
-        </div>
     </div>
 </header>
 

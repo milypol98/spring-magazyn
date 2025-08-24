@@ -22,7 +22,12 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     private final InvoiceRepo invoiceRepo;
     private final CompanyService companyService;
-    // ... ewentualne inne zależności (np. storage)
+
+
+    @Override
+    public Optional<Invoice> findById(Long id) {
+        return invoiceRepo.findById(id);
+    }
 
     @Override
     public Invoice create(String invoiceNumber,
@@ -33,12 +38,6 @@ public class InvoiceServiceImpl implements InvoiceService {
                           String totalVat,
                           String totalGross,
                           Long companyId) throws IOException {
-
-        // Walidacje podstawowe (np. duplikat numeru)
-        if (invoiceRepo.existsByInvoiceNumber(invoiceNumber)) {
-            throw new IllegalArgumentException("Faktura o numerze " + invoiceNumber + " już istnieje");
-        }
-
         Invoice inv = new Invoice();
         inv.setInvoiceNumber(invoiceNumber);
         inv.setName(name);
@@ -48,7 +47,6 @@ public class InvoiceServiceImpl implements InvoiceService {
         if (totalGross != null && !totalGross.isBlank()) inv.setTotalGross(new BigDecimal(totalGross.replace(",", ".")));
         inv.setUploadedAt(Instant.now());
 
-        // Zapis pliku (tu tylko szkic — dostosuj do swojej logiki)
         if (file != null && !file.isEmpty()) {
             String storedName = /* twoja logika zapisu pliku */ file.getOriginalFilename();
             inv.setStoredFileName(storedName);

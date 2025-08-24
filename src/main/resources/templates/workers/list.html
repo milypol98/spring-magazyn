@@ -60,6 +60,7 @@
                     <td th:text="${u.description}">Opis</td>
                     <td th:text="${u.email}">email@example.com</td>
                     <td class="actions">
+                        <a class="btn btn-small" th:href="@{|/users/${u.id}|}">Szczegóły</a>
                         <a class="btn btn-small" th:href="@{|/users/edit/${u.id}|}">Edytuj</a>
                     </td>
                 </tr>

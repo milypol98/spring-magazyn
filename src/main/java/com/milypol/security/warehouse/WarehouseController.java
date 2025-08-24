@@ -50,7 +50,6 @@ public class WarehouseController {
         model.addAttribute("carts", cartService.getAllCarts());
         model.addAttribute("countToolsStatus",toolService.getToolCountByStockPositionIdStatus());
         model.addAttribute("countToolsPosition", toolService.getToolCountByStockPositionId());
-        model.addAttribute("tasksPacked", taskService.getAllTasksByStatus(TaskStatus.TO_BE_PACKED));
         return "warehouses/list";
     }
     @GetMapping("/stocks/tools")

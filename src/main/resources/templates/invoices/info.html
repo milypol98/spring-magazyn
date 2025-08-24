@@ -10,57 +10,63 @@
     <nav class="breadcrumbs" aria-label="breadcrumb">
         <a th:href="@{/dashboard}" class="crumb">Strona główna</a>
         <span class="sep">/</span>
-        <a th:href="@{/dashboard}" class="crumb">Faktury</a>
+        <a th:href="@{/invoices}" class="crumb">Faktury</a>
         <span class="sep">/</span>
-        <span class="crumb current" th:text="${invoice?.id} != null ? 'Edycja faktury' : 'Nowa faktura'">Faktura</span>
+        <span class="crumb current" >Szczególy</span>
     </nav>
     <div class="header-row">
-        <h1 class="page-title" th:text="${invoice?.id} != null ? 'Edycja faktury' : 'Nowa faktura'">Lista faktur</h1>
-        <div class="header-tools">
-            <a th:if="${company?.id != null}" class="btn" th:href="@{|/companies/${company.id}|}">Szczegóły</a>
-        </div>
+        <h1 class="page-title" >
+            <span th:text="${invoice.name}"></span>
+        </h1>
     </div>
 </header>
+<main class="content">
+    <section class="card">
+        <div class="details-grid">
 
-<section th:if="${invoice != null}" class="details">
-    <dl class="details-grid">
-        <dt>ID</dt>
-        <dd th:text="${invoice?.id}">1</dd>
+            <div class="detail">
+                <div class="label">Nr faktury</div>
+                <div class="value" th:text="${#strings.defaultString(invoice?.invoiceNumber,'—')}">—</div>
+            </div>
 
-        <dt>Nr faktury</dt>
-        <dd th:text="${invoice?.invoiceNumber ?: '—'}">FV-001</dd>
+            <div class="detail">
+                <div class="label">Nazwa</div>
+                <div class="value" th:text="${#strings.defaultString(invoice?.name,'—')}">—</div>
+            </div>
 
-        <dt>Nazwa</dt>
-        <dd th:text="${invoice?.name ?: '—'}">Acme</dd>
+            <div class="detail">
+                <div class="label">Waluta</div>
+                <div class="value" th:text="${#strings.defaultString(invoice?.currency,'—')}">—</div>
+            </div>
 
-        <dt>Waluta</dt>
-        <dd th:text="${invoice?.currency ?: '—'}">PLN</dd>
+            <div class="detail">
+                <div class="label">Netto</div>
+                <div class="value" th:text="${invoice?.totalNet != null ? invoice.totalNet : '—'}">—</div>
+            </div>
 
-        <dt>Netto</dt>
-        <dd th:text="${invoice?.totalNet ?: '—'}">0.00</dd>
+            <div class="detail">
+                <div class="label">VAT</div>
+                <div class="value" th:text="${invoice?.totalVat != null ? invoice.totalVat : '—'}">—</div>
+            </div>
 
-        <dt>VAT</dt>
-        <dd th:text="${invoice?.totalVat ?: '—'}">0.00</dd>
+            <div class="detail">
+                <div class="label">Brutto</div>
+                <div class="value" th:text="${invoice?.totalGross != null ? invoice.totalGross : '—'}">—</div>
+            </div>
 
-        <dt>Brutto</dt>
-        <dd th:text="${invoice?.totalGross ?: '—'}">0.00</dd>
-
-        <dt>Dodano</dt>
-        <dd th:text="${#temporals.format(invoice?.uploadedAt, 'yyyy-MM-dd HH:mm')}">—</dd>
-    </dl>
-
-    <div class="details-actions">
-        <form th:action="@{|/invoices/${invoice?.id}/delete|}" method="post"
-              onsubmit="return confirm('Czy na pewno usunąć tę fakturę?');">
-            <button type="submit" class="btn btn-danger">Usuń</button>
-        </form>
-    </div>
-</section>
-
-<section th:if="${invoice == null}" class="empty-state">
-    Nie znaleziono faktury.
-</section>
+            <div class="detail">
+                <div class="label">Dodano</div>
+                <div class="value" th:text="${invoice.uploadedAt != null ? #temporals.format(invoice.uploadedAt,'yyyy-MM-dd HH:mm') : '—'}">—</div>
+            </div>
+        </div>
+    </section>
+    <section th:if="${invoice == null}" class="empty-state">
+        Nie znaleziono faktury.
+    </section>
+</main>
 
 <script th:src="@{/js/general.js}"></script>
+<script th:src="@{/js/invoices.js}"></script>
+
 </body>
 </html>

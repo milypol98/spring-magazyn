@@ -6,9 +6,8 @@ import lombok.Setter;
 @Getter
 public enum TaskStatus {
 
-    TO_BE_PACKED("Do spakowania"),
+    BEFORE_TASK("Przed"),
     IN_PROGRESS("W trakcie"),
-    TO_BE_UNPACKED("Do rozpakowania"),
     COMPLETED("Zakończone");
 
     private final String displayName;

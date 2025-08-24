@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface InvoiceService {
+    Optional<Invoice> findById(Long id);
     Invoice create(String invoiceNumber,
                    String name,
                    MultipartFile file,

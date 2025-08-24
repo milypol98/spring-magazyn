@@ -28,6 +28,12 @@ public class UserController {
         model.addAttribute("users", userService.getAllUsers());
         return "workers/list";
     }
+    @GetMapping("/{id}")
+    public String info(@PathVariable Integer id, Model model) {
+        model.addAttribute("user", userService.getUserById(id));
+        model.addAttribute("tasks", taskService.getAllTasksByUserId(id));
+        return "workers/info";
+    }
 
     @GetMapping("/edit/{id}")
     public String editUser(@PathVariable Integer id , Model model){
@@ -35,7 +41,7 @@ public class UserController {
         if (user.getAddress() == null) user.setAddress(new Address());
         model.addAttribute("user", user);
         model.addAttribute("tasks", taskService.getAllTasksByUserId(id));
-        return "settings/edit";
+        return "workers/edit";
     }
 
     @GetMapping("/edit")
@@ -44,7 +50,7 @@ public class UserController {
         if (user.getAddress() == null) user.setAddress(new Address());
         model.addAttribute("user", user);
         model.addAttribute("tasks", taskService.getAllTasksByUserId(user.getId()));
-        return "settings/edit";
+        return "workers/edit";
     }
 
     @PostMapping("/add")
@@ -65,7 +71,7 @@ public class UserController {
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("tasks", taskService.getAllTasksByUserId(targetId));
-            return "settings/edit";
+            return "workers/edit";
         }
 
         if (newPassword != null && !newPassword.isBlank()) {
@@ -78,7 +84,7 @@ public class UserController {
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("tasks", taskService.getAllTasksByUserId(targetId));
-            return "settings/edit";
+            return "workers/edit";
         }
 
         // Tu można dodać sprawdzenie uprawnień, jeśli edytujemy kogoś innego niż siebie

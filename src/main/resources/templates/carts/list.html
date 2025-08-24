@@ -25,14 +25,17 @@
     <section class="card">
         <div class="table-header">
             <label class="table-title">Lista koszyków</label>
-            <input id="cartSearch" class="table-search" type="search" placeholder="Szukaj po nazwie/opisie…" />
+            <input type="search"
+                   class="table-search"
+                   placeholder="Szukaj..."
+                   data-target-table="#cartsTable">
         </div>
 
         <div class="table-wrapper">
-            <table class="table">
+            <table id="cartsTable" class="table">
                 <thead>
                 <tr>
-                    <th>ID</th>
+                    <th>L.P.</th>
                     <th>Nazwa</th>
                     <th>Opis</th>
                     <th>Liczba pozycji</th>
@@ -40,13 +43,9 @@
                 </tr>
                 </thead>
                 <tbody id="cartsTbody">
-                <tr th:each="c : ${carts}"
-                    class="clickable-row"
-                    th:attr="data-href=@{/carts/{id}(id=${c.id})}, data-name=${c.name}, data-desc=${c.description}">
-                    <td th:text="${c.id}">1</td>
-                    <td>
-                        <a th:href="@{/carts/{id}(id=${c.id})}" th:text="${c.name}">Nazwa</a>
-                    </td>
+                <tr th:each="c, iter : ${carts}">
+                    <td th:text="${iter.count}">1</td>
+                    <td th:text="${c.name}"></td>
                     <td th:text="${#strings.defaultString(c.description,'—')}">—</td>
                     <td th:text="${#lists.size(c.items)}">0</td>
                     <td class="actions">

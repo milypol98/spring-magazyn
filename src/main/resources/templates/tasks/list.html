@@ -3,15 +3,25 @@
 <head>
     <meta charset="UTF-8" />
     <title>Zadania - lista</title>
-    <link rel="stylesheet" th:href="@{/css/tasks.css}" />
+    <link rel="stylesheet" th:href="@{/css/general.css}" />
 </head>
 <body>
 <header class="page-header">
-    <h1>Zadania</h1>
-    <div class="actions">
-        <a th:href="@{/tasks/add}" class="btn btn-primary">+ Dodaj zadanie</a>
+    <nav class="breadcrumbs" aria-label="breadcrumb">
+        <a th:href="@{/dashboard}" class="crumb">Strona główna</a>
+        <span class="sep">/</span>
+        <span class="crumb current">Zadania</span>
+    </nav>
+    <div class="header-row">
+        <h1 class="page-title">Lista zadań</h1>
+        <div class="header-tools">
+            <a th:href="@{/tasks/add}" class="btn btn-primary">+ Dodaj zadanie</a>
+        </div>
     </div>
 </header>
+<section th:if="${message}" class="flash">
+    <span th:text="${message}">Operacja zakończona pomyślnie</span>
+</section>
 
 <section class="filters">
     <form th:action="@{/tasks}" method="get" class="filters-form">
@@ -40,8 +50,6 @@
                             th:text="${u.firstname}">Jan Kowalski</option>
                 </select>
             </label>
-        </div>
-        <div class="row">
             <label>
                 Data od
                 <input type="date" name="from" th:value="${from}" />
@@ -56,72 +64,74 @@
                     <option th:selected="${size} == 10" th:value="10">10</option>
                     <option th:selected="${size} == 20" th:value="20">20</option>
                     <option th:selected="${size} == 50" th:value="50">50</option>
-                    <option th:selected="${size} == 100" th:value="100">100</option>
                 </select>
             </label>
 
-            <button type="submit" class="btn">Filtruj</button>
+            <button type="submit" class="btn btn-primary">Filtruj</button>
             <a th:href="@{/tasks}" class="btn btn-secondary">Wyczyść</a>
         </div>
     </form>
 </section>
-
-<section class="list-container">
-    <div th:if="${#lists.isEmpty(tasks)}" class="empty-state">
-        Brak zadań do wyświetlenia.
-    </div>
-
-    <table th:if="${!#lists.isEmpty(tasks)}" class="table table-striped">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Nazwa</th>
-            <th>Od</th>
-            <th>Do</th>
-            <th>Status</th>
-            <th>Użytkownicy</th>
-            <th>Akcje</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="t : ${tasks}">
-            <td th:text="${t.id}">1</td>
-            <td>
-                <a th:href="@{|/tasks/${t.id}|}" th:text="${t.name}">Nazwa zadania</a>
-            </td>
-            <td th:text="${t.dateFrom}">2025-01-01</td>
-            <td th:text="${t.dateTo}">2025-01-10</td>
-            <td th:text="${t.status}">OPEN</td>
-            <td>
-                <span th:each="u : ${t.users}" class="chip"
-                      th:text="${u.firstname}">user</span>
-            </td>
-            <td class="actions">
-                <a class="btn btn-small" th:href="@{|/tasks/${t.id}|}">Szczegóły</a>
-                <a class="btn btn-small" th:href="@{|/tasks/edit/${t.id}|}">Edytuj</a>
-                <form th:action="@{|/tasks/delete/${t.id}|}" method="post" class="inline-form" data-confirm="Usunąć to zadanie?">
-                    <button type="submit" class="btn btn-danger btn-small">Usuń</button>
-                </form>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-
-    <div class="pagination" th:if="${page != null and page.totalPages > 1}">
-        <a th:href="@{|/tasks?page=${page.number - 1}&size=${page.size}
+<main class="content">
+    <section class="card">
+        <div class="table-header">
+            <label class="table-title">Lista zadań</label>
+        </div>
+        <div class="table-wrapper">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>L.P.</th>
+                    <th>Nazwa</th>
+                    <th>Od</th>
+                    <th>Do</th>
+                    <th>Status</th>
+                    <th>Użytkownicy</th>
+                    <th>Akcje</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="t, i: ${tasks}">
+                    <td th:text="${i.count}">1</td>
+                    <td th:text="${t.name}"></td>
+                    <td th:text="${t.dateFrom}">2025-01-01</td>
+                    <td th:text="${t.dateTo}">2025-01-10</td>
+                    <td th:text="${t.status}">OPEN</td>
+                    <td>
+                <span th:each="u : ${t.users}"
+                      th:text="${u.firstname +' '+ u.lastName}">user</span>
+                    </td>
+                    <td class="actions">
+                        <a class="btn btn-small" th:href="@{|/tasks/${t.id}|}">Szczegóły</a>
+                        <a class="btn btn-small" th:href="@{|/tasks/edit/${t.id}|}">Edytuj</a>
+                        <form th:action="@{|/tasks/delete/${t.id}|}" method="post" class="inline-form" onsubmit="return confirm('Usunąć tę zadanie?');">
+                            <button type="submit" class="btn btn-danger btn-small">Usuń</button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(tasks)}">
+                    <td colspan="15">Brak zadań do wyświetlenia.</td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="pagination" th:if="${page != null and page.totalPages > 1}">
+                <a th:href="@{|/tasks?page=${page.number - 1}&size=${page.size}
             &q=${q}&status=${status}&userId=${userId}&from=${from}&to=${to}|}"
-           th:classappend="${page.first} ? 'disabled' : ''"
-           class="page-btn">« Poprzednia</a>
+                   th:classappend="${page.first} ? 'disabled' : ''"
+                   class="page-btn">« Poprzednia</a>
 
-        <span>Strona <span th:text="${page.number + 1}">1</span> z <span th:text="${page.totalPages}">3</span></span>
+                <span>Strona <span th:text="${page.number + 1}">1</span> z <span th:text="${page.totalPages}">3</span></span>
 
-        <a th:href="@{|/tasks?page=${page.number + 1}&size=${page.size}
+                <a th:href="@{|/tasks?page=${page.number + 1}&size=${page.size}
             &q=${q}&status=${status}&userId=${userId}&from=${from}&to=${to}|}"
-           th:classappend="${page.last} ? 'disabled' : ''"
-           class="page-btn">Następna »</a>
-    </div>
-</section>
+                   th:classappend="${page.last} ? 'disabled' : ''"
+                   class="page-btn">Następna »</a>
+            </div>
+        </div>
+    </section>
+</main>
 
-<script th:src="@{/js/tasks.js}"></script>
+
+<script th:src="@{/js/general.js}"></script>
 </body>
 </html>

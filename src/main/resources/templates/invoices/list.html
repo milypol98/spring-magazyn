@@ -65,11 +65,12 @@
 
 <main class="content">
     <section class="card">
+
         <div class="table-header">
             <label class="table-title">Lista faktur</label>
         </div>
         <div class="table-wrapper">
-            <table th:if="${invoices != null}" class="table">
+            <table  class="table">
                 <thead>
                 <tr>
                     <th>L.P.</th>
@@ -100,7 +101,9 @@
                     <td th:text="${inv?.totalGross ?: '—'}">0.00</td>
                     <td class="actions">
                         <a class="btn btn-small" th:href="@{|/invoices/${inv?.id}|}">Szczegóły</a>
-                        <a class="btn btn-small" th:href="@{|/invoices/${inv?.id}/download|}">Pobierz</a>
+<!--                        <a class="btn btn-small" th:href="@{|/invoices/${inv?.id}/edit|}">Edytuj</a>-->
+<!--                        <a class="btn btn-small" th:href="@{|/invoices/${inv?.id}/download|}">Pobierz</a>-->
+
                         <form th:action="@{|/invoices/${inv?.id}/delete|}" method="post" class="inline-form"
                               onsubmit="return confirm('Usunąć tę fakturę?');">
                             <button type="submit" class="btn btn-danger btn-small">Usuń</button>
@@ -133,5 +136,7 @@
 </main>
 
 <script th:src="@{/js/general.js}"></script>
+<script th:src="@{/js/invoices.js}"></script>
+
 </body>
 </html>
