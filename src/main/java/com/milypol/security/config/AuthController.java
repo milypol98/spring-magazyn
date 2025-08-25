@@ -14,6 +14,7 @@ public class AuthController {
 
     private final RegistrationService registrationService;
 
+
     // GET /register – wyświetlenie formularza rejestracji
     @GetMapping("/register")
     public String showRegistrationForm(Model model) {
@@ -39,11 +40,11 @@ public class AuthController {
             return "register";
         }
         // Po poprawnej rejestracji przekierowujemy do logowania z informacją
-        return "redirect:/login?registered=true";
+        return "redirect:/?registered=true";
     }
 
     // GET /login – wyświetlenie formularza logowania
-    @GetMapping("/login")
+    @GetMapping("/")
     public String showLoginForm(
             @RequestParam(value = "error", required = false) String error,
             @RequestParam(value = "logout", required = false) String logout,
