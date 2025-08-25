@@ -3,103 +3,121 @@
 <head>
     <meta charset="UTF-8"/>
     <title>Magazyn</title>
-    <link rel="stylesheet" th:href="@{/css/warehouses.css}"/>
+    <link rel="stylesheet" th:href="@{/css/general.css}"/>
 </head>
 <body>
 
 <header class="page-header">
     <nav class="breadcrumbs" aria-label="breadcrumb">
-        <a th:href="@{/}" class="crumb">Strona główna</a>
+        <a th:href="@{/dashboard}" class="crumb">Strona główna</a>
         <span class="sep">/</span>
         <span class="crumb current">Magazyn</span>
     </nav>
     <div class="header-row">
         <h1 class="page-title">Magazyn</h1>
-        <div class="header-tools">
-
-
-        </div>
     </div>
 </header>
 
 <main class="content">
-    <div class="grid-2">
-        <!-- Produkty -->
-        <section class="card">
-            <div class="table-header">
-                <label class="table-title">Produkty</label>
-                <a th:href="@{/warehouses/products/add}" class="btn btn-primary">+ Dodaj </a>
-                <input type="text" class="table-search" placeholder="Szukaj produktu…" data-target="#productsTable">
-            </div>
 
-            <div class="table-wrapper">
-                <table id="productsTable" class="table">
-                    <thead>
-                    <tr>
-                        <th data-sort="text">Pozycja</th>
-                        <th data-sort="text">Opis</th>
-                        <th data-sort="number">Stan magazynu</th>
-                        <th data-sort="number">Stan całkowity</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="p : ${products}"
-                        class="clickable-row"
-                        th:attr="data-href=@{/warehouses/products/{id}(id=${p.id})}">
-                        <td th:text="${p.position}">P-001</td>
-                        <td th:text="${p.name}">Nazwa</td>
-                        <td th:text="${(countProductWarehouse[p.id] ?: 0)}"
-                            th:classappend="${(countProductWarehouse[p.id] ?: 0) < p.minStock} ? ' low-stock'">0</td>
-                        <td th:text="${(countProductWarehouseAndCar[p.id] ?: 0)}"
-                            th:classappend="${(countProductWarehouseAndCar[p.id] ?: 0) < p.minStock} ? ' low-stock'">0</td>
-                    </tr>
-                    <tr th:if="${#lists.isEmpty(products)}">
-                        <td colspan="4">Brak produktów.</td>
-                    </tr>
-                    </tbody>
-                </table>
+        <section class="side-by-side">
+            <div class="section-box span-2">
+                <div class="table-header">
+                    <label class="table-title">
+                        Produkty
+                        <a th:href="@{|/product-positions/add/${warehouseId}|}" class="btn btn-primary">+</a>
+                    </label>
+                    <input type="text" class="table-search" placeholder="Szukaj produktu…" data-target="#productsTable">
+                </div>
+
+                <div class="table-wrapper">
+                    <table id="productsTable" class="table">
+                        <thead>
+                        <tr>
+                            <td>L.P.</td>
+                            <th data-sort="text">Pozycja</th>
+                            <th data-sort="text">Nazwa</th>
+                            <th data-sort="text">Kategoria</th>
+                            <th data-sort="number">Stan magazynu</th>
+                            <th data-sort="number">Stan całkowity</th>
+                            <th>Akcja</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="p, i : ${products}">
+                            <td th:text="${i.count}"></td>
+                            <td th:text="${p.position}"></td>
+                            <td th:text="${p.name}"></td>
+                            <td th:text="${p.category}"></td>
+                            <td th:text="${(countProductWarehouse[p.id] ?: 0)}"
+                                th:classappend="${(countProductWarehouse[p.id] ?: 0) < p.alarmStock ? 'low-stock' : ((countProductWarehouse[p.id] ?: 0) < p.minStock ? 'danger-stock' : '')}">0</td>
+                            <td th:text="${(countProductWarehouseAndCar[p.id] ?: 0)}"
+                                th:classappend="${(countProductWarehouseAndCar[p.id] ?: 0) < p.alarmStock ? 'low-stock' : ((countProductWarehouseAndCar[p.id] ?: 0) < p.minStock ? 'danger-stock' : '')}">0</td>
+                            <td class="actions">
+                                <a class="btn btn-small" th:href="@{|/product-positions/${p.id}|}">Szczególy</a>
+                                <a class="btn btn-small" th:href="@{|/product-positions/edit/${p.id}|}">Edytuj</a>
+                                <form th:action="@{|/product-positions/delete/${p.id}|}" method="post" class="inline-form" onsubmit="return confirm('Usunąć ten produkt?');">
+                                    <button type="submit" class="btn btn-danger btn-small">Usuń</button>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(products)}">
+                            <td colspan="4">Brak produktów.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="section-box span-2">
+                <div class="table-header">
+                    <label class="table-title">
+                        Narzędzia
+                        <a th:href="@{|/stock-positions/add/${warehouseId}|}" class="btn btn-primary">+</a>
+                    </label>
+                    <input type="text" class="table-search" placeholder="Szukaj narzędzia…" data-target="#toolsTable">
+                </div>
+
+                <div class="table-wrapper">
+                    <table id="toolsTable" class="table">
+                        <thead>
+                        <tr>
+                            <th>L.P.</th>
+                            <th data-sort="text">Pozycja</th>
+                            <th data-sort="text">Nazwa</th>
+                            <th data-sort="text">Kategoria</th>
+                            <th data-sort="number">Stan magazynu</th>
+                            <th data-sort="number">Stan całkowity</th>
+                            <th data-sort="number">Akcja</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="s, i: ${stockPositions}">
+                            <td th:text="${i.count}"></td>
+                            <td th:text="${s.position}"></td>
+                            <td th:text="${s.name}"></td>
+                            <td th:text="${s.category}"></td>
+                            <td th:text="${(countToolsStatus[s.id] ?: 0)}"
+                                th:classappend="${(countToolsStatus[s.id] ?: 0) < s.alarmStock ? 'alarm-stock' : ((countToolsStatus[s.id] ?: 0) < s.minStock ? 'low-stock' : '')}">0</td>
+                            <td th:text="${(countToolsPosition[s.id] ?: 0)}"
+                                th:classappend="${(countToolsPosition[s.id] ?: 0) < s.alarmStock ? 'alarm-stock' : ((countToolsPosition[s.id] ?: 0) < s.minStock ? 'low-stock' : '')}">0</td>
+                            <td class="actions">
+                                <a class="btn btn-small" th:href="@{|/stock-positions/${s.id}|}">Szczególy</a>
+                                <a class="btn btn-small" th:href="@{|/stock-positions/edit/${s.id}|}">Edytuj</a>
+                                <form th:action="@{|/stock-positions/delete/${s.id}|}" method="post" class="inline-form" onsubmit="return confirm('Usunąć ten produkt?');">
+                                    <button type="submit" class="btn btn-danger btn-small">Usuń</button>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(stockPositions)}">
+                            <td colspan="4">Brak narzędzi.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </section>
-
-        <!-- Narzędzia -->
-        <section class="card">
-            <div class="table-header">
-                <label class="table-title">Narzędzia</label>
-                <a th:href="@{/warehouses/stocks/tools}" class="btn btn-primary">+ Dodaj </a>
-                <input type="text" class="table-search" placeholder="Szukaj narzędzia…" data-target="#toolsTable">
-            </div>
-
-            <div class="table-wrapper">
-                <table id="toolsTable" class="table">
-                    <thead>
-                    <tr>
-                        <th data-sort="text">Pozycja</th>
-                        <th data-sort="text">Opis</th>
-                        <th data-sort="number">Stan magazynu</th>
-                        <th data-sort="number">Stan całkowity</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="s : ${stockPositions}"
-                        class="clickable-row"
-                        th:attr="data-href=@{/warehouses/stocks/tools/{id}(id=${s.id})}">
-                        <td th:text="${s.name}">Narzędzie</td>
-                        <td th:text="${s.description}">Opis</td>
-                        <td th:text="${(countToolsStatus[s.id] ?: 0)}"
-                            th:classappend="${(countToolsStatus[s.id] ?: 0) < s.minStock} ? ' low-stock'">0</td>
-                        <td th:text="${(countToolsPosition[s.id] ?: 0)}"
-                            th:classappend="${(countToolsPosition[s.id] ?: 0) < s.minStock} ? ' low-stock'">0</td>
-                    </tr>
-                    <tr th:if="${#lists.isEmpty(stockPositions)}">
-                        <td colspan="4">Brak narzędzi.</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-    </div>
 </main>
 
-<script th:src="@{/js/warehouses.js}"></script>
+<script th:src="@{/js/general.js}"></script>
 </body>
 </html>

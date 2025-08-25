@@ -45,7 +45,7 @@ public class ProductEventController {
         model.addAttribute("productEvent", productEvent);
         model.addAttribute("cars", carService.getAllCars());
         model.addAttribute("tasks", taskService.getAllTasks());
-        return "/events/edit";
+        return "/product/events-edit";
     }
 
     @GetMapping("/edit/{id}")
@@ -55,7 +55,7 @@ public class ProductEventController {
         model.addAttribute("productEvent", productEvent);
         model.addAttribute("cars", carService.getAllCars());
         model.addAttribute("tasks", taskService.getAllTasks());
-        return "/events/edit";
+        return "/product/events-edit";
     }
 
     @PostMapping("/delivery/save")
@@ -66,7 +66,6 @@ public class ProductEventController {
         return "redirect:/warehouses/products/" + productEvent.getProduct().getId();
     }
 
-    // Wyłącznie akcja zbiorcza z widoku auta
     @PostMapping("/product-event/bulk/{carId}")
     public String saveBulkFromCar(@PathVariable Integer carId,
                                   @RequestParam Map<String, String> allParams,

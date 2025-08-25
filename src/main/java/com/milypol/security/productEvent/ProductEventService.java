@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface ProductEventService {
+    List<ProductEvent> getProductEventsByProduct(Integer productId);
     ProductEvent getProductEventById(Integer id);
     ProductEvent saveProductEvent(ProductEvent productEvent);
     Map<Integer, Long> getProductCountInWarehouse();

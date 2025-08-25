@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/general.css}" />
+</head>
+<body>
+<header class="page-header">
+    <nav class="breadcrumbs" aria-label="breadcrumb">
+        <a th:href="@{/dashboard}" class="crumb">Strona główna</a>
+        <span class="sep">/</span>
+        <a th:href="@{|/warehouses/${stockPosition.warehouse.id}|}" class="crumb">Magazyn</a>
+        <span class="sep">/</span>
+        <span class="crumb current" >Szczególy</span>
+    </nav>
+    <div class="header-row">
+        <h1 class="page-title" >Szczególy</h1>
+    </div>
+</header>
+<main class="content">
+    <section class="card">
+        <div class="details-grid">
+            <div class="detail">
+                <div class="label">Nazwa</div>
+                <div class="value" th:text="${#strings.defaultString(stockPosition?.name,'—')}">—</div>
+            </div>
+            <div class="detail">
+                <div class="label">Kategoria</div>
+                <div class="value" th:text="${#strings.defaultString(stockPosition?.category,'—')}">—</div>
+            </div>
+            <div class="detail">
+                <div class="label">Opis</div>
+                <div class="value" th:text="${#strings.defaultString(stockPosition?.description,'—')}">—</div>
+            </div>
+            <div class="detail">
+                <div class="label">Minimalna ilosc</div>
+                <div class="value" th:text="${#strings.defaultString(stockPosition?.minStock,'—')}">—</div>
+            </div>
+            <div class="detail">
+                <div class="label">Alarmowa ilosc</div>
+                <div class="value" th:text="${#strings.defaultString(stockPosition?.alarmStock,'—')}">—</div>
+            </div>
+            <div class="detail">
+                <div class="label">Pozycja</div>
+                <div class="value" th:text="${#strings.defaultString(stockPosition?.position,'—')}">—</div>
+            </div>
+        </div>
+    </section>
+    <section class="card">
+        <div class="table-header">
+            <label class="table-title">Narzedzia</label>
+            <input type="search"
+                   class="table-search"
+                   placeholder="Szukaj..."
+                   data-target-table="#toolTable">
+        </div>
+        <div class="table-wrapper">
+            <table id="toolTable" class="table table-striped">
+                <thead>
+                <tr>
+                    <th>L.P.</th>
+                    <th>Kod</th>
+                    <th>Nazwa</th>
+                    <th>Opis</th>
+                    <th>Cena</th>
+                    <th>Status</th>
+                    <th>Akcja</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="t, i : ${tools}">
+                    <td th:text="${i.count}"></td>
+                    <td th:text="${t.code}"></td>
+                    <td th:text="${t.name}"></td>
+                    <td th:text="${t.description}"></td>
+                    <td th:text="${t.price}"></td>
+                    <td th:text="${t.status}"></td>
+                    <td class="actions">
+                        <a class="btn btn-small" th:href="@{|/tool/${t.id}|}">Szczególy</a>
+                        <a class="btn btn-small" th:href="@{|/tool/edit/${t.id}|}">Edytuj</a>
+                        <form th:action="@{|/tool/delete/${t.id}|}" method="post" class="inline-form" onsubmit="return confirm('Usunąć ten produkt?');">
+                            <button type="submit" class="btn btn-danger btn-small">Usuń</button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(tools)}">
+                    <td colspan="15">Brak informacji do wyświetlenia.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+<script th:src="@{/js/general.js}"></script>
+</body>
+</html>

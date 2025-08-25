@@ -13,11 +13,10 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 @Entity
-public class Product {
+public class ProductPosition {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String code;
     private String name;
     private String category;
     private String description;

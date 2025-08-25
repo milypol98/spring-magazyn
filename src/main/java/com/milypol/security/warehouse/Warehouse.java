@@ -12,7 +12,6 @@ public class Warehouse {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    // Unikalny kod magazynu (np. MAIN, W1, W2)
     @Column(nullable = false, length = 64)
     private String code;
 

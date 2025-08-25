@@ -1,8 +1,6 @@
 package com.milypol.security.carCost;
 
 import com.milypol.security.car.Car;
-import com.milypol.security.product.Product;
-import com.milypol.security.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,8 +8,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Data

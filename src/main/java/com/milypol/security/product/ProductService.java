@@ -3,11 +3,11 @@ package com.milypol.security.product;
 import java.util.List;
 
 public interface ProductService {
-    List<Product> getAllProducts();
-    Product getProductById(Integer id);
-    Product saveProduct(Product product);
+    List<ProductPosition> getAllProducts();
+    ProductPosition getProductById(Integer id);
+    ProductPosition saveProduct(ProductPosition product);
     void deleteProduct(Integer id);
-    List<Product> getAllProductsByWarehouseId(Integer warehouseId);
+    List<ProductPosition> getAllProductsByWarehouseId(Integer warehouseId);
 
 
 }

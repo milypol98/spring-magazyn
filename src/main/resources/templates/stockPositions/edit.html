@@ -1,9 +1,8 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
-    <meta charset="UTF-8"/>
+    <meta charset="UTF-8">
     <link rel="stylesheet" th:href="@{/css/general.css}" />
-
 </head>
 <body>
 
@@ -11,20 +10,22 @@
     <nav class="breadcrumbs" aria-label="breadcrumb">
         <a th:href="@{/dashboard}" class="crumb">Strona główna</a>
         <span class="sep">/</span>
-        <a th:href="@{|/warehouses/${productPosition.warehouse.id}|}" class="crumb">Magazyn</a>
+        <a th:href="@{|/warehouses/${stockPosition.warehouse.id}|}" class="crumb">Magazyn</a>
         <span class="sep">/</span>
-        <span class="crumb current" th:text="${productPosition.id != null ? 'Edycja pozycji' : 'Nowa pozycja'}">Formularz</span>
+        <span class="crumb current" th:text="${stockPosition.id != null ? 'Edycja pozycji' : 'Nowa pozycja'}">Formularz</span>
     </nav>
 
     <div class="header-row">
-        <h1 class="page-title" th:text="${productPosition.id != null ? 'Edytuj pozycję' : 'Dodaj nową pozycję'}">Formularz</h1>
+        <h1 class="page-title" th:text="${stockPosition.id != null ? 'Edytuj pozycję' : 'Dodaj nową pozycję'}">Formularz pozycji</h1>
     </div>
 </header>
 
 <section class="form-container">
-    <form th:action="@{/product-positions/save}" method="post" th:object="${productPosition}" class="card form">
+    <form th:action="@{/stock-positions/save}" method="post" th:object="${stockPosition}" class="card form">
+
         <input type="hidden" th:field="*{id}" />
         <input type="hidden" th:field="*{warehouse.id}" />
+
         <div class="form-row">
             <label for="name">Nazwa <span class="req">*</span></label>
             <input type="text" id="name" th:field="*{name}" maxlength="150" required />
@@ -62,13 +63,11 @@
             <div class="field-hint" th:if="${#fields.hasErrors('position')}" th:errors="*{position}">Błąd lokalizacji</div>
         </div>
 
-
         <div class="form-actions">
             <button type="submit" class="btn btn-primary">Zapisz</button>
-            <a th:href="@{|/warehouses/${productPosition.warehouse.id}|}" class="btn btn-secondary">Anuluj</a>
+            <a th:href="@{|/warehouses/${stockPosition.warehouse.id}|}" class="btn btn-secondary">Anuluj</a>
         </div>
     </form>
 </section>
-<script th:src="@{/js/general.js}"></script>
 </body>
 </html>

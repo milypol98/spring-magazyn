@@ -27,8 +27,8 @@ public class Tool {
     @Enumerated(EnumType.STRING)
     private ToolStatus status;
     @OneToMany(mappedBy = "tool", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonIgnore                    // ignoruj pole podczas serializacji JSON (REST, Thymeleaf)
-    @ToString.Exclude              // wyklucz z generowanego toString()
-    @EqualsAndHashCode.Exclude     // wyklucz z equals() i hashCode()
+    @JsonIgnore
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private List<ToolCost> costs;
 }

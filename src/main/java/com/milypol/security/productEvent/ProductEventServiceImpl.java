@@ -19,6 +19,11 @@ public class ProductEventServiceImpl implements ProductEventService{
     }
 
     @Override
+    public List<ProductEvent> getProductEventsByProduct(Integer id) {
+        return productEventRepo.findAllByProductPosition_Id(id);
+    }
+
+    @Override
     public ProductEvent getProductEventById(Integer id) {
         return productEventRepo.findById(id).orElseThrow(() -> new RuntimeException("ProductEvent not found"));
     }

@@ -8,7 +8,7 @@ import java.util.List;
 public interface ProductEventRepo extends JpaRepository<ProductEvent, Integer> {
 
     List<ProductEvent> findAllByEventType(ProductEventType type);
-
+    List<ProductEvent> findAllByProductPosition_Id(Integer productId);
     @Query(value = """
     SELECT 
         pe.product_id AS productId,

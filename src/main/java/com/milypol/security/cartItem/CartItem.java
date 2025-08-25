@@ -2,7 +2,7 @@ package com.milypol.security.cartItem;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.milypol.security.cart.Cart;
-import com.milypol.security.product.Product;
+import com.milypol.security.product.ProductPosition;
 import com.milypol.security.stockPosition.StockPosition;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -22,7 +22,7 @@ public class CartItem {
     @ManyToOne
     private StockPosition stockPosition;
     @ManyToOne
-    private Product product;
+    private ProductPosition product;
     private Integer quantity;
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JsonIgnore

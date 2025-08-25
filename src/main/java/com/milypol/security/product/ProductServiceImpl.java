@@ -13,17 +13,17 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public List<Product> getAllProducts() {
+    public List<ProductPosition> getAllProducts() {
         return productRepo.findAll();
     }
 
     @Override
-    public Product getProductById(Integer id) {
+    public ProductPosition getProductById(Integer id) {
         return productRepo.findById(id).orElseThrow(() -> new RuntimeException("Product not found"));
     }
 
     @Override
-    public Product saveProduct(Product product) {
+    public ProductPosition saveProduct(ProductPosition product) {
         return productRepo.save(product);
     }
 
@@ -33,7 +33,7 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public List<Product> getAllProductsByWarehouseId(Integer warehouseId) {
+    public List<ProductPosition> getAllProductsByWarehouseId(Integer warehouseId) {
         return productRepo.findAllByWarehouse_Id(warehouseId);
     }
 

@@ -5,44 +5,91 @@
     <link rel="stylesheet" th:href="@{/css/general.css}" />
 </head>
 <body>
-<h1>
-  <a th:href="@{/dashboard}" class="btn-main">Strona glowna</a>
-  <a th:href="@{/templates/warehouses}" class="btn-main">Magazyn</a>
-  <a th:href="@{/templates/tasks}" class="btn-main">Task</a>
-  <a th:href="@{/templates/cars}" class="btn-main">Auta</a>
-  <a th:href="@{/users}" class="btn-main">Pracownicy</a>
-  <a th:href="@{/profile}" class="btn-main">Ustawienia</a>
-</h1>
-<div class="top-row">
-  <div class="side-by-side">
-    <div class="info">
-      <div class="info-row">
-        <span class="label">Model:</span>
-        <span class="value" th:text="${product.position}">–</span>
-      </div>
-      <div class="info-row">
-        <span class="label">Nazwa:</span>
-        <span class="value" th:text="${product.name}">–</span>
-      </div>
-      <div class="info-row">
-        <span class="label">Minimalna dopuszczalna ilość:</span>
-        <span class="value" th:text="${product.minStock}">–</span>
-      </div>
-      <div class="info-row">
-        <span class="label">Opis:</span>
-        <span class="value" th:text="${product.description}">–</span>
-      </div>
-        <div class="info-row">
-            <span class="label">Akcija:</span>
-            <a th:href="@{'/warehouses/products/edit/' + ${product.id}}" class="btn-add">Edytuj</a>
-        </div>
+<header class="page-header">
+    <nav class="breadcrumbs" aria-label="breadcrumb">
+        <a th:href="@{/dashboard}" class="crumb">Strona główna</a>
+        <span class="sep">/</span>
+        <a th:href="@{|/warehouses/${productPosition.warehouse.id}|}" class="crumb">Magazyn</a>
+        <span class="sep">/</span>
+        <span class="crumb current" >Szczególy</span>
+    </nav>
+    <div class="header-row">
+        <h1 class="page-title" >Szczególy</h1>
     </div>
+</header>
+<main class="content">
+    <section class="card">
+        <div class="details-grid">
+            <div class="detail">
+                <div class="label">Nazwa</div>
+                <div class="value" th:text="${#strings.defaultString(productPosition?.name,'—')}">—</div>
+            </div>
+            <div class="detail">
+                <div class="label">Kategoria</div>
+                <div class="value" th:text="${#strings.defaultString(productPosition?.category,'—')}">—</div>
+            </div>
+            <div class="detail">
+                <div class="label">Opis</div>
+                <div class="value" th:text="${#strings.defaultString(productPosition?.description,'—')}">—</div>
+            </div>
+            <div class="detail">
+                <div class="label">Minimalna ilosc</div>
+                <div class="value" th:text="${#strings.defaultString(productPosition?.minStock,'—')}">—</div>
+            </div>
+            <div class="detail">
+                <div class="label">Alarmowa ilosc</div>
+                <div class="value" th:text="${#strings.defaultString(productPosition?.alarmStock,'—')}">—</div>
+            </div>
+            <div class="detail">
+                <div class="label">Pozycja</div>
+                <div class="value" th:text="${#strings.defaultString(productPosition?.position,'—')}">—</div>
+            </div>
+        </div>
+    </section>
+    <section class="card">
+        <div class="table-header">
+            <label class="table-title">Produkty użycie</label>
+            <input type="search"
+                   class="table-search"
+                   placeholder="Szukaj..."
+                   data-target-table="#productEventsTable">
+        </div>
+        <div class="table-wrapper">
+            <table id="productEventsTable" class="table table-striped">
+                <thead>
+                <tr>
+                    <th>L.P.</th>
+                    <th>Komentarz</th>
+                    <th>Ilosc</th>
+                    <th>Z</th>
+                    <th>Do</th>
+                    <th>Cena jednostkowa</th>
+                    <th>Type</th>
+                    <th>Data</th>
+                    <th>Użytkownik</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="e, i: ${productEvents}">
+                    <td th:text="${i.count}">1</td>
+                    <td th:text="${e.comment}"></td>
+                    <td th:text="${e.quantity}"></td>
+                    <td th:text="${e.fromLocationType}"></td>
+                    <td th:text="${e.toLocationType}"></td>
+                    <td th:text="${e.unitPrice}"></td>
+                    <td th:text="${e.eventType}"></td>
+                    <td th:text="${e.timestamp}"></td>
+                    <td th:text="${e.user.firstname + ' ' + e.user.lastName}"></td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(productEvents)}">
+                    <td colspan="15">Brak informacji do wyświetlenia.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+<script th:src="@{/js/general.js}"></script>
 
-      <div class="form-header">
-          <label class="form-title">Dostawy:</label>
-          <a th:href="@{'/events/add/' + ${product.id}}" class="btn-add">Dodaj</a>
-      </div>
-  </div>
-</div>
 </body>
 </html>

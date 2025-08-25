@@ -1,11 +1,8 @@
 package com.milypol.security.productEvent;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.milypol.security.car.Car;
-import com.milypol.security.product.Product;
-import com.milypol.security.task.Task;
+import com.milypol.security.product.ProductPosition;
 import com.milypol.security.user.User;
-import com.milypol.security.warehouse.Warehouse;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,11 +16,12 @@ import java.time.LocalDateTime;
 @Entity
 public class ProductEvent {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    private Product product;
+    private ProductPosition product;
 
     private Integer quantity;
 

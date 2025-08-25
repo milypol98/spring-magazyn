@@ -7,7 +7,7 @@
     --border-strong: #d1d5db;
     --primary: #2563eb;
     --danger: #dc2626;
-
+    --warn : #f59e0b;
     --radius: 10px;
     --shadow: 0 6px 20px rgba(0,0,0,.06);
 }
@@ -383,5 +383,11 @@ w1200{
 }
 .page-btn.disabled { opacity: .6; pointer-events: none; }
 .page-info { color: var(--muted); }
-
-
+.low-stock {
+    color: var(--warn);
+    font-weight: 700;
+}
+.danger-stock {
+    color: var(--danger);
+    font-weight: 700;
+}
