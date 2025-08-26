@@ -4,11 +4,10 @@ server:
 spring:
   # --- Konfiguracja Bazy Danych dla Render.com ---
   datasource:
-    # POPRAWKA: Ręcznie dodajemy "jdbc:" przed adresem z Render,
-    # aby stworzyć poprawny JDBC URL.
     url: jdbc:${DATABASE_URL}
-    username: ${DB_USERNAME:root}
-    password: ${DB_PASSWORD:root}
+    # DODAJ TĘ LINIJKĘ:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
   # --- Konfiguracja JPA/Hibernate ---
   jpa:
     hibernate:
