@@ -2,13 +2,14 @@ server:
   port: 10000
 
 spring:
-  # --- Konfiguracja Bazy Danych dla Render.com ---
   datasource:
-    url: jdbc:${DATABASE_URL}
-    # DODAJ TĘ LINIJKĘ:
+    # Użyjemy bardziej bezpośredniej właściwości do ustawienia URL,
+    # aby ominąć problem z przetwarzaniem zmiennej środowiskowej.
+    hikari:
+      jdbc-url: jdbc:${DATABASE_URL}
+    # Nadal musimy jawnie wskazać sterownik.
     driver-class-name: com.mysql.cj.jdbc.Driver
 
-  # --- Konfiguracja JPA/Hibernate ---
   jpa:
     hibernate:
       ddl-auto: update
@@ -18,7 +19,6 @@ spring:
         format_sql: true
         dialect: org.hibernate.dialect.MySQLDialect
 
-  # --- Konfiguracja Spring MVC ---
   mvc:
     hiddenmethod:
       filter:

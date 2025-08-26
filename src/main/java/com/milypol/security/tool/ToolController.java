@@ -51,7 +51,7 @@ public class ToolController {
     @GetMapping("/cost/add/{toolId}")
     public String productCostAdd(@PathVariable Integer toolId, Model model) {
         ToolCost toolCost = new ToolCost();
-        toolCost.setCost(toolCostService.getToolCostById(toolId).getCost());
+        toolCost.setTool(toolCostService.getToolCostById(toolId).getTool());
         model.addAttribute("tool_cost", toolCost);
         model.addAttribute("tool", toolService.getToolById(toolId));
         return "tools/cost-edit";
