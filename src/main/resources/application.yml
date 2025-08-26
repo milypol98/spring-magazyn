@@ -1,14 +1,13 @@
 spring:
   datasource:
-    # Te zmienne zostają bez zmian! Render poda do nich wartości
-    # dla bazy PostgreSQL, a Spring sam rozpozna format URL.
-    url: ${DB_URL}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    # Użyj tych zmiennych, Render dostarcza je automatycznie
+    url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DATABASE}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: update
     properties:
       hibernate:
-        # Zmień tę linię na dialekt PostgreSQL
         dialect: org.hibernate.dialect.PostgreSQLDialect
