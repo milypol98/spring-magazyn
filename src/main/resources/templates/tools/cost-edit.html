@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/general.css}" />
+
+</head>
+<body>
+<header class="page-header">
+    <nav class="breadcrumbs" aria-label="breadcrumb">
+        <a th:href="@{/dashboard}" class="crumb">Strona główna</a>
+<!--        <span class="sep">/</span>-->
+<!--        <a th:href="@{|/warehouses/${tool.stockPosition.warehouse.id}|}" class="crumb">Magazyn </a>-->
+<!--        <span class="sep">/</span>-->
+<!--        <a th:href="@{|/stockPositions/${tool.stockPosition.id}|}" class="crumb">Pozycija </a>-->
+        <span class="sep">/</span>
+        <span class="crumb current" >Koszty</span>
+    </nav>
+    <div class="header-row">
+        <h1 class="page-title" >Koszty</h1>
+
+    </div>
+</header>
+<section class="form-container">
+    <form th:action="@{/warehouses/tools/cost/save}" method="post" th:object="${tool_cost}" class="card form">
+
+        <input type="hidden" th:field="*{id}" />
+        <input type="hidden" th:field="*{tool.id}" />
+
+        <div class="form-row">
+            <label>Nazwa produktu</label>
+            <p class="static-text" th:text="${tool_cost.tool.name}">Nazwa narzędzia</p>
+        </div>
+
+        <div class="form-row">
+            <label for="description">Opis</label>
+            <input type="text" id="description" th:field="*{description}" />
+            <div class="field-hint" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Błąd opisu</div>
+        </div>
+
+        <div class="form-row">
+            <label for="cost">Koszty</label>
+            <input type="text" id="cost" th:field="*{cost}" />
+            <div class="field-hint" th:if="${#fields.hasErrors('cost')}" th:errors="*{cost}">Błąd kosztów</div>
+        </div>
+
+        <div class="form-row">
+            <label for="dateTo">Data od</label>
+            <input type="date" id="dateTo" th:field="*{dateTo}" />
+            <div class="field-hint" th:if="${#fields.hasErrors('dateTo')}" th:errors="*{dateTo}">Błąd daty</div>
+        </div>
+
+        <div class="form-row">
+            <label for="dateFrom">Data do</label>
+            <input type="date" id="dateFrom" th:field="*{dateFrom}" />
+            <div class="field-hint" th:if="${#fields.hasErrors('dateFrom')}" th:errors="*{dateFrom}">Błąd daty</div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Zapisz</button>
+        </div>
+
+    </form>
+</section>
+<script th:src="@{/js/general.js}"></script>
+
+</body>
+</html>

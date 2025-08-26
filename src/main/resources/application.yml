@@ -2,19 +2,29 @@ server:
   port: 10000
 
 spring:
+  # --- Konfiguracja Bazy Danych dla Render.com ---
   datasource:
-    url: ${DB_URL:jdbc:mysql://localhost:3306/magazyn2}
-    username: ${DB_USERNAME:root}
-    password: ${DB_PASSWORD:root}
+    # Render dostarcza pełny adres URL w zmiennej DATABASE_URL.
+    # Spring Boot jest wystarczająco inteligentny, aby wyciągnąć z niego
+    # sterownik, użytkownika, hasło i adres bazy danych.
+    url: ${DATABASE_URL}
 
+  # --- Konfiguracja JPA/Hibernate ---
   jpa:
-    database: mysql
     hibernate:
-      ddl-auto: create-drop
+      # WAŻNE: Zmieniono z "create-drop" na "update".
+      # "create-drop" KASUJE całą bazę danych przy każdym restarcie aplikacji.
+      # "update" będzie tylko aktualizować schemat, jeśli wykryje zmiany w encjach.
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
+        # Ta właściwość jest przydatna do debugowania
         format_sql: true
+        # Dialekt jest ważny, aby Hibernate wiedział, jakiego SQL używać
+        dialect: org.hibernate.dialect.MySQLDialect
+
+  # --- Konfiguracja Spring MVC ---
   mvc:
     hiddenmethod:
       filter:

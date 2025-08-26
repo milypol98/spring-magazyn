@@ -77,9 +77,9 @@
                     <td th:text="${t.price}"></td>
                     <td th:text="${t.status}"></td>
                     <td class="actions">
-                        <a class="btn btn-small" th:href="@{|/tool/${t.id}|}">Szczególy</a>
-                        <a class="btn btn-small" th:href="@{|/tool/edit/${t.id}|}">Edytuj</a>
-                        <form th:action="@{|/tool/delete/${t.id}|}" method="post" class="inline-form" onsubmit="return confirm('Usunąć ten produkt?');">
+                        <a class="btn btn-small" th:href="@{|/templates/tools/${t.id}|}">Szczególy</a>
+                        <a class="btn btn-small" th:href="@{|/templates/tools/edit/${t.id}|}">Edytuj</a>
+                        <form th:action="@{|/templates/tools/delete/${t.id}|}" method="post" class="inline-form" onsubmit="return confirm('Usunąć ten produkt?');">
                             <button type="submit" class="btn btn-danger btn-small">Usuń</button>
                         </form>
                     </td>

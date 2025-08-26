@@ -17,11 +17,14 @@
 
     <div class="header-row">
         <h1 class="page-title" >Formularz pozycji</h1>
+        <div class="header-tools">
+            <a th:if="${tool?.id != null}" class="btn" th:href="@{|/tools/cost/add/${tool.id}|}">+ Dodaj Koszty</a>
+        </div>
     </div>
 </header>
 
 <section class="form-container">
-    <form th:action="@{/tool/save}" method="post" th:object="${tool}" class="card form">
+    <form th:action="@{/templates/tools/save}" method="post" th:object="${tool}" class="card form">
 
         <input type="hidden" th:field="*{id}" />
         <input type="hidden" th:field="*{stockPosition.id}" />

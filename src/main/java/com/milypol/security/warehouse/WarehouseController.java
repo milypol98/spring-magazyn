@@ -24,18 +24,12 @@ public class WarehouseController {
 
     private final ProductService productService;
     private final StockPositionService stockPositionService;
-    private final CartService cartService;
-    private final ToolCostService toolCostService;
-    private final TaskService taskService;
     private final ToolService toolService;
     private final ProductEventService productEventService;
 
-    public WarehouseController(ProductService productService, StockPositionService stockPositionService, CartService cartService, ToolCostService toolCostService, TaskService taskService, ToolService toolService, ProductEventService productEventService) {
+    public WarehouseController(ProductService productService, StockPositionService stockPositionService, ToolService toolService, ProductEventService productEventService) {
         this.productService = productService;
         this.stockPositionService = stockPositionService;
-        this.cartService = cartService;
-        this.toolCostService = toolCostService;
-        this.taskService = taskService;
         this.toolService = toolService;
         this.productEventService = productEventService;
     }

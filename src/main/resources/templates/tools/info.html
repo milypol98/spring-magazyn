@@ -19,6 +19,9 @@
     </nav>
     <div class="header-row">
         <h1 class="page-title" >Szczególy</h1>
+        <div class="header-tools">
+            <a th:if="${tool?.id != null}" class="btn" th:href="@{|/tools/cost/add/${tool.id}|}">+ Dodaj Koszty</a>
+        </div>
     </div>
 </header>
 <main class="content">
