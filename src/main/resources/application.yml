@@ -1,9 +1,14 @@
 spring:
   datasource:
+    # Te zmienne zostają bez zmian! Render poda do nich wartości
+    # dla bazy PostgreSQL, a Spring sam rozpozna format URL.
     url: ${DB_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+    properties:
+      hibernate:
+        # Zmień tę linię na dialekt PostgreSQL
+        dialect: org.hibernate.dialect.PostgreSQLDialect
