@@ -4,24 +4,19 @@ server:
 spring:
   # --- Konfiguracja Bazy Danych dla Render.com ---
   datasource:
-    # Render dostarcza pełny adres URL w zmiennej DATABASE_URL.
-    # Spring Boot jest wystarczająco inteligentny, aby wyciągnąć z niego
-    # sterownik, użytkownika, hasło i adres bazy danych.
-    url: ${DATABASE_URL}
-
+    # POPRAWKA: Ręcznie dodajemy "jdbc:" przed adresem z Render,
+    # aby stworzyć poprawny JDBC URL.
+    url: jdbc:${DATABASE_URL}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:root}
   # --- Konfiguracja JPA/Hibernate ---
   jpa:
     hibernate:
-      # WAŻNE: Zmieniono z "create-drop" na "update".
-      # "create-drop" KASUJE całą bazę danych przy każdym restarcie aplikacji.
-      # "update" będzie tylko aktualizować schemat, jeśli wykryje zmiany w encjach.
       ddl-auto: update
     show-sql: true
     properties:
       hibernate:
-        # Ta właściwość jest przydatna do debugowania
         format_sql: true
-        # Dialekt jest ważny, aby Hibernate wiedział, jakiego SQL używać
         dialect: org.hibernate.dialect.MySQLDialect
 
   # --- Konfiguracja Spring MVC ---

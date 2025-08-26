@@ -54,23 +54,24 @@ public class ToolController {
         toolCost.setCost(toolCostService.getToolCostById(toolId).getCost());
         model.addAttribute("tool_cost", toolCost);
         model.addAttribute("tool", toolService.getToolById(toolId));
-        return "warehouses/costEdit";
+        return "tools/cost-edit";
     }
 
     @GetMapping("/cost/edit/{id}")
     public String productCostEdit(@PathVariable Integer id, Model model) {
         model.addAttribute("tool_cost", toolCostService.getToolCostById(id));
         model.addAttribute("tool", toolService.getToolById(id));
-        return "warehouses/costEdit";
+        return "tools/cost-edit";
     }
     @PostMapping( "/cost/save")
     public String saveCostProduct(@ModelAttribute ToolCost toolCost) {
         toolCostService.saveToolCost(toolCost);
-        return "redirect:/warehouses/products/edit/" + toolCost.getTool().getId();
+        return "redirect:/tools/" + toolCost.getTool().getId();
     }
     @PostMapping("/cost/delete/{id}")
     public String deleteCostProduct(@PathVariable Integer id){
+        toolCostService.getToolCostById(id);
         toolCostService.deleteToolCost(id);
-        return "redirect:/productEdit";
+        return "redirect:/tools/" + toolCostService.getToolCostById(id).getTool().getId();
     }
 }
