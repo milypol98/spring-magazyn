@@ -23,9 +23,9 @@ RUN mvn clean package -DskipTests
 # =================================================================
 # ETAP 2: Tworzenie finalnego, lekkiego obrazu do uruchomienia
 # =================================================================
-# Używamy bardzo małego obrazu, który zawiera tylko środowisko
-# uruchomieniowe Javy (JRE), bez zbędnych narzędzi
-FROM openjdk:17-jre-slim
+# Używamy aktualnego, oficjalnego obrazu Eclipse Temurin, który jest lekki
+# i zawiera tylko środowisko uruchomieniowe Javy (JRE).
+FROM eclipse-temurin:17-jre-jammy
 
 # Ustawiamy katalog roboczy
 WORKDIR /app
