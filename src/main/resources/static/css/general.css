@@ -57,7 +57,7 @@ body {
 /* TYLKO: niebieski (akcje) i czerwony (usuń) */
 .btn-primary{ background: linear-gradient(180deg, var(--primary), #1d4ed8); border:none; color:#fff }
 .btn-primary:hover{ filter:brightness(1.05) }
-.btn-danger{ background:#fee2e2; border:1px solid #ef4444; color:#b91c1c }
+.btn-danger{ background:#fee2e2; border:1px solid #ef4444; color:#b91c1c;display:none; }
 .btn-danger:hover{ background: #e44d4d
 }
 .flash {
@@ -114,7 +114,7 @@ input[type="text"].table-search {
     color: var(--text);
 }
 
-.table-wrapper { overflow-x: auto; }
+.table-wrapper { overflow-x: auto;}
 .table { width: 100%; border-collapse: collapse; }
 .table thead th {
     text-align: left;
@@ -127,14 +127,14 @@ input[type="text"].table-search {
     white-space: nowrap;
 }
 .table tbody td {
-    padding: 10px 8px;
+    padding: 5px 4px;
     border-bottom: 1px solid var(--border);
     background: #fff;
     vertical-align: top;
 }
 
 /* Przyciski i akcje */
-.actions{ display:inline-flex; gap:8px; align-items:center }
+.actions{ gap:8px; align-items:center }
 .address-fieldset .grid-2 {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -390,4 +390,5 @@ w1200{
 .danger-stock {
     color: var(--danger);
     font-weight: 700;
+
 }

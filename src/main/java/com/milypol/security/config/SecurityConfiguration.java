@@ -43,6 +43,7 @@ public class SecurityConfiguration {
                 // Konfiguracja URL-i publicznych i chronionych
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(
+                                "/",
                                 "/register",
                                 "/login",
                                 "/css/**",

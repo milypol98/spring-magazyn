@@ -10,7 +10,7 @@
     <nav class="breadcrumbs" aria-label="breadcrumb">
         <a th:href="@{/dashboard}" class="crumb">Strona główna</a>
         <span class="sep">/</span>
-        <a th:href="@{|/warehouses/${productPosition.warehouse.id}|}" class="crumb">Magazyn</a>
+        <a class="crumb">Magazyn</a>
         <span class="sep">/</span>
         <span class="crumb current">Formularz</span>
     </nav>
@@ -20,105 +20,200 @@
     </div>
 </header>
 
-<div class="top-row">
-    <div class="side-by-side">
-        <div class="container w1200">
-            <div class="table-header">
-                <label class="table-title" th:text="|Produkt: ${product.name}|"></label>
-            </div>
+<section class="form-container">
+    <form th:action="@{'/events/save'}" th:object="${productEvent}" method="post" id="eventForm">
+        <input type="hidden" th:field="*{id}" />
+        <input type="hidden" th:field="*{product.id}" />
 
-            <form th:action="@{'/events/product-event/save'}" th:object="${productEvent}" method="post" id="eventForm">
-                <input type="hidden" th:field="*{id}" />
-                <input type="hidden" th:field="*{product.id}" />
-
-                <div class="field-group">
-                    <label class="inline">Ilość</label>
-                    <input type="number" th:field="*{quantity}" class="w200" required />
-                </div>
-
-                <div class="field-group" id="grp-unitPrice">
-                    <label class="inline">Cena jednostkowa</label>
-                    <input type="number" step="0.01" th:field="*{unitPrice}" class="w200" />
-                </div>
-
-                <div class="field-group">
-                    <label class="inline">Komentarz</label>
-                    <textarea th:field="*{comment}" class="w200"></textarea>
-                </div>
-
-                <div class="field-group">
-                    <label class="inline">Data i czas</label>
-                    <input type="datetime-local" th:field="*{timestamp}"
-                           th:text="${#temporals.format(productEvent.timestamp, 'yyyy-MM-dd''T''HH:mm')}" required />
-                </div>
-
-                <!-- Typ zdarzenia -->
-                <div class="field-group" id="grp-eventType">
-                    <label class="inline">Typ</label>
-                    <select th:field="*{eventType}" id="eventType" required>
-                        <option value="" disabled selected>-- wybierz typ zdarzenia --</option>
-                        <option th:each="t : ${eventTypes}" th:value="${t}" th:text="${t}"></option>
-                    </select>
-                </div>
-
-                <!-- FROM -->
-                <div class="field-group" id="grp-fromType">
-                    <label class="inline">Źródło (From)</label>
-                    <select th:field="*{fromLocationType}" id="fromType">
-                        <option value="" disabled selected>-- wybierz typ źródła --</option>
-                        <option th:each="l : ${locationTypes}" th:value="${l}" th:text="${l}"></option>
-                    </select>
-                </div>
-
-                <div class="field-group" id="grp-fromCar">
-                    <label class="inline">Auto źródłowe</label>
-                    <select th:field="*{fromLocationCode}" id="fromCar">
-                        <option value="" disabled selected>-- wybierz auto --</option>
-                        <option th:each="c : ${cars}" th:value="${c.id}"
-                                th:text="${c.name + ' | ' + (c.registration ?: '')}"></option>
-                    </select>
-                </div>
-
-                <div class="field-group" id="grp-fromTask">
-                    <label class="inline">Zadanie źródłowe</label>
-                    <select th:field="*{fromLocationCode}" id="fromTask">
-                        <option value="" disabled selected>-- wybierz zadanie --</option>
-                        <option th:each="t : ${tasks}" th:value="${t.id}" th:text="${t.name}"></option>
-                    </select>
-                </div>
-
-                <!-- TO -->
-                <div class="field-group" id="grp-toType">
-                    <label class="inline">Cel (To)</label>
-                    <select th:field="*{toLocationType}" id="toType">
-                        <option value="" disabled selected>-- wybierz typ celu --</option>
-                        <option th:each="l : ${locationTypes}" th:value="${l}" th:text="${l}"></option>
-                    </select>
-                </div>
-
-                <div class="field-group" id="grp-toCar">
-                    <label class="inline">Auto docelowe</label>
-                    <select th:field="*{toLocationCode}" id="toCar">
-                        <option value="" disabled selected>-- wybierz auto --</option>
-                        <option th:each="c : ${cars}" th:value="${c.id}"
-                                th:text="${c.name + ' | ' + (c.registration ?: '')}"></option>
-                    </select>
-                </div>
-
-                <div class="field-group" id="grp-toTask">
-                    <label class="inline">Zadanie docelowe</label>
-                    <select th:field="*{toLocationCode}" id="toTask">
-                        <option value="" disabled selected>-- wybierz zadanie --</option>
-                        <option th:each="t : ${tasks}" th:value="${t.id}" th:text="${t.name}"></option>
-                    </select>
-                </div>
-
-                <button type="submit" class="submit-btn">Zapisz</button>
-            </form>
+        <div class="form-row">
+            <label for="quantity">Ilość <span class="req">*</span></label>
+            <input type="number" id="quantity" th:field="*{quantity}" required />
+            <div class="field-hint" th:if="${#fields.hasErrors('quantity')}" th:errors="*{quantity}">Błąd ilości</div>
         </div>
-    </div>
-</div>
-<script th:src="@{/js/general.js}"></script>
 
+        <div class="form-row" id="grp-unitPrice">
+            <label for="unitPrice">Cena jednostkowa</label>
+            <input type="number" step="0.01" id="unitPrice" th:field="*{unitPrice}" />
+            <div class="field-hint" th:if="${#fields.hasErrors('unitPrice')}" th:errors="*{unitPrice}">Błąd ceny</div>
+        </div>
+
+        <div class="form-row">
+            <label for="comment">Komentarz</label>
+            <textarea id="comment" th:field="*{comment}"></textarea>
+            <div class="field-hint" th:if="${#fields.hasErrors('comment')}" th:errors="*{comment}">Błąd komentarza</div>
+        </div>
+
+        <div class="form-row" id="grp-eventType">
+            <label for="eventType">Typ <span class="req">*</span></label>
+            <select id="eventType" th:field="*{eventType}" required>
+                <option value="" disabled selected>-- wybierz typ zdarzenia --</option>
+                <option th:each="t : ${eventTypes}" th:value="${t}" th:text="${t}"></option>
+            </select>
+            <div class="field-hint" th:if="${#fields.hasErrors('eventType')}" th:errors="*{eventType}">Błąd typu zdarzenia</div>
+        </div>
+
+        <div class="form-row" id="grp-fromType">
+            <label for="fromType">Źródło (From)</label>
+            <select id="fromType" th:field="*{fromLocationType}">
+                <option value="" disabled selected>-- wybierz typ źródła --</option>
+                <option th:each="l : ${locationTypes}" th:value="${l}" th:text="${l}"></option>
+            </select>
+            <div class="field-hint" th:if="${#fields.hasErrors('fromLocationType')}" th:errors="*{fromLocationType}">Błąd typu źródła</div>
+        </div>
+
+        <div class="form-row" id="grp-fromCar">
+            <label for="fromCar">Auto źródłowe</label>
+            <select id="fromCar" th:field="*{fromLocationCode}">
+                <option value="" disabled selected>-- wybierz auto --</option>
+                <option th:each="c : ${cars}" th:value="${c.id}"
+                        th:text="${c.name + ' | ' + (c.registration ?: '')}"></option>
+            </select>
+            <div class="field-hint" th:if="${#fields.hasErrors('fromLocationCode')}" th:errors="*{fromLocationCode}">Błąd lokalizacji źródłowej</div>
+        </div>
+
+        <div class="form-row" id="grp-fromTask">
+            <label for="fromTask">Zadanie źródłowe</label>
+            <select id="fromTask" th:field="*{fromLocationCode}">
+                <option value="" disabled selected>-- wybierz zadanie --</option>
+                <option th:each="t : ${tasks}" th:value="${t.id}" th:text="${t.name}"></option>
+            </select>
+            <div class="field-hint" th:if="${#fields.hasErrors('fromLocationCode')}" th:errors="*{fromLocationCode}">Błąd lokalizacji źródłowej</div>
+        </div>
+
+
+        <div class="form-row" id="grp-toType">
+            <label for="toType">Cel (To)</label>
+            <select id="toType" th:field="*{toLocationType}">
+                <option value="" disabled selected>-- wybierz typ celu --</option>
+                <option th:each="l : ${locationTypes}" th:value="${l}" th:text="${l}"></option>
+            </select>
+            <div class="field-hint" th:if="${#fields.hasErrors('toLocationType')}" th:errors="*{toLocationType}">Błąd typu celu</div>
+        </div>
+
+        <div class="form-row" id="grp-toCar">
+            <label for="toCar">Auto docelowe</label>
+            <select id="toCar" th:field="*{toLocationCode}">
+                <option value="" disabled selected>-- wybierz auto --</option>
+                <option th:each="c : ${cars}" th:value="${c.id}"
+                        th:text="${c.name + ' | ' + (c.registration ?: '')}"></option>
+            </select>
+            <div class="field-hint" th:if="${#fields.hasErrors('toLocationCode')}" th:errors="*{toLocationCode}">Błąd lokalizacji docelowej</div>
+        </div>
+
+        <div class="form-row" id="grp-toTask">
+            <label for="toTask">Zadanie docelowe</label>
+            <select id="toTask" th:field="*{toLocationCode}">
+                <option value="" disabled selected>-- wybierz zadanie --</option>
+                <option th:each="t : ${tasks}" th:value="${t.id}" th:text="${t.name}"></option>
+            </select>
+            <div class="field-hint" th:if="${#fields.hasErrors('toLocationCode')}" th:errors="*{toLocationCode}">Błąd lokalizacji docelowej</div>
+        </div>
+
+
+        <div class="form-row">
+            <button type="submit" class="submit-btn">Zapisz</button>
+        </div>
+    </form>
+</section>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+        // --- Referencje do elementów formularza ---
+        const eventTypeSelect = document.getElementById('eventType');
+
+        // Grupy pól
+        const grpFromType = document.getElementById('grp-fromType');
+        const grpFromCar = document.getElementById('grp-fromCar');
+        const grpFromTask = document.getElementById('grp-fromTask');
+        const grpToType = document.getElementById('grp-toType');
+        const grpToCar = document.getElementById('grp-toCar');
+        const grpToTask = document.getElementById('grp-toTask');
+        const allLocationGroups = [
+            grpFromType, grpFromCar, grpFromTask,
+            grpToType, grpToCar, grpToTask
+        ];
+
+        // Pola select
+        const fromTypeSelect = document.getElementById('fromType');
+        const fromCarSelect = document.getElementById('fromCar');
+        const fromTaskSelect = document.getElementById('fromTask');
+        const toTypeSelect = document.getElementById('toType');
+        const toCarSelect = document.getElementById('toCar');
+        const toTaskSelect = document.getElementById('toTask');
+        const allLocationSelects = [
+            fromTypeSelect, fromCarSelect, fromTaskSelect,
+            toTypeSelect, toCarSelect, toTaskSelect
+        ];
+
+        function showGroup(groupElement) {
+            if (groupElement) groupElement.style.display = '';
+        }
+
+        /**
+         * Zarządza widocznością pól 'Auto'/'Zadanie' dla sekcji FROM.
+         */
+        function handleFromLocationChange() {
+            const fromType = fromTypeSelect.value;
+            grpFromCar.style.display = (fromType === 'CAR') ? '' : 'none';
+            grpFromTask.style.display = (fromType === 'TASK') ? '' : 'none';
+        }
+
+        /**
+         * Główna funkcja sterująca formularzem.
+         */
+        function updateFormVisibility() {
+            const selectedEvent = eventTypeSelect.value;
+
+            // ########## KLUCZOWA POPRAWKA ##########
+            // 1. Pełny i bezwarunkowy reset stanu przy każdej zmianie.
+            //    Najpierw ukrywamy wszystkie grupy...
+            allLocationGroups.forEach(group => { if(group) group.style.display = 'none' });
+            //    ...a następnie czyścimy wartości WSZYSTKICH selectów.
+            allLocationSelects.forEach(select => { if(select) select.value = '' });
+            // #####################################
+
+            // 2. Ustaw wartości i pokaż odpowiednie pola na nowo.
+            switch (selectedEvent) {
+                case 'DELIVERY': // Dostawa -> tylko Cel (TO)
+                    toTypeSelect.value = 'WAREHOUSE';
+                    break;
+
+                case 'TRANSFER': // Magazyn -> Auto
+                    fromTypeSelect.value = 'WAREHOUSE';
+                    toTypeSelect.value = 'CAR';
+                    showGroup(grpToCar);
+                    break;
+
+                case 'RETURN':   // Auto -> Magazyn
+                    fromTypeSelect.value = 'CAR';
+                    toTypeSelect.value = 'WAREHOUSE';
+                    showGroup(grpFromCar);
+                    break;
+
+                case 'TRANSFER_CAR_TO_CAR': // Auto -> Auto
+                    fromTypeSelect.value = 'CAR';
+                    toTypeSelect.value = 'CAR';
+                    showGroup(grpFromCar);
+                    showGroup(grpToCar);
+                    break;
+
+                case 'USED':   // Zużycie -> tylko Źródło (FROM)
+                case 'LOST':   // Utracone -> tylko Źródło (FROM)
+                case 'DELETE': // Usunięcie -> tylko Źródło (FROM)
+                    showGroup(grpFromType);
+                    handleFromLocationChange();
+                    break;
+            }
+        }
+
+        // --- Rejestracja event listenerów ---
+        eventTypeSelect.addEventListener('change', updateFormVisibility);
+        fromTypeSelect.addEventListener('change', handleFromLocationChange);
+
+        // --- Inicjalizacja formularza przy załadowaniu strony ---
+        updateFormVisibility();
+    });
+</script>
+<script th:src="@{/js/general.js}"></script>
 </body>
 </html>
