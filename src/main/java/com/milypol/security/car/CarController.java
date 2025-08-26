@@ -94,7 +94,11 @@ public class CarController {
 
         return "cars/list";
     }
-
+    @GetMapping("/info/{id}")
+    public String info(@PathVariable Integer id, Model model) {
+        model.addAttribute("car", carService.getCarById(id));
+        return "cars/info";
+    }
     @GetMapping("/add")
     public String addForm(Model model) {
         model.addAttribute("car", new Car());
@@ -118,7 +122,7 @@ public class CarController {
             return "cars/edit";
         }
         carService.saveCar(car);
-        return "redirect:/cars/info/" + car.getId();
+        return "redirect:/cars";
     }
 
     @PostMapping("/delete/{id}")
@@ -132,47 +136,30 @@ public class CarController {
         CarCost carCost = new CarCost();
         carCost.setCar(carService.getCarById(carId));
         model.addAttribute("car_cost", carCost);
-        return "cars/costEdit";
+        return "cars/cost-edit";
     }
 
     @GetMapping("cost/edit/{id}")
     public String carCostEdit(@PathVariable Integer id, Model model) {
         model.addAttribute("car_cost", carCostService.getCarCostById(id));
-        return "cars/costEdit";
+        return "cars/cost-edit";
     }
 
     @PostMapping("cost/save")
     public String saveCostCar(@ModelAttribute CarCost carCost) {
         carCostService.saveCarCost(carCost);
-        return "redirect:/cars/edit/" + carCost.getCar().getId();
+        return "redirect:/cars/" + carCost.getCar().getId();
     }
 
     @PostMapping("/cost/delete/{id}")
     public String deleteCostCar(@PathVariable Integer id, @RequestParam("carId") Integer carId){
         carCostService.deleteCarCost(id);
-        return "redirect:/cars/edit/" + carId;
+        return "redirect:/cars/" + carId;
+    }
+    @GetMapping("/item/{id}")
+    public String costInfo(@PathVariable Integer id, Model model) {
+        model.addAttribute("car", carService.getCarById(id));
+        return "cars/car-item";
     }
 
-    // NOWE: szczegóły pojazdu + koszty
-    @GetMapping("/info/{id}")
-    public String info(@PathVariable Integer id, Model model) {
-        Car car = carService.getCarById(id);
-        List<CarCost> costs = Optional.ofNullable(car.getCosts()).orElseGet(List::of)
-                .stream()
-                .sorted(Comparator.comparing(CarCost::getDateFrom, Comparator.nullsLast(Comparator.naturalOrder()))
-                        .thenComparing(CarCost::getId, Comparator.nullsLast(Comparator.naturalOrder())))
-                .toList();
-
-        double total = costs.stream()
-                .map(CarCost::getCost)
-                .filter(Objects::nonNull)
-                .mapToDouble(Double::doubleValue)
-                .sum();
-
-        model.addAttribute("car", car);
-        model.addAttribute("costs", costs);
-        model.addAttribute("totalCost", total);
-
-        return "cars/info";
-    }
 }

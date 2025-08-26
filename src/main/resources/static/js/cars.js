@@ -1,7 +1,165 @@
+(function () {
+    // ====================================================================
+    //  Część 1: Funkcje pomocnicze i definicje
+    // ====================================================================
+
+    /** Stałe i zmienne globalne używane w obliczeniach. */
+    const MS_PER_DAY = 24 * 60 * 60 * 1000; // Liczba milisekund w jednym dniu
+    const today = new Date(); // Dzisiejsza data
+    today.setHours(0, 0, 0, 0); // Ustawienie godziny na 00:00 dla spójnych porównań dat
+    const thresholds = { red: 0, orange: 7, yellow: 30 }; // Progi dla kolorów (dni lub km)
+
+    /**
+     * Konwertuje wartość na liczbę, usuwając białe znaki.
+     * @param {*} val Wartość do konwersji.
+     * @returns {number|null} Liczba lub null, jeśli konwersja się nie powiedzie.
+     */
+    const toNum = val => {
+        if (val === null || val === undefined) return null;
+        const str = String(val).trim().replace(/\s/g,'');
+        if (!str) return null;
+        const num = Number(str);
+        return Number.isFinite(num) ? num : null;
+    };
+
+    /**
+     * Parsuje datę w formacie ISO (np. "2025-08-26") na obiekt Date.
+     * @param {string} text Tekst z datą.
+     * @returns {Date|null} Obiekt daty lub null w przypadku błędu.
+     */
+    const parseIsoDate = text => {
+        if (!text) return null;
+        const date = new Date(text);
+        if (Number.isNaN(date.getTime())) return null;
+        date.setHours(0,0,0,0);
+        return date;
+    };
+
+    /**
+     * Oblicza, ile dni pozostało do podanej daty.
+     * @param {string} dateText Data w formacie tekstowym.
+     * @returns {number|null} Liczba pozostałych dni lub null.
+     */
+    const computeDaysLeft = dateText => {
+        const date = parseIsoDate(dateText);
+        if (!date) return null;
+        return Math.round((date - today) / MS_PER_DAY);
+    };
+
+    /**
+     * Formatuje liczbę pozostałych dni na czytelny tekst (np. "za 5 dni").
+     * @param {number|null} days Liczba dni.
+     * @returns {string} Sformatowany tekst.
+     */
+    const formatDaysLeft = days => {
+        if (days === null || days === undefined) return 'brak danych';
+        if (days < 0) return `po terminie o ${Math.abs(days)} dni`;
+        if (days === 0) return 'dzisiaj';
+        return `za ${days} dni`;
+    };
+
+    /**
+     * Oblicza, ile kilometrów pozostało do serwisu.
+     * @param {number|string} current Aktualny przebieg.
+     * @param {number|string} last Przebieg przy ostatnim serwisie.
+     * @param {number|string} interval Interwał serwisowy w km.
+     * @returns {number|null} Liczba pozostałych kilometrów lub null.
+     */
+    const computeKmLeft = (current, last, interval) => {
+        const curNum = toNum(current);
+        const lastNum = toNum(last);
+        const intNum = toNum(interval);
+        if (curNum === null || lastNum === null || intNum === null) return null;
+        return lastNum + intNum - curNum;
+    };
+
+    /**
+     * Zwraca klasę CSS (sev-red, sev-green, etc.) na podstawie wartości.
+     * @param {number|null} value Wartość (dni lub km).
+     * @returns {string} Nazwa klasy CSS.
+     */
+    const classForValue = value => {
+        if (value === null || value === undefined) return 'sev-neutral';
+        if (value <= thresholds.red) return 'sev-red';
+        if (value <= thresholds.orange) return 'sev-orange';
+        if (value <= thresholds.yellow) return 'sev-yellow';
+        return 'sev-green';
+    };
+
+    /**
+     * Nadaje komórce tabeli odpowiednią klasę CSS w zależności od statusu.
+     * @param {HTMLElement} cell Element komórki (<td>).
+     * @param {number|null} value Wartość, na podstawie której nadawana jest klasa.
+     */
+    const applySeverity = (cell, value) => {
+        if (!cell) return;
+        cell.classList.remove('sev-green','sev-yellow','sev-orange','sev-red','sev-neutral');
+        cell.classList.add(classForValue(value));
+    };
+
+
+    // ====================================================================
+    //  Część 2: Główna logika obliczeń dla listy samochodów
+    // ====================================================================
+
+    const listTable = document.getElementById('carsTable');
+    if (listTable) {
+        // Przejdź przez wszystkie wiersze (samochody) w tabeli
+        document.querySelectorAll('#carsTable tbody tr').forEach(tr => {
+
+            // --- Ubezpieczenie ---
+            const insuredDateCell = tr.querySelector('.insured-date');
+            const insuranceDaysCell = tr.querySelector('.insurance-days');
+            if (insuredDateCell && insuranceDaysCell) {
+                const daysLeft = computeDaysLeft(insuredDateCell.textContent.trim());
+                insuranceDaysCell.textContent = formatDaysLeft(daysLeft);
+                applySeverity(insuranceDaysCell, daysLeft);
+            }
+
+            // --- Przegląd techniczny ---
+            const reviewDateCell = tr.querySelector('.review-date');
+            const reviewDaysCell = tr.querySelector('.review-days');
+            if (reviewDateCell && reviewDaysCell) {
+                const daysLeft = computeDaysLeft(reviewDateCell.textContent.trim());
+                reviewDaysCell.textContent = formatDaysLeft(daysLeft);
+                applySeverity(reviewDaysCell, daysLeft);
+            }
+
+            // --- Wymiana oleju ---
+            const oilCell = tr.querySelector('.oil-remaining');
+            if (oilCell) {
+                const currentCourse = tr.querySelector('.course')?.textContent;
+                const lastOilCourse = tr.getAttribute('data-oil-course');
+                const oilInterval = tr.getAttribute('data-oil-int');
+                const kmLeft = computeKmLeft(currentCourse, lastOilCourse, oilInterval);
+
+                oilCell.textContent = (kmLeft === null) ? 'brak danych'
+                    : (kmLeft < 0 ? `po terminie o ${Math.abs(kmLeft)} km`
+                        : (kmLeft === 0 ? 'teraz' : `za ${kmLeft} km`));
+                applySeverity(oilCell, kmLeft);
+            }
+
+            // --- Wymiana rozrządu ---
+            const timingCell = tr.querySelector('.timing-remaining');
+            if (timingCell) {
+                const currentCourse = tr.querySelector('.course')?.textContent;
+                const lastTimingCourse = tr.getAttribute('data-timing-course');
+                const timingInterval = tr.getAttribute('data-timing-int');
+                const kmLeft = computeKmLeft(currentCourse, lastTimingCourse, timingInterval);
+
+                timingCell.textContent = (kmLeft === null) ? 'brak danych'
+                    : (kmLeft < 0 ? `po terminie o ${Math.abs(kmLeft)} km`
+                        : (kmLeft === 0 ? 'teraz' : `za ${kmLeft} km`));
+                applySeverity(timingCell, kmLeft);
+            }
+        });
+    }
+})();
+/*
 // cars.js – lista: wyszukiwarka, obliczenia statusów, pełne sortowanie
 //          edycja: VIN/rejestracja uppercase + live "pozostało do..." (olej/rozrząd)
 (function () {
-  /* ====== Część wspólna dla LISTY ====== */
+  /!* ====== Część wspólna dla LISTY ====== *!/
   const MS_PER_DAY = 24 * 60 * 60 * 1000;
   const today = new Date(); today.setHours(0, 0, 0, 0);
   const thresholds = { red: 0, orange: 7, yellow: 30 };
@@ -146,7 +304,7 @@
     })();
   }
 
-  /* ====== Część dla EDYCJI (uruchomi się tylko jeśli formularz istnieje) ====== */
+  /!* ====== Część dla EDYCJI (uruchomi się tylko jeśli formularz istnieje) ====== *!/
   const vin = document.getElementById('vin');
   const reg = document.getElementById('registration');
   const editForm = document.querySelector('form.edit-form') || document.querySelector('form[th\\:object], form[action*="/cars/save"]');
@@ -323,4 +481,4 @@
             rangeHint?.classList.add('sev-red');
         }
     });
-})();
+})();*/

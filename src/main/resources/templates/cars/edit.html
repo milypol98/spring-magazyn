@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title th:text="${car.id} != null ? 'Edytuj pojazd' : 'Dodaj pojazd'">Pojazd</title>
-    <link rel="stylesheet" th:href="@{/css/cars.css}" />
+    <link rel="stylesheet" th:href="@{/css/general.css}" />
 </head>
 <body>
 
 <header class="page-header">
     <nav class="breadcrumbs" aria-label="breadcrumb">
-        <a th:href="@{/}" class="crumb">Strona główna</a>
+        <a th:href="@{/dashboard}" class="crumb">Strona główna</a>
         <span class="sep">/</span>
         <a th:href="@{/cars}" class="crumb">Pojazdy</a>
         <span class="sep">/</span>
@@ -18,162 +18,173 @@
     <div class="header-row">
         <h1 class="page-title" th:text="${car.id} != null ? 'Edytuj pojazd' : 'Dodaj pojazd'">Pojazd</h1>
         <div class="header-tools">
-            <a th:href="@{/cars}" class="btn">← Wróć do listy</a>
+            <a th:href="@{/cars/cost/add/{carId}(carId=${car.id})}" class="btn btn-primary">+ Dodaj koszt</a>
         </div>
     </div>
 </header>
 
-<main class="content">
-    <section class="card">
-        <form th:action="@{/cars/save}" th:object="${car}" method="post" class="edit-form" novalidate>
-            <input type="hidden" th:field="*{id}" />
+<section class="form-container">
+    <form th:action="@{/cars/save}" th:object="${car}" method="post" novalidate>
+        <input type="hidden" th:field="*{id}" />
 
-            <!-- Dane podstawowe -->
-            <h2 class="section-title">Dane pojazdu</h2>
-            <div class="grid-2 gap">
-                <label> Nazwa
-                    <input type="text" th:field="*{name}" maxlength="100"
-                           th:classappend="${#fields.hasErrors('name')} ? ' invalid' : ''" required />
-                    <span class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Błąd</span>
-                </label>
-                <label> Właściciel
-                    <input type="text" th:field="*{owner}" maxlength="100"
-                           th:classappend="${#fields.hasErrors('owner')} ? ' invalid' : ''" />
-                    <span class="error" th:if="${#fields.hasErrors('owner')}" th:errors="*{owner}">Błąd</span>
-                </label>
+        <div th:if="${#fields.hasErrors()}" class="flash" style="border-color:#fca5a5;background:#fef2f2;color:#991b1b;">
+            Popraw zaznaczone pola formularza.
+        </div>
 
-                <label> Marka
-                    <input type="text" th:field="*{brand}" maxlength="100"
-                           th:classappend="${#fields.hasErrors('brand')} ? ' invalid' : ''" required />
-                    <span class="error" th:if="${#fields.hasErrors('brand')}" th:errors="*{brand}">Błąd</span>
-                </label>
-                <label> Model
-                    <input type="text" th:field="*{model}" maxlength="100"
-                           th:classappend="${#fields.hasErrors('model')} ? ' invalid' : ''" required />
-                    <span class="error" th:if="${#fields.hasErrors('model')}" th:errors="*{model}">Błąd</span>
-                </label>
+        <div class="form-grid">
+            <div class="section-box span-2">
+                <div class="section-header">Dane pojazdu</div>
+                <div class="subgrid">
+                    <div class="field">
+                        <label for="name">Nazwa <span class="req">*</span></label>
+                        <input id="name" type="text" th:field="*{name}" maxlength="100" th:classappend="${#fields.hasErrors('name')} ? 'invalid'" required />
+                        <div class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Błąd</div>
+                    </div>
 
-                <label> Kolor
-                    <input type="text" th:field="*{color}" maxlength="50"
-                           th:classappend="${#fields.hasErrors('color')} ? ' invalid' : ''" required />
-                    <span class="error" th:if="${#fields.hasErrors('color')}" th:errors="*{color}">Błąd</span>
-                </label>
-                <label> Rejestracja
-                    <input type="text" th:field="*{registration}" id="registration"
-                           pattern="^[A-Z0-9\-]{4,12}$"
-                           th:classappend="${#fields.hasErrors('registration')} ? ' invalid' : ''"
-                           placeholder="np. WX12345" />
-                    <span class="hint">Tylko A-Z, 0-9 i „-”, 4–12 znaków.</span>
-                    <span class="error" th:if="${#fields.hasErrors('registration')}" th:errors="*{registration}">Błąd</span>
-                </label>
+                    <div class="field">
+                        <label for="owner">Właściciel</label>
+                        <input id="owner" type="text" th:field="*{owner}" maxlength="100" th:classappend="${#fields.hasErrors('owner')} ? 'invalid'" />
+                        <div class="error" th:if="${#fields.hasErrors('owner')}" th:errors="*{owner}">Błąd</div>
+                    </div>
 
-                <label> VIN
-                    <input type="text" th:field="*{vin}" id="vin"
-                           maxlength="17" pattern="^[A-HJ-NPR-Z0-9]{17}$"
-                           th:classappend="${#fields.hasErrors('vin')} ? ' invalid' : ''"
-                           placeholder="17 znaków" />
-                    <span class="hint">Bez I, O, Q. Automatycznie zamieniam na wielkie litery.</span>
-                    <span class="error" th:if="${#fields.hasErrors('vin')}" th:errors="*{vin}">Błąd</span>
-                </label>
+                    <div class="field">
+                        <label for="brand">Marka <span class="req">*</span></label>
+                        <input id="brand" type="text" th:field="*{brand}" maxlength="100" th:classappend="${#fields.hasErrors('brand')} ? 'invalid'" required />
+                        <div class="error" th:if="${#fields.hasErrors('brand')}" th:errors="*{brand}">Błąd</div>
+                    </div>
 
-                <label class="col-span-2"> Opis
-                    <textarea th:field="*{description}" maxlength="2000"
-                              th:classappend="${#fields.hasErrors('description')} ? ' invalid' : ''"
-                              rows="3"></textarea>
-                    <span class="error" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Błąd</span>
-                </label>
-            </div>
+                    <div class="field">
+                        <label for="model">Model <span class="req">*</span></label>
+                        <input id="model" type="text" th:field="*{model}" maxlength="100" th:classappend="${#fields.hasErrors('model')} ? 'invalid'" required />
+                        <div class="error" th:if="${#fields.hasErrors('model')}" th:errors="*{model}">Błąd</div>
+                    </div>
 
-            <!-- Przeglądy i ubezpieczenie -->
-            <h2 class="section-title">Daty i przeglądy</h2>
-            <div class="grid-3 gap">
-                <label> Przegląd do
-                    <input type="date" th:field="*{review}"
-                           th:classappend="${#fields.hasErrors('review')} ? ' invalid' : ''" />
-                    <span class="error" th:if="${#fields.hasErrors('review')}" th:errors="*{review}">Błąd</span>
-                </label>
-                <label> Ubezpieczenie do
-                    <input type="date" th:field="*{insured}"
-                           th:classappend="${#fields.hasErrors('insured')} ? ' invalid' : ''" />
-                    <span class="error" th:if="${#fields.hasErrors('insured')}" th:errors="*{insured}">Błąd</span>
-                </label>
-                <label> Rok produkcji (data)
-                    <input type="date" th:field="*{year}"
-                           th:classappend="${#fields.hasErrors('year')} ? ' invalid' : ''" />
-                    <span class="error" th:if="${#fields.hasErrors('year')}" th:errors="*{year}">Błąd</span>
-                </label>
+                    <div class="field">
+                        <label for="color">Kolor <span class="req">*</span></label>
+                        <input id="color" type="text" th:field="*{color}" maxlength="50" th:classappend="${#fields.hasErrors('color')} ? 'invalid'" required />
+                        <div class="error" th:if="${#fields.hasErrors('color')}" th:errors="*{color}">Błąd</div>
+                    </div>
 
-                <label> Przebieg (km)
-                    <input type="number" th:field="*{course}" min="0" max="3000000" step="1"
-                           th:classappend="${#fields.hasErrors('course')} ? ' invalid' : ''" />
-                    <span class="error" th:if="${#fields.hasErrors('course')}" th:errors="*{course}">Błąd</span>
-                </label>
-                <label> Data przebiegu
-                    <input type="date" th:field="*{courseDate}"
-                           th:classappend="${#fields.hasErrors('courseDate')} ? ' invalid' : ''" />
-                    <span class="error" th:if="${#fields.hasErrors('courseDate')}" th:errors="*{courseDate}">Błąd</span>
-                </label>
-            </div>
+                    <div class="field">
+                        <label for="registration">Rejestracja</label>
+                        <input id="registration" type="text" th:field="*{registration}" pattern="^[A-Z0-9\-]{4,12}$" th:classappend="${#fields.hasErrors('registration')} ? 'invalid'" placeholder="np. WX12345" />
+                        <div class="hint">Tylko A-Z, 0-9 i „-”, 4–12 znaków.</div>
+                        <div class="error" th:if="${#fields.hasErrors('registration')}" th:errors="*{registration}">Błąd</div>
+                    </div>
 
-            <!-- Rozrząd i olej -->
-            <h2 class="section-title">Serwis: rozrząd i olej</h2>
-            <div class="grid-3 gap">
-                <label> Interwał rozrządu (km)
-                    <input type="number" th:field="*{timingSystemIntervalKm}" min="0" max="1000000" step="1000"
-                           th:classappend="${#fields.hasErrors('timingSystemIntervalKm')} ? ' invalid' : ''" />
-                    <span class="error" th:if="${#fields.hasErrors('timingSystemIntervalKm')}"
-                          th:errors="*{timingSystemIntervalKm}">Błąd</span>
-                </label>
-                <label> Przebieg rozrządu (km)
-                    <input type="number" th:field="*{timingSystemCourse}" min="0" max="3000000" step="100"
-                           th:classappend="${#fields.hasErrors('timingSystemCourse')} ? ' invalid' : ''" />
-                    <span class="error" th:if="${#fields.hasErrors('timingSystemCourse')}"
-                          th:errors="*{timingSystemCourse}">Błąd</span>
-                </label>
-                <div class="readonly-box">
-                    <span class="muted">Pozostało do rozrządu</span>
-                    <strong id="timingLeft">—</strong>
-                </div>
-
-                <label> Interwał oleju (km)
-                    <input type="number" th:field="*{oilChangeIntervalKm}" min="0" max="1000000" step="1000"
-                           th:classappend="${#fields.hasErrors('oilChangeIntervalKm')} ? ' invalid' : ''" />
-                    <span class="error" th:if="${#fields.hasErrors('oilChangeIntervalKm')}"
-                          th:errors="*{oilChangeIntervalKm}">Błąd</span>
-                </label>
-                <label> Przebieg wymiany oleju (km)
-                    <input type="number" th:field="*{oilChangeCourse}" min="0" max="3000000" step="100"
-                           th:classappend="${#fields.hasErrors('oilChangeCourse')} ? ' invalid' : ''" />
-                    <span class="error" th:if="${#fields.hasErrors('oilChangeCourse')}"
-                          th:errors="*{oilChangeCourse}">Błąd</span>
-                </label>
-                <div class="readonly-box">
-                    <span class="muted">Pozostało do oleju</span>
-                    <strong id="oilLeft">—</strong>
+                    <div class="field">
+                        <label for="vin">VIN</label>
+                        <input id="vin" type="text" th:field="*{vin}" maxlength="17" pattern="^[A-HJ-NPR-Z0-9]{17}$" th:classappend="${#fields.hasErrors('vin')} ? 'invalid'" placeholder="17 znaków" />
+                        <div class="hint">Bez I, O, Q. Automatycznie zamieniam na wielkie litery.</div>
+                        <div class="error" th:if="${#fields.hasErrors('vin')}" th:errors="*{vin}">Błąd</div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Koszyki -->
-            <h2 class="section-title">Koszyki</h2>
-            <div class="grid-1 gap">
-                <label> Przypisane koszyki
-                    <select th:field="*{cart}" multiple size="6"
-                            th:classappend="${#fields.hasErrors('cart')} ? ' invalid' : ''">
-                        <option th:each="c : ${allCarts}" th:value="${c.id}" th:text="${c.name}">Koszyk</option>
-                    </select>
-                    <span class="hint">Przytrzymaj Ctrl/Shift, aby wybrać wiele.</span>
-                    <span class="error" th:if="${#fields.hasErrors('cart')}" th:errors="*{cart}">Błąd</span>
-                </label>
+            <div class="field span-2">
+                <label for="description">Opis</label>
+                <textarea id="description" th:field="*{description}" maxlength="2000" rows="3" th:classappend="${#fields.hasErrors('description')} ? 'invalid'"></textarea>
+                <div class="error" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Błąd</div>
             </div>
 
-            <div class="form-actions">
-                <button type="submit" class="btn btn-primary">Zapisz</button>
-                <a th:href="@{/cars}" class="btn">Anuluj</a>
-            </div>
-        </form>
-    </section>
-</main>
+            <div class="section-box span-2">
+                <div class="section-header">Daty i przeglądy</div>
+                <div class="subgrid" style="--cols: 3">
+                    <div class="field">
+                        <label for="review">Przegląd do</label>
+                        <input id="review" type="date" th:field="*{review}" th:classappend="${#fields.hasErrors('review')} ? 'invalid'" />
+                        <div class="error" th:if="${#fields.hasErrors('review')}" th:errors="*{review}">Błąd</div>
+                    </div>
 
-<script th:src="@{/js/cars-edit.js}"></script>
+                    <div class="field">
+                        <label for="insured">Ubezpieczenie do</label>
+                        <input id="insured" type="date" th:field="*{insured}" th:classappend="${#fields.hasErrors('insured')} ? 'invalid'" />
+                        <div class="error" th:if="${#fields.hasErrors('insured')}" th:errors="*{insured}">Błąd</div>
+                    </div>
+
+                    <div class="field">
+                        <label for="year">Rok produkcji (data)</label>
+                        <input id="year" type="date" th:field="*{year}" th:classappend="${#fields.hasErrors('year')} ? 'invalid'" />
+                        <div class="error" th:if="${#fields.hasErrors('year')}" th:errors="*{year}">Błąd</div>
+                    </div>
+
+                    <div class="field">
+                        <label for="course">Przebieg (km)</label>
+                        <input id="course" type="number" th:field="*{course}" min="0" max="3000000" step="1" th:classappend="${#fields.hasErrors('course')} ? 'invalid'" />
+                        <div class="error" th:if="${#fields.hasErrors('course')}" th:errors="*{course}">Błąd</div>
+                    </div>
+
+                    <div class="field">
+                        <label for="courseDate">Data przebiegu</label>
+                        <input id="courseDate" type="date" th:field="*{courseDate}" th:classappend="${#fields.hasErrors('courseDate')} ? 'invalid'" />
+                        <div class="error" th:if="${#fields.hasErrors('courseDate')}" th:errors="*{courseDate}">Błąd</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-box span-2">
+                <div class="section-header">Serwis: rozrząd i olej</div>
+                <div class="subgrid" style="--cols: 3">
+                    <div class="field">
+                        <label for="timingSystemIntervalKm">Interwał rozrządu (km)</label>
+                        <input id="timingSystemIntervalKm" type="number" th:field="*{timingSystemIntervalKm}" min="0" max="1000000" step="1000" th:classappend="${#fields.hasErrors('timingSystemIntervalKm')} ? 'invalid'" />
+                        <div class="error" th:if="${#fields.hasErrors('timingSystemIntervalKm')}" th:errors="*{timingSystemIntervalKm}">Błąd</div>
+                    </div>
+
+                    <div class="field">
+                        <label for="timingSystemCourse">Przebieg rozrządu (km)</label>
+                        <input id="timingSystemCourse" type="number" th:field="*{timingSystemCourse}" min="0" max="3000000" step="100" th:classappend="${#fields.hasErrors('timingSystemCourse')} ? 'invalid'" />
+                        <div class="error" th:if="${#fields.hasErrors('timingSystemCourse')}" th:errors="*{timingSystemCourse}">Błąd</div>
+                    </div>
+
+                    <div class="field readonly">
+                        <label>Pozostało do rozrządu</label>
+                        <strong id="timingLeft" class="value">—</strong>
+                    </div>
+
+                    <div class="field">
+                        <label for="oilChangeIntervalKm">Interwał oleju (km)</label>
+                        <input id="oilChangeIntervalKm" type="number" th:field="*{oilChangeIntervalKm}" min="0" max="1000000" step="1000" th:classappend="${#fields.hasErrors('oilChangeIntervalKm')} ? 'invalid'" />
+                        <div class="error" th:if="${#fields.hasErrors('oilChangeIntervalKm')}" th:errors="*{oilChangeIntervalKm}">Błąd</div>
+                    </div>
+
+                    <div class="field">
+                        <label for="oilChangeCourse">Przebieg wymiany oleju (km)</label>
+                        <input id="oilChangeCourse" type="number" th:field="*{oilChangeCourse}" min="0" max="3000000" step="100" th:classappend="${#fields.hasErrors('oilChangeCourse')} ? 'invalid'" />
+                        <div class="error" th:if="${#fields.hasErrors('oilChangeCourse')}" th:errors="*{oilChangeCourse}">Błąd</div>
+                    </div>
+
+                    <div class="field readonly">
+                        <label>Pozostało do oleju</label>
+                        <strong id="oilLeft" class="value">—</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-box span-2">
+                <div class="section-header">Koszyki</div>
+                <div class="subgrid" style="--cols: 1">
+                    <div class="field">
+                        <label for="cart">Przypisane koszyki</label>
+                        <select id="cart" th:field="*{cart}" multiple size="6" th:classappend="${#fields.hasErrors('cart')} ? 'invalid'">
+                            <option th:each="c : ${allCarts}" th:value="${c.id}" th:text="${c.name}">Koszyk</option>
+                        </select>
+                        <div class="hint">Przytrzymaj Ctrl/Shift, aby wybrać wiele.</div>
+                        <div class="error" th:if="${#fields.hasErrors('cart')}" th:errors="*{cart}">Błąd</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Zapisz</button>
+            <a th:href="@{/cars}" class="btn btn-secondary">Anuluj</a>
+        </div>
+    </form>
+</section>
+
+
+<script th:src="@{/js/general.js}"></script>
 </body>
 </html>

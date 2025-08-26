@@ -392,3 +392,9 @@ w1200{
     font-weight: 700;
 
 }
+.sev-green { color: #167c2f; font-weight: 600; }
+.sev-yellow { color: #b27d12; font-weight: 600; }
+.sev-orange { color: #c24914; font-weight: 600; }
+.sev-red { color: #c1121f; font-weight: 700; }
+.sev-neutral { color: #6b7280; }
+

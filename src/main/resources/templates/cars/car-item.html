@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="pl">
+<html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <title>Szczegóły pojazdu</title>
+    <meta charset="UTF-8">
+    <title>Title</title>
     <link rel="stylesheet" th:href="@{/css/general.css}" />
+
 </head>
 <body>
-
 <header class="page-header">
     <nav class="breadcrumbs" aria-label="breadcrumb">
         <a th:href="@{/dashboard}" class="crumb">Strona główna</a>
@@ -84,34 +84,30 @@
             </div>
         </div>
     </section>
-
-    <!-- Karta: koszty pojazdu -->
     <section class="card">
         <div class="table-header">
-            <label class="table-title">Koszty pojazdu</label>
+            <label class="table-title">Item</label>
             <input type="search"
                    class="table-search"
                    placeholder="Szukaj..."
-                   data-target-table="#carsCostTable">
+                   data-target-table="#itemTabel">
         </div>
 
         <div class="table-wrapper">
-            <table id="carsCostTable" class="table">
+            <table id="itemTabel" class="table">
                 <thead>
                 <tr>
-                    <th>Data od</th>
-                    <th>Data do</th>
-                    <th>Opis</th>
-                    <th>Kwota</th>
+                    <th>L.P</th>
+                    <th>Nazwa</th>
+                    <th>Ilosc</th>
                     <th>Akcje</th>
                 </tr>
                 </thead>
-                <tbody>
-                <tr th:each="c : ${car.costs}">
-                    <td th:text="${c.dateFrom}">2024-01-01</td>
-                    <td th:text="${c.dateTo}">2024-01-31</td>
-                    <td th:text="${#strings.defaultString(c.description,'—')}">—</td>
-                    <td class="text-right" th:text="${#numbers.formatDecimal(c.cost,1,'COMMA',2,'POINT')}">0,00</td>
+                <tbody th:each="c : ${car.cart}">
+                <tr  th:each = "items,i : ${c.items}">
+                    <td th:text="${i.count}"></td>
+                    <td th:text="${items.product.name}"></td>
+                    <td th:text="${items.quantity}"></td>
                     <td class="actions">
                         <a class="btn btn-small" th:href="@{/cars/cost/edit/{id}(id=${c.id})}">Edytuj</a>
                         <form th:action="@{/cars/cost/delete/{id}(id=${c.id})}" method="post" class="inline-form" data-confirm="Usunąć ten koszt?">
@@ -120,7 +116,7 @@
                         </form>
                     </td>
                 </tr>
-                <tr th:if="${#lists.isEmpty(car.costs)}">
+                <tr th:if="${#lists.isEmpty(c.items)}">
                     <td colspan="5">Brak kosztów dla tego pojazdu.</td>
                 </tr>
                 </tbody>
@@ -128,7 +124,7 @@
         </div>
     </section>
 </main>
-
 <script th:src="@{/js/general.js}"></script>
+
 </body>
 </html>
