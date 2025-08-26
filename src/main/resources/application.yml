@@ -1,13 +1,9 @@
 spring:
   datasource:
-    # Użyj tych zmiennych, Render dostarcza je automatycznie
-    url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DATABASE}
-    username: ${POSTGRES_USER}
-    password: ${POSTGRES_PASSWORD}
-    driver-class-name: org.postgresql.Driver
+    # Doklejamy "jdbc:" do zmiennej DATABASE_URL dostarczonej przez Render
+    url: jdbc:${DATABASE_URL}
   jpa:
+    # Ta sekcja pomaga Hibernate poprawnie rozpoznać dialekt bazy danych
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: update
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+      ddl-auto: update # lub inna strategia, np. 'validate'
