@@ -12,7 +12,7 @@ spring:
     hibernate:
       # BARDZO WAŻNE: Zmień 'create-drop' na 'validate' lub 'update'
       # aby nie tracić danych po każdym restarcie aplikacji!
-      ddl-auto: validate
+      ddl-auto: update
     # Na produkcji lepiej wyłączyć, aby nie zaśmiecać logów.
     show-sql: false
     properties:
