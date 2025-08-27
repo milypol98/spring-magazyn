@@ -1,12 +1,9 @@
-# Etap 1: Budowanie aplikacji przy użyciu Maven
 FROM maven:3.8.5-openjdk-17 AS build
 WORKDIR /app
-COPY pom.xml .
-RUN mvn dependency:go-offline
-COPY src ./src
-RUN mvn package -DskipTests
+COPY . .
+RUN mvn clean package -DskipTests
 
-# Etap 2: Tworzenie finalnego, lekkiego obrazu
+# Etap 2: Uruchomienie aplikacji
 FROM openjdk:17-jdk-slim
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar

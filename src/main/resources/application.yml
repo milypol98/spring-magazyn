@@ -1,9 +1,26 @@
 spring:
+  # --- Konfiguracja połączenia z bazą danych dla Render ---
   datasource:
-    # Doklejamy "jdbc:" do zmiennej DATABASE_URL dostarczonej przez Render
-    url: jdbc:${DATABASE_URL}
+    # Te wartości MUSZĄ być ustawione w zmiennych środowiskowych na Render.com
+    url: ${JDBC_DATABASE_URL}
+    username: ${JDBC_DATABASE_USERNAME}
+    password: ${JDBC_DATABASE_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
   jpa:
-    # Ta sekcja pomaga Hibernate poprawnie rozpoznać dialekt bazy danych
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    database: postgresql
     hibernate:
-      ddl-auto: update # lub inna strategia, np. 'validate'
+      # BARDZO WAŻNE: Zmień 'create-drop' na 'validate' lub 'update'
+      # aby nie tracić danych po każdym restarcie aplikacji!
+      ddl-auto: validate
+    # Na produkcji lepiej wyłączyć, aby nie zaśmiecać logów.
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+
+  # --- Konfiguracja Spring MVC (bez zmian) ---
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
