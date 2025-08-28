@@ -25,6 +25,11 @@ public class InvoiceServiceImpl implements InvoiceService {
 
 
     @Override
+    public List<Invoice> findAll() {
+        return invoiceRepo.findAll();
+    }
+
+    @Override
     public Optional<Invoice> findById(Long id) {
         return invoiceRepo.findById(id);
     }

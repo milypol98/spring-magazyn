@@ -30,15 +30,15 @@
         <input type="hidden" th:field="*{stockPosition.id}" />
 
         <div class="form-row">
-            <label for="code">Nazwa <span class="req">*</span></label>
+            <label for="code">Kod <span class="req">*</span></label>
             <input type="text" id="code" th:field="*{code}" maxlength="150" required />
-            <div class="field-hint" th:if="${#fields.hasErrors('code')}" th:errors="*{code}">Błąd nazwy</div>
+            <div class="field-hint" th:if="${#fields.hasErrors('code')}" th:errors="*{code}">Błąd Kodu</div>
         </div>
 
         <div class="form-row">
-            <label for="name">Kategoria</label>
+            <label for="name">Name</label>
             <input type="text" id="name" th:field="*{name}" maxlength="100" />
-            <div class="field-hint" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Błąd kategorii</div>
+            <div class="field-hint" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Błąd Nazwy</div>
         </div>
 
         <div class="form-row">
@@ -48,15 +48,11 @@
         </div>
 
         <div class="form-row">
-            <label for="price">Lokalizacja (np. regał/półka)</label>
+            <label for="price">Cena</label>
             <input type="text" id="price" th:field="*{price}" maxlength="50" />
-            <div class="field-hint" th:if="${#fields.hasErrors('price')}" th:errors="*{price}">Błąd lokalizacji</div>
+            <div class="field-hint" th:if="${#fields.hasErrors('price')}" th:errors="*{price}">Błąd ceny</div>
         </div>
-        <div class="form-row">
-            <label for="status">Lokalizacja (np. regał/półka)</label>
-            <input type="text" id="status" th:field="*{price}" maxlength="50" />
-            <div class="field-hint" th:if="${#fields.hasErrors('status')}" th:errors="*{status}">Błąd lokalizacji</div>
-        </div>
+
 
         <div class="form-actions">
             <button type="submit" class="btn btn-primary">Zapisz</button>

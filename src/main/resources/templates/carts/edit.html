@@ -56,7 +56,7 @@
                                 <tr>
                                     <th>L.P.</th>
                                     <th>Typ</th>
-                                    <th>Kod</th>
+                                    <th>Pozycja magazynowa</th>
                                     <th>Nazwa</th>
                                     <th>Ilość</th>
                                     <th>Akcja</th>
@@ -67,8 +67,8 @@
                                     <td th:text="${i.count}">1</td>
                                     <td th:text="${ci.product != null ? 'Produkt' : 'StockPosition'}">Typ</td>
                                     <td>
-                                        <span th:if="${ci.product != null}" th:text="${ci.product.code}">Produkt</span>
-                                        <span th:if="${ci.stockPosition != null}" th:text="${ci.stockPosition.name}">Pozycja</span>
+                                        <span th:if="${ci.product != null}" th:text="${ci.product.position}">Produkt</span>
+                                        <span th:if="${ci.stockPosition != null}" th:text="${ci.stockPosition.position}">Pozycja</span>
                                     </td>
                                     <td>
                                         <span th:if="${ci.product != null}" th:text="${ci.product.name}">Produkt</span>
@@ -106,7 +106,8 @@
                         <table id="onCartsTable" class="table">
                             <thead>
                             <tr>
-                                <th>Kod</th>
+                                <td>L.P.</td>
+                                <th>Pozycja magazynowa</th>
                                 <th>Nazwa</th>
                                 <th>Opis</th>
                                 <th>Ilość</th>
@@ -114,8 +115,9 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:each="p : ${allProduct}">
-                                <td th:text="${p.code}">P-001</td>
+                            <tr th:each="p, i: ${allProduct}">
+                                <td th:text="${i.count}">1</td>
+                                <td th:text="${p.position}">P-001</td>
                                 <td th:text="${p.name}">Nazwa</td>
                                 <td th:text="${p.description}">Opis</td>
                                 <td>

@@ -148,13 +148,13 @@ public class CarController {
     @PostMapping("cost/save")
     public String saveCostCar(@ModelAttribute CarCost carCost) {
         carCostService.saveCarCost(carCost);
-        return "redirect:/cars/" + carCost.getCar().getId();
+        return "redirect:/cars/info/" + carCost.getCar().getId();
     }
 
     @PostMapping("/cost/delete/{id}")
     public String deleteCostCar(@PathVariable Integer id, @RequestParam("carId") Integer carId){
         carCostService.deleteCarCost(id);
-        return "redirect:/cars/" + carId;
+        return "redirect:/cars/info/" + carId;
     }
     @GetMapping("/item/{id}")
     public String costInfo(@PathVariable Integer id, Model model) {

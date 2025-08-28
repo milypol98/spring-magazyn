@@ -51,11 +51,11 @@ public class StockPositionController {
     @PostMapping("/save")
     public String saveStockPositionTool(@ModelAttribute StockPosition stockPosition) {
         stockPositionService.saveStockPosition(stockPosition);
-        return "redirect:/warehouses/" + stockPosition.getWarehouse().getId();
+        return "redirect:/stock-positions/" + stockPosition.getWarehouse().getId();
     }
     @PostMapping("/delete/{id}")
     public String deleteStockPositionTool(@PathVariable Integer id) {
         stockPositionService.deleteStockPosition(id);
-        return "redirect:/warehouses/" + stockPositionService.getStockPositionById(id).getWarehouse().getId();
+        return "redirect:/stock-positions/" + stockPositionService.getStockPositionById(id).getWarehouse().getId();
     }
 }

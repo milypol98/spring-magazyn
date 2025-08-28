@@ -23,54 +23,57 @@
     <span th:text="${message}">Operacja zakończona pomyślnie</span>
 </section>
 
-<section class="filters">
-    <form th:action="@{/invoices}" method="get" class="filters-form">
-        <div class="row">
-            <label>
-                Szukaj
-                <input type="text" name="q" th:value="${q}" placeholder="numer, nazwa..." />
-            </label>
-            <label>Firma
-                <select name="companyId">
-                    <option th:each="c : ${companies}"
-                            th:value="${c.id}"
-                            th:text="${c.name}"
-                            th:selected="${companyId != null and companyId == c.id}">
-                    </option>
-                </select>
-            </label>
-            <label>
-                Data od
-                <input type="date" name="dateFrom" th:value="${dateFrom}" />
-            </label>
-            <label>
-                Data do
-                <input type="date" name="dateTo" th:value="${dateTo}" />
-            </label>
-            <label>
-                Rozmiar strony
-                <select name="size" th:value="${size}">
-                    <option th:value="10">10</option>
-                    <option th:value="20">20</option>
-                    <option th:value="50">50</option>
-                </select>
-            </label>
-            <!-- W formularzu filtrów dodaj select firmy -->
+<!--<section class="filters">-->
+<!--    <form th:action="@{/invoices}" method="get" class="filters-form">-->
+<!--        <div class="row">-->
+<!--            <label>-->
+<!--                Szukaj-->
+<!--                <input type="text" name="q" th:value="${q}" placeholder="numer, nazwa..." />-->
+<!--            </label>-->
+<!--            <label>Firma-->
+<!--                <select name="companyId">-->
+<!--                    <option th:each="c : ${companies}"-->
+<!--                            th:value="${c.id}"-->
+<!--                            th:text="${c.name}"-->
+<!--                            th:selected="${companyId != null and companyId == c.id}">-->
+<!--                    </option>-->
+<!--                </select>-->
+<!--            </label>-->
+<!--            <label>-->
+<!--                Data od-->
+<!--                <input type="date" name="dateFrom" th:value="${dateFrom}" />-->
+<!--            </label>-->
+<!--            <label>-->
+<!--                Data do-->
+<!--                <input type="date" name="dateTo" th:value="${dateTo}" />-->
+<!--            </label>-->
+<!--            <label>-->
+<!--                Rozmiar strony-->
+<!--                <select name="size" th:value="${size}">-->
+<!--                    <option th:value="10">10</option>-->
+<!--                    <option th:value="20">20</option>-->
+<!--                    <option th:value="50">50</option>-->
+<!--                </select>-->
+<!--            </label>-->
+<!--            &lt;!&ndash; W formularzu filtrów dodaj select firmy &ndash;&gt;-->
 
-            <button type="submit" class="btn btn-primary">Filtruj</button>
-            <a th:href="@{/invoices}" class="btn btn-secondary">Wyczyść</a>
-        </div>
-    </form>
-</section>
+<!--            <button type="submit" class="btn btn-primary">Filtruj</button>-->
+<!--            <a th:href="@{/invoices}" class="btn btn-secondary">Wyczyść</a>-->
+<!--        </div>-->
+<!--    </form>-->
+<!--</section>-->
 
 <main class="content">
     <section class="card">
-
         <div class="table-header">
             <label class="table-title">Lista faktur</label>
+            <input type="search"
+                   class="table-search"
+                   placeholder="Szukaj..."
+                   data-target-table="#invoicesTable">
         </div>
         <div class="table-wrapper">
-            <table  class="table">
+            <table id="invoicesTable" class="table">
                 <thead>
                 <tr>
                     <th>L.P.</th>
@@ -116,27 +119,26 @@
                 </tbody>
             </table>
 
-            <div th:if="${invoices != null and invoices.totalPages > 1}" class="pagination">
-                <a class="page-btn"
-                   th:classappend="${invoices.first} ? 'disabled'"
-                   th:href="@{/invoices(page=${invoices.number - 1}, size=${size}, q=${q}, dateFrom=${dateFrom}, dateTo=${dateTo})}">&laquo; Poprzednia</a>
+<!--            <div th:if="${invoices != null and invoices.totalPages > 1}" class="pagination">-->
+<!--                <a class="page-btn"-->
+<!--                   th:classappend="${invoices.first} ? 'disabled'"-->
+<!--                   th:href="@{/invoices(page=${invoices.number - 1}, size=${size}, q=${q}, dateFrom=${dateFrom}, dateTo=${dateTo})}">&laquo; Poprzednia</a>-->
 
-                <span class="page-info">
-            Strona <span th:text="${invoices.number + 1}">1</span>
-            z <span th:text="${invoices.totalPages}">1</span>
-            (łącznie: <span th:text="${invoices.totalElements}">0</span>)
-        </span>
+<!--                <span class="page-info">-->
+<!--            Strona <span th:text="${invoices.number + 1}">1</span>-->
+<!--            z <span th:text="${invoices.totalPages}">1</span>-->
+<!--            (łącznie: <span th:text="${invoices.totalElements}">0</span>)-->
+<!--        </span>-->
 
-                <a class="page-btn"
-                   th:classappend="${invoices.last} ? 'disabled'"
-                   th:href="@{/invoices(page=${invoices.number + 1}, size=${size}, q=${q}, dateFrom=${dateFrom}, dateTo=${dateTo})}">Następna &raquo;</a>
-            </div>
+<!--                <a class="page-btn"-->
+<!--                   th:classappend="${invoices.last} ? 'disabled'"-->
+<!--                   th:href="@{/invoices(page=${invoices.number + 1}, size=${size}, q=${q}, dateFrom=${dateFrom}, dateTo=${dateTo})}">Następna &raquo;</a>-->
+<!--            </div>-->
         </div>
     </section>
 </main>
 
 <script th:src="@{/js/general.js}"></script>
-<script th:src="@{/js/invoices.js}"></script>
 
 </body>
 </html>

@@ -128,8 +128,8 @@
                 </div>
 
                 <div class="form-actions">
-                    <button type="submit" class="btn btn-primary"
-                            th:text="${user?.id} != null ? 'Zapisz zmiany' : 'Utwórz użytkownika'">Zapisz</button>
+<!--                    <button type="submit" class="btn btn-primary"-->
+<!--                            th:text="${user?.id} != null ? 'Zapisz zmiany' : 'Utwórz użytkownika'">Zapisz</button>-->
                     <a th:href="@{/users}" class="btn btn-secondary">Anuluj</a>
                 </div>
             </form>
@@ -155,10 +155,7 @@
                     </thead>
                     <tbody>
                     <tr th:each="task : ${tasks}"
-                        th:attr="data-name=${task.name}, data-desc=${task.description}, onclick=|window.location.href='/tasks/edit/${task.id}'|"
-                        th:classappend="${task.status != null and task.status.toString() == 'IN_PROGRESS'} ? 'row--in-progress' : ''"
-                        class="clickable-row">
-
+                        th:attr="data-name=${task.name}, data-desc=${task.description}">
                         <td th:text="${task.name}"></td>
                         <td th:text="${task.description}"></td>
                         <td th:text="${task.dateFrom}"></td>

@@ -39,12 +39,12 @@ public class ToolController {
     @PostMapping("/save")
     public String saveTool(@ModelAttribute Tool tool) {
         toolService.saveTool(tool);
-        return "redirect:/warehouses/stock-positions/" + tool.getStockPosition().getId();
+        return "redirect:/stock-positions/" + tool.getStockPosition().getId();
     }
     @PostMapping("/delete/{id}")
     public String saveTool(@PathVariable Integer id) {
         toolService.deleteTool(id);
-        return "redirect:/warehouses/stock-positions/" + toolService.getToolById(id).getStockPosition().getId();
+        return "redirect:/stock-positions/" + toolService.getToolById(id).getStockPosition().getId();
     }
 
 

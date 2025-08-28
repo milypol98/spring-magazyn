@@ -37,29 +37,8 @@ public class TaskController {
     }
 
     @GetMapping
-    public String list(
-            @RequestParam(required = false) String q,
-            @RequestParam(required = false) TaskStatus status,
-            @RequestParam(required = false) Integer userId,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size,
-            Model model
-    ) {
-        PageRequest pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "dateFrom"));
-        Page<Task> tasksPage = taskService.search(q, status, userId, from, to, pageable);
-
-        model.addAttribute("page", tasksPage);
-        model.addAttribute("tasks", tasksPage.getContent());
-        model.addAttribute("q", q);
-        model.addAttribute("status", status);
-        model.addAttribute("userId", userId);
-        model.addAttribute("from", from);
-        model.addAttribute("to", to);
-        model.addAttribute("size", size);
-        model.addAttribute("allUsers", userService.getAllUsers());
-        model.addAttribute("statusValues", TaskStatus.values());
+    public String list(Model model) {
+        model.addAttribute("tasks", taskService.getAllTasks());
         return "tasks/list";
     }
     @GetMapping("/{id}")

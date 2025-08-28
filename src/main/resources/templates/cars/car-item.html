@@ -109,7 +109,6 @@
                     <td th:text="${items.product.name}"></td>
                     <td th:text="${items.quantity}"></td>
                     <td class="actions">
-                        <a class="btn btn-small" th:href="@{/cars/cost/edit/{id}(id=${c.id})}">Edytuj</a>
                         <form th:action="@{/cars/cost/delete/{id}(id=${c.id})}" method="post" class="inline-form" data-confirm="Usunąć ten koszt?">
                             <input type="hidden" name="carId" th:value="${car.id}" />
                             <button type="submit" class="btn btn-danger btn-small">Usuń</button>

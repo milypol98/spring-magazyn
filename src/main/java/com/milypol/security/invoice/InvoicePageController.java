@@ -33,24 +33,8 @@ public class InvoicePageController {
     private final CompanyService companyService;
 
     @GetMapping
-    public String list(@RequestParam(defaultValue = "0") int page,
-                       @RequestParam(defaultValue = "20") int size,
-                       @RequestParam(required = false) String q,
-                       @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateFrom,
-                       @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateTo,
-                       @RequestParam(required = false) Long companyId,
-                       Model model) {
-
-        Page<Invoice> invoices = invoiceService.search(q, dateFrom, dateTo, companyId, PageRequest.of(page, size));
-
-        model.addAttribute("invoices", invoices);
-        model.addAttribute("q", q);
-        model.addAttribute("dateFrom", dateFrom);
-        model.addAttribute("dateTo", dateTo);
-        model.addAttribute("size", size);
-        model.addAttribute("companies", companyService.findAll());
-        model.addAttribute("companyId", companyId);
-
+    public String list(Model model) {
+        model.addAttribute("invoices",invoiceService.findAll());
         return "invoices/list";
     }
 

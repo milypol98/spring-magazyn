@@ -38,49 +38,31 @@ public class DataInitializer implements CommandLineRunner {
             warehouse2.setDescription("Magazyn lewt");
             warehouseRepo.save(warehouse2);
 
-            Address adminAddress = new Address();
-            adminAddress.setCountry("Polska");
-            adminAddress.setCity("Dąbrowa Górnicza");
-            adminAddress.setStreet("ul. Przykładowa");
-            adminAddress.setPostalCode("41-300");
-
-            Address magazynierAddress = new Address();
-            magazynierAddress.setCountry("Polska");
-            magazynierAddress.setCity("Dąbrowa Górnicza");
-            magazynierAddress.setStreet("ul. Testowa");
-            magazynierAddress.setPostalCode("41-300");
-
-            Address kierowcaAddress = new Address();
-            kierowcaAddress.setCountry("Polska");
-            kierowcaAddress.setCity("Dąbrowa Górnicza");
-            kierowcaAddress.setStreet("ul. Statyczna");
-            kierowcaAddress.setPostalCode("41-300");
-
             User admin = new User();
 
             admin.setDescription("Administrator systemu");
-            admin.setEmail("milypol98@gmail.com");
+            admin.setEmail("test1@gmail.com");
             admin.setFirstname("Jan");
             admin.setLastName("Kowalski");
-            admin.setPassword(passwordEncoder.encode("123456"));
+            admin.setPassword(passwordEncoder.encode("Test2025"));
             admin.setRole(Role.ADMIN);
 
             User magazynier = new User();
 
             magazynier.setDescription("Magazynier");
-            magazynier.setEmail("milypol1998@gmail.com");
+            magazynier.setEmail("test2@gmail.com");
             magazynier.setFirstname("Anna");
             magazynier.setLastName("Nowak");
-            magazynier.setPassword(passwordEncoder.encode("123456"));
+            magazynier.setPassword(passwordEncoder.encode("Test2025"));
             magazynier.setRole(Role.USER);
 
             User kierowca = new User();
 
             kierowca.setDescription("Kierowca serwisowy");
-            kierowca.setEmail("kierowca@example.com");
+            kierowca.setEmail("test3@gmail.com");
             kierowca.setFirstname("Piotr");
-            kierowca.setLastName("Wiśniewski");
-            kierowca.setPassword(passwordEncoder.encode("haslo789"));
+            kierowca.setLastName("Nowak");
+            kierowca.setPassword(passwordEncoder.encode("Test2025"));
             kierowca.setRole(Role.USER);
 
 

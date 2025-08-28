@@ -2,20 +2,100 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-    <link rel="stylesheet" th:href="@{/css/general.css}" />
+    <title>Logowanie</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            overflow: hidden; /* Ukrywa paski przewijania */
+        }
+
+        body {
+            /* Nowoczesne, ciemne tło z gradientem */
+            background: linear-gradient(135deg, #1d2b4a 0%, #0d121c 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Poppins', sans-serif; /* Użycie importowanej czcionki */
+        }
+
+        /* Główny kontener na przyciski */
+        .action-container {
+            text-align: center;
+            transform: translateY(-20px); /* Lekkie przesunięcie w górę */
+        }
+
+        /* Tytuł */
+        h1 {
+            color: #ffffff;
+            font-size: 3.5rem; /* Duży, czytelny tytuł */
+            font-weight: 600;
+            margin-bottom: 50px; /* Większy odstęp od przycisków */
+            letter-spacing: 2px; /* Lepszy wygląd liter */
+        }
+
+        /* Kontener na same przyciski, aby były obok siebie */
+        .button-wrapper {
+            display: flex;
+            gap: 25px; /* Odstęp między przyciskami */
+        }
+
+        /* Styl bazowy dla obu przycisków */
+        .btn {
+            display: inline-block;
+            text-decoration: none;
+            font-size: 1.5rem; /* DUŻA czcionka na przyciskach */
+            font-weight: 600;
+            padding: 20px 60px; /* Bardzo duże przyciski */
+            border-radius: 50px; /* Całkowicie zaokrąglone rogi */
+            border: 3px solid transparent; /* Przezroczysta ramka jako baza */
+            transition: all 0.3s ease; /* Płynne animacje */
+            cursor: pointer;
+        }
+
+        /* Styl główny (wypełniony) dla przycisku "Zarejestruj" */
+        .btn-primary {
+            background-color: #00aaff; /* Energetyczny niebieski */
+            color: #ffffff;
+        }
+
+        /* Efekt po najechaniu na przycisk główny */
+        .btn-primary:hover {
+            background-color: #0088cc;
+            transform: scale(1.05); /* Lekkie powiększenie */
+            box-shadow: 0 10px 30px rgba(0, 170, 255, 0.3);
+        }
+
+        /* Styl "duch" (z ramką) dla przycisku "Zaloguj" */
+        .btn-secondary {
+            background-color: transparent;
+            color: #00aaff;
+            border-color: #00aaff;
+        }
+
+        /* Efekt po najechaniu na przycisk z ramką */
+        .btn-secondary:hover {
+            background-color: #00aaff;
+            color: #ffffff;
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(0, 170, 255, 0.3);
+        }
+
+    </style>
 </head>
 <body>
-<div class="table-header">
-    <h1 class="table-title">Strona Główna</h1>
-    <div>
-        <a href="/login">Zaloguj</a>
-        <a href="/registry">Zarejestruj</a>
+
+<div class="action-container">
+    <h1>Witaj</h1>
+    <div class="button-wrapper">
+        <a href="/login" class="btn btn-secondary">Zaloguj</a>
+<!--        <a href="/register" class="btn btn-primary">Zarejestruj</a>-->
     </div>
 </div>
 
-<main>
-    <p>To jest zawartość strony głównej.</p>
-</main>
 </body>
 </html>

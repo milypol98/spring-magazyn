@@ -98,10 +98,7 @@
                     </thead>
                     <tbody>
                     <tr th:each="task : ${tasks}"
-                        th:attr="data-name=${task.name}, data-desc=${task.description}"
-                        class="clickable-row"
-                        th:onclick="|window.location.href='@{/tasks/details/{id}(id=${task.id})}'|">
-
+                        th:attr="data-name=${task.name}, data-desc=${task.description}">
                         <td th:text="${task.name}">Nazwa zadania</td>
                         <td th:text="${task.description}">Opis zadania</td>
                         <td th:text="${task.dateFrom}">2025-08-01</td>
