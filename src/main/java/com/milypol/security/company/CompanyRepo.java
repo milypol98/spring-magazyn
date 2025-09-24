@@ -6,6 +6,5 @@ import java.util.List;
 
 public interface CompanyRepo extends JpaRepository<Company, Long> {
     List<Company> findByNameContainingIgnoreCase(String namePart);
-    boolean existsByNameIgnoreCase(String name);
 
 }

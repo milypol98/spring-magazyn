@@ -3,6 +3,7 @@ package com.milypol.security.user;
 import com.milypol.security.address.Address;
 import com.milypol.security.task.TaskService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,78 +22,79 @@ public class UserController {
 
     private final UserService userService;
     private final TaskService taskService;
-    private final PasswordEncoder passwordEncoder;
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public String list(Model model) {
         model.addAttribute("users", userService.getAllUsers());
-        return "workers/list";
+        return "users/list";
     }
     @GetMapping("/{id}")
     public String info(@PathVariable Integer id, Model model) {
         model.addAttribute("user", userService.getUserById(id));
         model.addAttribute("tasks", taskService.getAllTasksByUserId(id));
-        return "workers/info";
+        return "users/info";
     }
-
-    @GetMapping("/edit/{id}")
-    public String editUser(@PathVariable Integer id , Model model){
-        var user = userService.getUserById(id);
-        if (user.getAddress() == null) user.setAddress(new Address());
-        model.addAttribute("user", user);
-        model.addAttribute("tasks", taskService.getAllTasksByUserId(id));
-        return "workers/edit";
-    }
-
     @GetMapping("/edit")
     public String editCurrent(@AuthenticationPrincipal UserDetails principal, Model model) {
         var user = userService.getByEmail(principal.getUsername());
-        if (user.getAddress() == null) user.setAddress(new Address());
-        model.addAttribute("user", user);
+        model.addAttribute("updateRequest", userService.getUserForUpdate(user.getId()));
         model.addAttribute("tasks", taskService.getAllTasksByUserId(user.getId()));
-        return "workers/edit";
+        return "users/edit";
+    }
+    @GetMapping("/edit/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String editUser(@PathVariable Integer id , Model model){
+        model.addAttribute("updateAdminRequest", userService.getUserForAdminUpdate(id));
+        model.addAttribute("roles", Role.values());
+        model.addAttribute("tasks", taskService.getAllTasksByUserId(id));
+        return "users/edit-admin";
+    }
+    @PostMapping("/save/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String updateUserByAdmin(
+            @PathVariable Integer id,
+            @Valid @ModelAttribute("updateAdminRequest") UpdateAdminRequest request,
+            BindingResult bindingResult,
+            RedirectAttributes redirectAttributes,
+            Model model) {
+
+        if (bindingResult.hasErrors()) {
+            User user = userService.getUserById(id);
+            model.addAttribute("tasks", taskService.getAllTasksByUserId(user.getId()));
+            model.addAttribute("roles", Role.values());
+            return "users/edit-admin";
+        }
+        try {
+            userService.updateUserByAdmin(id, request);
+            redirectAttributes.addFlashAttribute("successMessage", "Dane użytkownika zostały zaktualizowane.");
+        } catch (RuntimeException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        }
+
+        return "redirect:/users";
     }
 
-    @PostMapping("/add")
-    public String update(@AuthenticationPrincipal UserDetails principal,
-                         @Valid @ModelAttribute("user") User form,
-                         BindingResult bindingResult,
-                         @RequestParam(value = "newPassword", required = false) String newPassword,
-                         @RequestParam(value = "confirmPassword", required = false) String confirmPassword,
-                         RedirectAttributes ra,
-                         Model model) {
-
-        // Ustal właściwe id: z formularza lub bieżącego zalogowanego
-        Integer targetId = form.getId();
-        if (targetId == null) {
-            var current = userService.getByEmail(principal.getUsername());
-            targetId = current.getId();
-        }
+    @PostMapping("/save")
+    public String updateProfile(
+            @AuthenticationPrincipal UserDetails principal,
+            @Valid @ModelAttribute("updateRequest") UpdateRequest request,
+            BindingResult bindingResult,
+            RedirectAttributes redirectAttributes,
+            Model model) {
 
         if (bindingResult.hasErrors()) {
-            model.addAttribute("tasks", taskService.getAllTasksByUserId(targetId));
-            return "workers/edit";
+            User user = userService.getByEmail(principal.getUsername());
+            model.addAttribute("tasks", taskService.getAllTasksByUserId(user.getId()));
+            return "users/edit";
         }
 
-        if (newPassword != null && !newPassword.isBlank()) {
-            if (!newPassword.equals(confirmPassword)) {
-                bindingResult.rejectValue("password", "password.mismatch", "Hasła nie są zgodne");
-            } else if (newPassword.length() < 8) {
-                bindingResult.rejectValue("password", "password.tooShort", "Hasło musi mieć co najmniej 8 znaków");
-            }
+        try {
+            userService.updateUserProfile(principal.getUsername(), request);
+            redirectAttributes.addFlashAttribute("successMessage", "Profil został zaktualizowany.");
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
         }
-
-        if (bindingResult.hasErrors()) {
-            model.addAttribute("tasks", taskService.getAllTasksByUserId(targetId));
-            return "workers/edit";
-        }
-
-        // Tu można dodać sprawdzenie uprawnień, jeśli edytujemy kogoś innego niż siebie
-        userService.updateUser(targetId, form, newPassword, passwordEncoder);
-
-        ra.addFlashAttribute("message", "Dane użytkownika zostały zaktualizowane");
-
-        var isSelf = form.getId() == null || form.getId().equals(targetId);
-        return isSelf ? "redirect:/users/edit" : "redirect:/users/edit/" + targetId;
+        return "redirect:/users/edit";
     }
 }

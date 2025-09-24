@@ -159,6 +159,7 @@ public class CarController {
     @GetMapping("/item/{id}")
     public String costInfo(@PathVariable Integer id, Model model) {
         model.addAttribute("car", carService.getCarById(id));
+        model.addAttribute("carItem", productEventService.getAllProductCountInCar(id));
         return "cars/car-item";
     }
 

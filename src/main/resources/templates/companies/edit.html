@@ -74,7 +74,7 @@
             <div class="field span-2">
                 <label for="description">Opis</label>
                 <textarea id="description" th:field="*{description}" rows="4" placeholder="Krótki opis działalności..."></textarea>
-                <div class="error" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Błąd</div>
+                <div class="error" th:maxlength="100" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Błąd</div>
             </div>
 
             <!-- Sekcja ADRES - oddzielny blok na pełną szerokość -->

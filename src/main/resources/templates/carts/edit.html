@@ -20,139 +20,138 @@
     </div>
 </header>
 
-<main class="content">
-        <section class="card">
-            <div class="side-by-side ">
-                <div class="section-box span-2">
-                    <div class="card">
-                        <form th:action="@{/carts/save}" method="post" th:object="${cart}" class="edit-form" novalidate>
-                            <input type="hidden" th:field="*{id}" />
-                            <div class="form-row">
-                                <label>Nazwa <span class="req">*</span>
-                                    <input type="text" th:field="*{name}" required maxlength="255" />
-                                </label>
-                            </div>
-                            <div class="form-row">
-                                <label>Opis
-                                    <textarea th:field="*{description}" rows="3" maxlength="2000"></textarea>
-                                </label>
-                            </div>
-                            <div class="form-actions">
-                                <button type="submit" class="btn btn-primary">Zapisz</button>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="card">
-                        <div class="table-header">
-                            <label class="table-title">Produkty/Narzędzia w koszyku</label>
-                            <input type="search"
-                                   class="table-search"
-                                   placeholder="Szukaj..."
-                                   data-target-table="#inCartsTable">
-                        </div>
-                        <div class="table-wrapper">
-                            <table id="inCartsTable" th:if="${!#lists.isEmpty(cart.items)}" class="table">
-                                <thead>
-                                <tr>
-                                    <th>L.P.</th>
-                                    <th>Typ</th>
-                                    <th>Pozycja magazynowa</th>
-                                    <th>Nazwa</th>
-                                    <th>Ilość</th>
-                                    <th>Akcja</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr th:each="ci, i : ${cart.items}">
-                                    <td th:text="${i.count}">1</td>
-                                    <td th:text="${ci.product != null ? 'Produkt' : 'StockPosition'}">Typ</td>
-                                    <td>
-                                        <span th:if="${ci.product != null}" th:text="${ci.product.position}">Produkt</span>
-                                        <span th:if="${ci.stockPosition != null}" th:text="${ci.stockPosition.position}">Pozycja</span>
-                                    </td>
-                                    <td>
-                                        <span th:if="${ci.product != null}" th:text="${ci.product.name}">Produkt</span>
-                                        <span th:if="${ci.stockPosition != null}" th:text="${ci.stockPosition.name}">Pozycja</span>
-                                    </td>
-                                    <td>
-                                        <span th:if="${ci.product != null}" th:text="${ci.product.description}">Produkt</span>
-                                        <span th:if="${ci.stockPosition != null}" th:text="${ci.stockPosition.description}">Pozycja</span>
-                                    </td>
-                                    <td th:text="${ci.quantity}">1</td>
-                                    <td>
-                                        <form th:action="@{/carts/items/delete/{id}(id=${ci.id})}" method="post">
-                                            <input type="hidden" name="cartId" th:value="${cart.id}" />
-                                            <button type="submit" class="btn btn-danger btn-small">Usuń</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                                <tr th:if="${#lists.isEmpty(cart.items)}">
-                                    <td colspan="4">Koszyk jest pusty.</td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+<section class="side-by-side">
+    <div class="section-box span-2">
+        <div>
+            <form th:action="@{/carts/save}" method="post" th:object="${cart}" class="edit-form" novalidate>
+                <input type="hidden" th:field="*{id}" />
+                <div class="form-row">
+                    <label>Nazwa <span class="req">*</span>
+                        <input type="text" th:field="*{name}" required maxlength="255" />
+                    </label>
                 </div>
-                <div class="section-box span-2" th:if="${cart.id} != null">
-                    <div class="table-header">
-                        <label class="table-title">Produkty/Narzędzia</label>
-                        <input type="search"
-                               class="table-search"
-                               placeholder="Szukaj..."
-                               data-target-table="#onCartsTable">
-                    </div>
-                    <div class="table-wrapper">
-                        <table id="onCartsTable" class="table">
-                            <thead>
-                            <tr>
-                                <td>L.P.</td>
-                                <th>Pozycja magazynowa</th>
-                                <th>Nazwa</th>
-                                <th>Opis</th>
-                                <th>Ilość</th>
-                                <th>Akcja</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr th:each="p, i: ${allProduct}">
-                                <td th:text="${i.count}">1</td>
-                                <td th:text="${p.position}">P-001</td>
-                                <td th:text="${p.name}">Nazwa</td>
-                                <td th:text="${p.description}">Opis</td>
-                                <td>
-                                    <form th:action="@{/carts/items/save}" method="post" th:id="|addProd_${p.id}|">
-                                        <input type="hidden" name="cart.id" th:value="${cart.id}" />
-                                        <input type="hidden" name="product.id" th:value="${p.id}" />
-                                        <input type="number" name="quantity" min="1" value="1" required />
-                                    </form>
-                                </td>
-                                <td>
-                                    <button type="submit" class="btn btn-small" th:attr="form=|addProd_${p.id}|">Dodaj</button>
-                                </td>
-                            </tr>
-                            <tr th:each="s : ${allStackPositions}">
-                                <td th:text="${s.id}">1</td>
-                                <td th:text="${s.name}">Pozycja</td>
-                                <td th:text="${s.description}">Opis</td>
-                                <td>
-                                    <form th:action="@{/carts/items/save}" method="post" th:id="|addStock_${s.id}|">
-                                        <input type="hidden" name="cart.id" th:value="${cart.id}" />
-                                        <input type="hidden" name="stockPosition.id" th:value="${s.id}" />
-                                        <input type="number" name="quantity" min="1" value="1" required />
-                                    </form>
-                                </td>
-                                <td>
-                                    <button type="submit" class="btn btn-small" th:attr="form=|addStock_${s.id}|">Dodaj</button>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                <div class="form-row">
+                    <label>Opis
+                        <textarea th:field="*{description}" rows="3" maxlength="2000"></textarea>
+                    </label>
                 </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Zapisz</button>
+                </div>
+            </form>
+        </div>
+        <div class="card">
+            <div class="table-header">
+                <label class="table-title">Produkty/Narzędzia w koszyku</label>
+                <input type="search"
+                       class="table-search"
+                       placeholder="Szukaj..."
+                       data-target-table="#inCartsTable">
             </div>
-        </section>
-</main>
+            <div class="table-wrapper">
+                <table id="inCartsTable" th:if="${!#lists.isEmpty(cart.items)}" class="table">
+                    <thead>
+                    <tr>
+                        <th>L.P.</th>
+                        <th>Typ</th>
+                        <th>Pozycja magazynowa</th>
+                        <th>Nazwa</th>
+                        <th>Ilość</th>
+                        <th>Akcja</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="ci, i : ${cart.items}">
+                        <td th:text="${i.count}">1</td>
+                        <td th:text="${ci.product != null ? 'Produkt' : 'StockPosition'}">Typ</td>
+                        <td>
+                            <span th:if="${ci.product != null}" th:text="${ci.product.position}">Produkt</span>
+                            <span th:if="${ci.stockPosition != null}" th:text="${ci.stockPosition.position}">Pozycja</span>
+                        </td>
+                        <td>
+                            <span th:if="${ci.product != null}" th:text="${ci.product.name}">Produkt</span>
+                            <span th:if="${ci.stockPosition != null}" th:text="${ci.stockPosition.name}">Pozycja</span>
+                        </td>
+                        <td>
+                            <span th:if="${ci.product != null}" th:text="${ci.product.description}">Produkt</span>
+                            <span th:if="${ci.stockPosition != null}" th:text="${ci.stockPosition.description}">Pozycja</span>
+                        </td>
+                        <td th:text="${ci.quantity}">1</td>
+                        <td>
+                            <form th:action="@{/carts/items/delete/{id}(id=${ci.id})}" method="post">
+                                <input type="hidden" name="cartId" th:value="${cart.id}" />
+                                <button type="submit" class="btn btn-danger btn-small">Usuń</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(cart.items)}">
+                        <td colspan="4">Koszyk jest pusty.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="section-box span-2" th:if="${cart.id} != null">
+        <div class="table-header">
+            <label class="table-title">Produkty/Narzędzia</label>
+            <input type="search"
+                   class="table-search"
+                   placeholder="Szukaj..."
+                   data-target-table="#onCartsTable">
+        </div>
+        <div class="table-wrapper">
+            <table id="onCartsTable" class="table">
+                <thead>
+                <tr>
+                    <td>L.P.</td>
+                    <th>Pozycja magazynowa</th>
+                    <th>Nazwa</th>
+                    <th>Opis</th>
+                    <th>Ilość</th>
+                    <th>Akcja</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="p, i: ${allProduct}">
+                    <td th:text="${i.count}">1</td>
+                    <td th:text="${p.position}">P-001</td>
+                    <td th:text="${p.name}">Nazwa</td>
+                    <td th:text="${p.description}">Opis</td>
+                    <td>
+                        <form th:action="@{/carts/items/save}" method="post" th:id="|addProd_${p.id}|">
+                            <input type="hidden" name="cart.id" th:value="${cart.id}" />
+                            <input type="hidden" name="product.id" th:value="${p.id}" />
+                            <input type="number" name="quantity" min="1" value="1" required />
+                        </form>
+                    </td>
+                    <td>
+                        <button type="submit" class="btn btn-small" th:attr="form=|addProd_${p.id}|">Dodaj</button>
+                    </td>
+                </tr>
+                <tr th:each="s : ${allStackPositions}">
+                    <td th:text="${s.id}">1</td>
+                    <td th:text="${s.name}">Pozycja</td>
+                    <td th:text="${s.description}">Opis</td>
+                    <td>
+                        <form th:action="@{/carts/items/save}" method="post" th:id="|addStock_${s.id}|">
+                            <input type="hidden" name="cart.id" th:value="${cart.id}" />
+                            <input type="hidden" name="stockPosition.id" th:value="${s.id}" />
+                            <input type="number" name="quantity" min="1" value="1" required />
+                        </form>
+                    </td>
+                    <td>
+                        <button type="submit" class="btn btn-small" th:attr="form=|addStock_${s.id}|">Dodaj</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+
+
 
 <script th:src="@{/js/general.js}"></script>
 </body>

@@ -5,16 +5,10 @@ import java.util.Map;
 
 public interface ProductEventService {
     List<ProductEvent> getProductEventsByProduct(Integer productId);
-    ProductEvent getProductEventById(Integer id);
     ProductEvent saveProductEvent(ProductEvent productEvent);
-    Map<Integer, Long> getProductCountInWarehouse();
-    Map<Integer, Long> getProductCountInWarehouseAndCar();
-    Map<Integer, Long> getProductCountInCar(Integer carId);
-
-    void saveBulkFromCarEvents(Integer carId,
-                               Map<String, String> allParams,
-                               String type,
-                               String comment);
+    Map<Integer, Long> getAllProductCountInWarehouse();
+    Map<Integer, Long> getAllProductCountInWarehouseAndCar();
+    Map<Integer, Long> getAllProductCountInCar(Integer carId);
     List<ProductEvent> findUsedForTask(Integer taskId);
 
 }

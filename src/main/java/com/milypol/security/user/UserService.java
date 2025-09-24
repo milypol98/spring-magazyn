@@ -1,5 +1,6 @@
 package com.milypol.security.user;
 
+import jakarta.validation.Valid;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
@@ -7,9 +8,14 @@ import java.util.List;
 public interface UserService {
     User getUserById(Integer id);
     User save(User user);
-    User updateUser(Integer id, User form, String newPassword, PasswordEncoder passwordEncoder);
+    void register(RegistrationRequest request);
     List<User> getAllUsers();
-
-    // NOWE: pobranie użytkownika po email/username
     User getByEmail(String email);
+    UpdateRequest getUserForUpdate(Integer id);
+    UpdateAdminRequest getUserForAdminUpdate(Integer id);
+    void updateUserByAdmin(Integer id, @Valid UpdateAdminRequest request);
+    void updateUserProfile(String username, @Valid UpdateRequest request);
 }
+
+
+

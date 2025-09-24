@@ -4,6 +4,7 @@ import com.milypol.security.user.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.*;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -11,6 +12,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @RequiredArgsConstructor
+@EnableMethodSecurity
 public class SecurityConfiguration {
 
     private final CustomUserDetailsService userDetailsService;
@@ -51,11 +53,15 @@ public class SecurityConfiguration {
                                 "/images/**",
                                 "/h2-console/**"
                         ).permitAll()
-                        .requestMatchers("/warehouses/**").hasAuthority("ADMIN") // Dostęp tylko dla roli ADMIN
+                        .requestMatchers(
+                                "/register",
+                                "/users",
+                                "/users/edit/{id}"
+                        ).hasAuthority("ROLE_ADMIN")
                         .anyRequest().authenticated()
                 )
 
-                // Formularz logowania
+                // Formularz logowaniaw
                 .formLogin(form -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/perform_login")

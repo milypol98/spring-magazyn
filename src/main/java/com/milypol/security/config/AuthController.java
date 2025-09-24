@@ -1,8 +1,9 @@
 package com.milypol.security.config;
 import com.milypol.security.user.RegistrationRequest;
-import com.milypol.security.user.RegistrationService;
+import com.milypol.security.user.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -12,38 +13,37 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final RegistrationService registrationService;
+    private final UserService userService;
 
     @GetMapping("/")
     public String getHomePage() {
         return "home";
     }
-    // GET /register – wyświetlenie formularza rejestracji
+
     @GetMapping("/register")
     public String showRegistrationForm(Model model) {
         model.addAttribute("registrationRequest", new RegistrationRequest());
-        return "register"; // templates/register.html
+        return "users/add";
     }
 
-    // POST /register – przetwarzanie rejestracji
     @PostMapping("/register")
+    @PreAuthorize("hasRole('ADMIN')")
     public String processRegistration(
             @ModelAttribute("registrationRequest") @Valid RegistrationRequest request,
             BindingResult bindingResult,
             Model model
     ) {
         if (bindingResult.hasErrors()) {
-            // Błędy walidacji (np. niepoprawny e-mail, zbyt krótkie hasło itp.)
-            return "register";
+            return "users/add";
         }
+
         try {
-            registrationService.register(request);
+            userService.register(request);
         } catch (RuntimeException e) {
-            model.addAttribute("registrationError", e.getMessage());
-            return "register";
+            model.addAttribute("formError", e.getMessage());
+            return "users/add";
         }
-        // Po poprawnej rejestracji przekierowujemy do logowania z informacją
-        return "redirect:/login?registered=true";
+        return "redirect:/users?registered=true";
     }
 
     // GET /login – wyświetlenie formularza logowania
@@ -59,9 +59,6 @@ public class AuthController {
         }
         if (logout != null) {
             model.addAttribute("logoutMsg", "Zostałeś wylogowany pomyślnie.");
-        }
-        if (registered != null) {
-            model.addAttribute("registeredMsg", "Rejestracja zakończona sukcesem. Możesz się teraz zalogować.");
         }
         return "login"; // templates/login.html
     }

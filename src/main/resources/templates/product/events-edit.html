@@ -19,7 +19,9 @@
         <h1 class="page-title">Formularz</h1>
     </div>
 </header>
-
+<section th:if="${error}" class="flash">
+    <span th:text="${error}">Blenda ilosc. Ilosc na stanie jest mniejsza niz transfer</span>
+</section>
 <section class="form-container">
     <form th:action="@{'/events/save'}" th:object="${productEvent}" method="post" id="eventForm">
         <input type="hidden" th:field="*{id}" />
@@ -47,18 +49,11 @@
             <label for="eventType">Typ <span class="req">*</span></label>
             <select id="eventType" th:field="*{eventType}" required>
                 <option value="" disabled selected>-- wybierz typ zdarzenia --</option>
-                <option th:each="t : ${eventTypes}" th:value="${t}" th:text="${t}"></option>
+                <option th:each="t : ${eventTypes}" th:if="${t.name() != 'USED'}" th:value="${t}" th:text="${t}"></option>
             </select>
             <div class="field-hint" th:if="${#fields.hasErrors('eventType')}" th:errors="*{eventType}">Błąd typu zdarzenia</div>
-        </div>
-
-        <div class="form-row" id="grp-fromType">
-            <label for="fromType">Źródło (From)</label>
-            <select id="fromType" th:field="*{fromLocationType}">
-                <option value="" disabled selected>-- wybierz typ źródła --</option>
-                <option th:each="l : ${locationTypes}" th:value="${l}" th:text="${l}"></option>
-            </select>
-            <div class="field-hint" th:if="${#fields.hasErrors('fromLocationType')}" th:errors="*{fromLocationType}">Błąd typu źródła</div>
+            <input id="toType" type="hidden" th:field="*{toLocationType}" value="" />
+            <input id="fromType" type="hidden" th:field="*{fromLocationType}" value="" />
         </div>
 
         <div class="form-row" id="grp-fromCar">
@@ -71,24 +66,6 @@
             <div class="field-hint" th:if="${#fields.hasErrors('fromLocationCode')}" th:errors="*{fromLocationCode}">Błąd lokalizacji źródłowej</div>
         </div>
 
-        <div class="form-row" id="grp-fromTask">
-            <label for="fromTask">Zadanie źródłowe</label>
-            <select id="fromTask" th:field="*{fromLocationCode}">
-                <option value="" disabled selected>-- wybierz zadanie --</option>
-                <option th:each="t : ${tasks}" th:value="${t.id}" th:text="${t.name}"></option>
-            </select>
-            <div class="field-hint" th:if="${#fields.hasErrors('fromLocationCode')}" th:errors="*{fromLocationCode}">Błąd lokalizacji źródłowej</div>
-        </div>
-
-
-        <div class="form-row" id="grp-toType">
-            <label for="toType">Cel (To)</label>
-            <select id="toType" th:field="*{toLocationType}">
-                <option value="" disabled selected>-- wybierz typ celu --</option>
-                <option th:each="l : ${locationTypes}" th:value="${l}" th:text="${l}"></option>
-            </select>
-            <div class="field-hint" th:if="${#fields.hasErrors('toLocationType')}" th:errors="*{toLocationType}">Błąd typu celu</div>
-        </div>
 
         <div class="form-row" id="grp-toCar">
             <label for="toCar">Auto docelowe</label>
@@ -98,122 +75,15 @@
                         th:text="${c.name + ' | ' + (c.registration ?: '')}"></option>
             </select>
             <div class="field-hint" th:if="${#fields.hasErrors('toLocationCode')}" th:errors="*{toLocationCode}">Błąd lokalizacji docelowej</div>
-        </div>
 
-        <div class="form-row" id="grp-toTask">
-            <label for="toTask">Zadanie docelowe</label>
-            <select id="toTask" th:field="*{toLocationCode}">
-                <option value="" disabled selected>-- wybierz zadanie --</option>
-                <option th:each="t : ${tasks}" th:value="${t.id}" th:text="${t.name}"></option>
-            </select>
-            <div class="field-hint" th:if="${#fields.hasErrors('toLocationCode')}" th:errors="*{toLocationCode}">Błąd lokalizacji docelowej</div>
         </div>
-
 
         <div class="form-row">
             <button type="submit" class="submit-btn">Zapisz</button>
         </div>
     </form>
 </section>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-
-        // --- Referencje do elementów formularza ---
-        const eventTypeSelect = document.getElementById('eventType');
-
-        // Grupy pól
-        const grpFromType = document.getElementById('grp-fromType');
-        const grpFromCar = document.getElementById('grp-fromCar');
-        const grpFromTask = document.getElementById('grp-fromTask');
-        const grpToType = document.getElementById('grp-toType');
-        const grpToCar = document.getElementById('grp-toCar');
-        const grpToTask = document.getElementById('grp-toTask');
-        const allLocationGroups = [
-            grpFromType, grpFromCar, grpFromTask,
-            grpToType, grpToCar, grpToTask
-        ];
-
-        // Pola select
-        const fromTypeSelect = document.getElementById('fromType');
-        const fromCarSelect = document.getElementById('fromCar');
-        const fromTaskSelect = document.getElementById('fromTask');
-        const toTypeSelect = document.getElementById('toType');
-        const toCarSelect = document.getElementById('toCar');
-        const toTaskSelect = document.getElementById('toTask');
-        const allLocationSelects = [
-            fromTypeSelect, fromCarSelect, fromTaskSelect,
-            toTypeSelect, toCarSelect, toTaskSelect
-        ];
-
-        function showGroup(groupElement) {
-            if (groupElement) groupElement.style.display = '';
-        }
-
-        /**
-         * Zarządza widocznością pól 'Auto'/'Zadanie' dla sekcji FROM.
-         */
-        function handleFromLocationChange() {
-            const fromType = fromTypeSelect.value;
-            grpFromCar.style.display = (fromType === 'CAR') ? '' : 'none';
-            grpFromTask.style.display = (fromType === 'TASK') ? '' : 'none';
-        }
-
-        /**
-         * Główna funkcja sterująca formularzem.
-         */
-        function updateFormVisibility() {
-            const selectedEvent = eventTypeSelect.value;
-
-            // ########## KLUCZOWA POPRAWKA ##########
-            // 1. Pełny i bezwarunkowy reset stanu przy każdej zmianie.
-            //    Najpierw ukrywamy wszystkie grupy...
-            allLocationGroups.forEach(group => { if(group) group.style.display = 'none' });
-            //    ...a następnie czyścimy wartości WSZYSTKICH selectów.
-            allLocationSelects.forEach(select => { if(select) select.value = '' });
-            // #####################################
-
-            // 2. Ustaw wartości i pokaż odpowiednie pola na nowo.
-            switch (selectedEvent) {
-                case 'DELIVERY': // Dostawa -> tylko Cel (TO)
-                    toTypeSelect.value = 'WAREHOUSE';
-                    break;
-
-                case 'TRANSFER': // Magazyn -> Auto
-                    fromTypeSelect.value = 'WAREHOUSE';
-                    toTypeSelect.value = 'CAR';
-                    showGroup(grpToCar);
-                    break;
-
-                case 'RETURN':   // Auto -> Magazyn
-                    fromTypeSelect.value = 'CAR';
-                    toTypeSelect.value = 'WAREHOUSE';
-                    showGroup(grpFromCar);
-                    break;
-
-                case 'TRANSFER_CAR_TO_CAR': // Auto -> Auto
-                    fromTypeSelect.value = 'CAR';
-                    toTypeSelect.value = 'CAR';
-                    showGroup(grpFromCar);
-                    showGroup(grpToCar);
-                    break;
-
-                case 'USED':   // Zużycie -> tylko Źródło (FROM)
-                case 'LOST':   // Utracone -> tylko Źródło (FROM)
-                case 'DELETE': // Usunięcie -> tylko Źródło (FROM)
-                    showGroup(grpFromType);
-                    handleFromLocationChange();
-                    break;
-            }
-        }
-
-        // --- Rejestracja event listenerów ---
-        eventTypeSelect.addEventListener('change', updateFormVisibility);
-        fromTypeSelect.addEventListener('change', handleFromLocationChange);
-
-        // --- Inicjalizacja formularza przy załadowaniu strony ---
-        updateFormVisibility();
-    });
-</script>
+<script th:src="@{/js/productEvents.js}"></script>
 <script th:src="@{/js/general.js}"></script>
 </body>
 </html>

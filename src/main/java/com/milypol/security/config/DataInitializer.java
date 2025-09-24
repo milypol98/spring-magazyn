@@ -45,7 +45,7 @@ public class DataInitializer implements CommandLineRunner {
             admin.setFirstname("Jan");
             admin.setLastName("Kowalski");
             admin.setPassword(passwordEncoder.encode("Test2025"));
-            admin.setRole(Role.ADMIN);
+            admin.setRole(Role.ROLE_ADMIN);
 
             User magazynier = new User();
 
@@ -54,7 +54,7 @@ public class DataInitializer implements CommandLineRunner {
             magazynier.setFirstname("Anna");
             magazynier.setLastName("Nowak");
             magazynier.setPassword(passwordEncoder.encode("Test2025"));
-            magazynier.setRole(Role.USER);
+            magazynier.setRole(Role.ROLE_USER);
 
             User kierowca = new User();
 
@@ -63,7 +63,7 @@ public class DataInitializer implements CommandLineRunner {
             kierowca.setFirstname("Piotr");
             kierowca.setLastName("Nowak");
             kierowca.setPassword(passwordEncoder.encode("Test2025"));
-            kierowca.setRole(Role.USER);
+            kierowca.setRole(Role.ROLE_ADMIN);
 
 
             userRepository.save(admin);

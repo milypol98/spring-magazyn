@@ -1,39 +1,5 @@
 // settings.js – logika UI dla zakładki ustawień/profilu
 (function () {
-    const tbody = document.getElementById('tasksTbody');
-    const search = document.getElementById('taskSearch');
-    const onlyInProgress = document.getElementById('onlyInProgress');
-
-    // Zadania: wyszukiwarka + filtr "w trakcie"
-    if (tbody) {
-        const rows = Array.from(tbody.querySelectorAll('tr'));
-
-        function matchesSearch(row, term) {
-            if (!term) return true;
-            const name = (row.getAttribute('data-name') || '').toLowerCase();
-            const desc = (row.getAttribute('data-desc') || '').toLowerCase();
-            return name.includes(term) || desc.includes(term);
-        }
-
-        function isInProgress(row) {
-            return row.classList.contains('row--in-progress');
-        }
-
-        function applyFilters() {
-            const term = (search?.value || '').trim().toLowerCase();
-            const onlyIP = !!onlyInProgress?.checked;
-
-            rows.forEach(row => {
-                const okSearch = matchesSearch(row, term);
-                const okIP = !onlyIP || isInProgress(row);
-                row.style.display = (okSearch && okIP) ? '' : 'none';
-            });
-        }
-
-        search?.addEventListener('input', applyFilters);
-        onlyInProgress?.addEventListener('change', applyFilters);
-        search?.addEventListener('keydown', (e) => { if (e.key === 'Enter') e.preventDefault(); });
-    }
 
     // Formularz: walidacja oraz obsługa zmiany hasła
     const form = document.querySelector('form.profile-form');

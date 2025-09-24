@@ -69,6 +69,15 @@ body {
     margin: 16px auto;
     max-width: 1200px;
 }
+.flashError {
+    background: #ffffff;
+    border: 1px solid #e44d4d;
+    color: #c11d1d;
+    padding: 10px 14px;
+    border-radius: 8px;
+    margin: 16px auto;
+    max-width: 1200px;
+}
 /* Filters / search bar (dla dynamicznej wyszukiwarki na liście) */
 .filters .filters-form .row {
     display: flex;
@@ -155,6 +164,7 @@ input[type="email"],
 input[type="url"],
 input[type="number"],
 input[type="date"],
+input[type="password"],
 textarea,
 select {
     width: 100%;
@@ -185,6 +195,7 @@ a { color: #1d4ed8; }
 a:hover { color: #1e40af; }
 .content { padding: 0 24px 24px; }
 .card {
+    margin: 10px;
     background: var(--card-bg);
     border: 1px solid var(--border);
     border-radius: var(--radius);

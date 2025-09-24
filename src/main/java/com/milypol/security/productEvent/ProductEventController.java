@@ -52,22 +52,25 @@ public class ProductEventController {
         model.addAttribute("tasks", taskService.getAllTasks());
         return "/product/events-edit";
     }
-
-
     @PostMapping("/save")
-    public String saveEventDelivery(@ModelAttribute ProductEvent productEvent, @AuthenticationPrincipal UserDetails principal){
+    public String saveProductEvent(@ModelAttribute ProductEvent productEvent, Model model, @AuthenticationPrincipal UserDetails principal) {
         productEvent.setUser(userService.getByEmail(principal.getUsername()));
         productEvent.setTimestamp(LocalDateTime.now());
-        productEventService.saveProductEvent(productEvent);
-        return "redirect:/product-positions/" + productEvent.getProduct().getId();
+        try {
+            productEventService.saveProductEvent(productEvent);
+            return "redirect:/product-positions/" + productEvent.getProduct().getId();
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("error", e.getMessage());
+            return "/product/events-edit";
+        }
     }
 
-    @PostMapping("/product-event/bulk/{carId}")
-    public String saveBulkFromCar(@PathVariable Integer carId,
-                                  @RequestParam Map<String, String> allParams,
-                                  @RequestParam("type") String type,
-                                  @RequestParam(value = "comment", required = false) String comment) {
-        productEventService.saveBulkFromCarEvents(carId, allParams, type, comment);
-        return "redirect:/cars/info/" + carId;
-    }
+//    @PostMapping("/product-event/bulk/{carId}")
+//    public String saveBulkFromCar(@PathVariable Integer carId,
+//                                  @RequestParam Map<String, String> allParams,
+//                                  @RequestParam("type") String type,
+//                                  @RequestParam(value = "comment", required = false) String comment) {
+//        productEventService.saveBulkFromCarEvents(carId, allParams, type, comment);
+//        return "redirect:/cars/info/" + carId;
+//    }
 }

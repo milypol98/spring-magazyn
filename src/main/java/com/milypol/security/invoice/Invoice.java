@@ -26,8 +26,7 @@ public class Invoice {
     @Column(name = "name", nullable = false, length = 255)
     private String name;
 
-    // Plik
-    @Column(name = "stored_file_name", nullable = false, length = 255)
+    @Column(name = "stored_file_name", length = 255)
     private String storedFileName;
 
     @Column(name = "original_file_name", length = 255)
@@ -39,10 +38,9 @@ public class Invoice {
     @Column(name = "file_size")
     private Long fileSize;
 
-    @Column(name = "uploaded_at", nullable = false)
+    @Column(name = "uploaded_at")
     private Instant uploadedAt;
 
-    // Wartości faktury
     @Column(name = "total_net", precision = 19, scale = 2)
     private BigDecimal totalNet;
 

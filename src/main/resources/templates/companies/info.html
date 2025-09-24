@@ -23,81 +23,72 @@
 <main class="content">
     <section class="card">
         <div class="details-grid">
-                <div class="detail">
-                    <div class="label">Nazwa</div>
-                    <div class="value" th:text="${#strings.defaultString(company?.name,'—')}">—</div>
-                </div>
 
-                <div class="detail">
-                    <div class="label">Telefon</div>
-                    <div class="value" th:text="${#strings.defaultString(company?.phoneNumber,'—')}">—</div>
-                </div>
+            <div class="detail">
+                <div class="label">Nazwa</div>
+                <div class="value" th:text="${#strings.defaultString(company?.name,'—')}">—</div>
+            </div>
 
-                <div class="detail">
-                    <div class="label">E-mail</div>
-                    <div class="value">
-                        <a th:if="${!#strings.isEmpty(company?.email)}"
-                           th:href="${'mailto:' + company.email}"
-                           th:text="${company.email}">—</a>
-                        <span th:if="${#strings.isEmpty(company?.email)}">—</span>
-                    </div>
-                </div>
+            <div class="detail">
+                <div class="label">Telefon</div>
+                <div class="value" th:text="${#strings.defaultString(company?.phoneNumber,'—')}">—</div>
+            </div>
 
-                <div class="detail">
-                    <div class="label">Strona WWW</div>
-                    <div class="value">
-                        <a th:if="${!#strings.isEmpty(company?.website)}"
-                           th:href="${company.website}"
-                           th:text="${company.website}"
-                           target="_blank" rel="noopener">—</a>
-                        <span th:if="${#strings.isEmpty(company?.website)}">—</span>
-                    </div>
+            <div class="detail">
+                <div class="label">E-mail</div>
+                <div class="value">
+                    <a th:if="${!#strings.isEmpty(company?.email)}"
+                       th:href="${'mailto:' + company.email}"
+                       th:text="${company.email}">—</a>
+                    <span th:if="${#strings.isEmpty(company?.email)}">—</span>
                 </div>
+            </div>
 
-                <div class="detail">
-                    <div class="label">NIP</div>
-                    <div class="value" th:text="${#strings.defaultString(company?.nip,'—')}">—</div>
+            <div class="detail">
+                <div class="label">Strona WWW</div>
+                <div class="value">
+                    <a th:if="${!#strings.isEmpty(company?.website)}"
+                       th:href="${company.website}"
+                       th:text="${company.website}"
+                       target="_blank" rel="noopener">—</a>
+                    <span th:if="${#strings.isEmpty(company?.website)}">—</span>
                 </div>
+            </div>
 
-                <div class="detail">
-                    <div class="label">REGON</div>
-                    <div class="value" th:text="${#strings.defaultString(company?.regon,'—')}">—</div>
-                </div>
+            <div class="detail">
+                <div class="label">NIP</div>
+                <div class="value" th:text="${#strings.defaultString(company?.nip,'—')}">—</div>
+            </div>
 
-                <div class="detail wide">
-                    <div class="label">Opis</div>
-                    <div class="value" th:text="${#strings.defaultString(company?.description,'—')}">—</div>
-                </div>
+            <div class="detail">
+                <div class="label">REGON</div>
+                <div class="value" th:text="${#strings.defaultString(company?.regon,'—')}">—</div>
+            </div>
 
-                <div class="detail wide">
-                    <div class="label">Adres</div>
-                    <div class="value">
-                        <div th:if="${company.address != null}">
-                            <div>
-                                <span th:text="${#strings.defaultString(company.address?.street,'')}">Ulica</span>
-                                <span th:text="${#strings.defaultString(company.address?.buildingNumber,'')}">1</span>
-                                <span th:if="${!#strings.isEmpty(company.address?.apartmentNumber)}"
-                                      th:text="${'/' + company.address.apartmentNumber}">/1</span>
-                            </div>
-                            <div>
-                                <span th:text="${#strings.defaultString(company.address?.postalCode,'')}">00-000</span>
-                                <span th:text="${#strings.defaultString(company.address?.city,'')}">Miasto</span>
-                            </div>
-                            <div th:text="${#strings.defaultString(company.address?.country,'')}">Kraj</div>
+            <div class="detail wide">
+                <div class="label">Opis</div>
+                <div class="value" th:text="${#strings.defaultString(company?.description,'—')}">—</div>
+            </div>
+
+            <div class="detail wide">
+                <div class="label">Adres</div>
+                <div class="value">
+                    <div th:if="${company.address != null}">
+                        <div>
+                            <span th:text="${#strings.defaultString(company.address?.street,'')}">Ulica</span>
+                            <span th:text="${#strings.defaultString(company.address?.buildingNumber,'')}">1</span>
+                            <span th:if="${!#strings.isEmpty(company.address?.apartmentNumber)}"
+                                  th:text="${'/' + company.address.apartmentNumber}">/1</span>
                         </div>
-                        <span th:if="${company.address == null}">—</span>
+                        <div>
+                            <span th:text="${#strings.defaultString(company.address?.postalCode,'')}">00-000</span>
+                            <span th:text="${#strings.defaultString(company.address?.city,'')}">Miasto</span>
+                        </div>
+                        <div th:text="${#strings.defaultString(company.address?.country,'')}">Kraj</div>
                     </div>
+                    <span th:if="${company.address == null}">—</span>
                 </div>
-
-                <div class="detail">
-                    <div class="label">Utworzono</div>
-                    <div class="value" th:text="${company.createdAt != null ? #temporals.format(company.createdAt,'yyyy-MM-dd HH:mm') : '—'}">—</div>
-                </div>
-
-                <div class="detail">
-                    <div class="label">Aktualizowano</div>
-                    <div class="value" th:text="${company.updatedAt != null ? #temporals.format(company.updatedAt,'yyyy-MM-dd HH:mm') : '—'}">—</div>
-                </div>
+            </div>
         </div>
     </section>
     <section class="card">

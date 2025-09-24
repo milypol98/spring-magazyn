@@ -23,55 +23,6 @@
     <span th:text="${message}">Operacja zakończona pomyślnie</span>
 </section>
 
-<!--<section class="filters">-->
-<!--    <form th:action="@{/tasks}" method="get" class="filters-form">-->
-<!--        <div class="row">-->
-<!--            <label>-->
-<!--                Szukaj po nazwie-->
-<!--                <input type="text" name="q" th:value="${q}" placeholder="nazwa zadania..." />-->
-<!--            </label>-->
-<!--            <label>-->
-<!--                Status-->
-<!--                <select name="status">-->
-<!--                    <option value="">— dowolny —</option>-->
-<!--                    <option th:each="s: ${statusValues}"-->
-<!--                            th:value="${s}"-->
-<!--                            th:selected="${status} == ${s}"-->
-<!--                            th:text="${s}">OPEN</option>-->
-<!--                </select>-->
-<!--            </label>-->
-<!--            <label>-->
-<!--                Użytkownik-->
-<!--                <select name="userId">-->
-<!--                    <option value="">— dowolny —</option>-->
-<!--                    <option th:each="u: ${allUsers}"-->
-<!--                            th:value="${u.id}"-->
-<!--                            th:selected="${userId} == ${u.id}"-->
-<!--                            th:text="${u.firstname}">Jan Kowalski</option>-->
-<!--                </select>-->
-<!--            </label>-->
-<!--            <label>-->
-<!--                Data od-->
-<!--                <input type="date" name="from" th:value="${from}" />-->
-<!--            </label>-->
-<!--            <label>-->
-<!--                Data do-->
-<!--                <input type="date" name="to" th:value="${to}" />-->
-<!--            </label>-->
-<!--            <label>-->
-<!--                Na stronę-->
-<!--                <select name="size">-->
-<!--                    <option th:selected="${size} == 10" th:value="10">10</option>-->
-<!--                    <option th:selected="${size} == 20" th:value="20">20</option>-->
-<!--                    <option th:selected="${size} == 50" th:value="50">50</option>-->
-<!--                </select>-->
-<!--            </label>-->
-
-<!--            <button type="submit" class="btn btn-primary">Filtruj</button>-->
-<!--            <a th:href="@{/tasks}" class="btn btn-secondary">Wyczyść</a>-->
-<!--        </div>-->
-<!--    </form>-->
-<!--</section>-->
 <main class="content">
     <section class="card">
         <div class="table-header">
@@ -96,7 +47,11 @@
                     <td th:text="${t.name}"></td>
                     <td th:text="${t.dateFrom}">2025-01-01</td>
                     <td th:text="${t.dateTo}">2025-01-10</td>
-                    <td th:text="${t.status}">OPEN</td>
+                    <td>
+                        <span class="status-badge"
+                              th:text="${t.status != null ? t.status.displayName : 'UNKNOWN'}">
+                        </span>
+                    </td>
                     <td>
                 <span th:each="u : ${t.users}"
                       th:text="${u.firstname +' '+ u.lastName}">user</span>

@@ -12,7 +12,6 @@
 <main class="login-wrapper">
     <section class="login-card">
         <header class="login-header">
-            <img class="logo" src="/images/logo.png" alt="Logo" />
             <h1>Witaj ponownie</h1>
             <p class="subtitle">Zaloguj się, aby przejść do panelu</p>
         </header>
@@ -25,10 +24,6 @@
             <div th:if="${logoutMsg}" class="message success">
                 <span class="icon">✅</span>
                 <p th:text="${logoutMsg}">Zostałeś wylogowany.</p>
-            </div>
-            <div th:if="${registeredMsg}" class="message success">
-                <span class="icon">✅</span>
-                <p th:text="${registeredMsg}">Rejestracja zakończona. Zaloguj się.</p>
             </div>
         </div>
 
@@ -68,12 +63,6 @@
             </div>
         </form>
 
-<!--        <footer class="login-footer">-->
-<!--            <p class="register-link">-->
-<!--                Nie masz konta?-->
-<!--                <a th:href="@{/register}" class="link">Zarejestruj się</a>-->
-<!--            </p>-->
-<!--        </footer>-->
     </section>
     <p class="copyright">© <span id="yearNow"></span> — Panel operacyjny</p>
 </main>

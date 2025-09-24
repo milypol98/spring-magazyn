@@ -50,12 +50,6 @@ public class CompanyServiceImpl implements CompanyService {
         return repository.findAll();
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public List<Company> searchByName(String query) {
-        if (query == null || query.isBlank()) return repository.findAll();
-        return repository.findByNameContainingIgnoreCase(query.trim());
-    }
 
     @Override
     public void deleteById(Long id) {
