@@ -47,7 +47,7 @@ public class Car {
     @Pattern(regexp = "^[A-HJ-NPR-Z0-9]{17}$", message = "{car.vin.pattern}")
     private String vin;
 
-    @Pattern(regexp = "^[A-Z0-9\\-]{4,12}$", message = "{car.registration.pattern}")
+    @Pattern(regexp = "^[A-Z0-9\\- ]{4,12}$", message = "{car.registration.pattern}")
     private String registration;
 
     @Min(value = 0, message = "{car.course.min}")
@@ -55,7 +55,6 @@ public class Car {
     private Integer course;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @PastOrPresent(message = "{car.courseDate.pastOrPresent}")
     private LocalDate courseDate;
 
     @Min(value = 0, message = "{car.timingSystemIntervalKm.min}")
@@ -65,26 +64,49 @@ public class Car {
     @Min(value = 0, message = "{car.timingSystemCourse.min}")
     @Max(value = 3000000, message = "{car.timingSystemCourse.max}")
     private Integer timingSystemCourse;
-
+    private Integer timingSystemKmWarning;
+    private Integer timingSystemKmCritical;
     @Min(value = 0, message = "{car.oilChangeCourse.min}")
     @Max(value = 3000000, message = "{car.oilChangeCourse.max}")
     private Integer oilChangeCourse;
-
     @Min(value = 0, message = "{car.oilChangeIntervalKm.min}")
     @Max(value = 1000000, message = "{car.oilChangeIntervalKm.max}")
     private Integer oilChangeIntervalKm;
+    private Integer oilChangeIntervalKmWarning;
+    private Integer oilChangeIntervalKmCritical;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @PastOrPresent(message = "{car.year.pastOrPresent}")
     private LocalDate year;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @FutureOrPresent(message = "{car.review.futureOrPresent}")
     private LocalDate review;
+    private Integer reviewWarningDay;
+    private Integer reviewCriticalDay;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate insured;
+    private Integer insuredWarningDay;
+    private Integer insuredCriticalDay;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate tiresCheck;
+    private Integer tiresCheckWarningDay;
+    private Integer tiresCheckCriticalDay;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @FutureOrPresent(message = "{car.insured.futureOrPresent}")
-    private LocalDate insured;
+    private LocalDate reminderDate;
+    @Size(max = 100, message = "{car.description.size}")
+    private String reminderDateDescription;
+    private Integer reminderDateWarningDay;
+    private Integer reminderDateCriticalDay;
+    @Min(value = 0)
+    @Max(value = 1000000)
+    private Integer reminderKm;
+    @Size(max = 100, message = "{car.description.size}")
+    private String reminderKmDescription;
+    private Integer reminderKmWarning;
+    private Integer reminderKmCritical;
+
+    private String backgroundColor;
 
     @OneToMany(mappedBy = "car", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
@@ -99,4 +121,19 @@ public class Car {
             inverseJoinColumns = @JoinColumn(name = "cart_id")
     )
     private List<Cart> cart;
+
+    @Transient
+    private Integer initialCourse;
+
+    @PostLoad
+    private void storeInitialState() {
+        this.initialCourse = this.course;
+    }
+
+    @PreUpdate
+    public void onUpdate() {
+        if (initialCourse == null || !initialCourse.equals(this.course)) {
+            this.courseDate = LocalDate.now();
+        }
+    }
 }

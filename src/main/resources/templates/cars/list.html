@@ -35,71 +35,98 @@
             <table id="carsTable" class="table table-sortable">
                 <thead>
                 <tr>
-                    <th data-sort="text">Rejestracja</th>
-                    <th data-sort="text">Właściciel</th>
-                    <th data-sort="text">Miejsce</th>
-                    <th data-sort="text">Użytkownik</th>
-                    <th data-sort="text">Marka</th>
-                    <th data-sort="text">Model</th>
-                    <th data-sort="date">Ubezpieczenie do</th>
-                    <th data-sort="number">Ubezpieczenie</th>
-                    <th data-sort="date">Przegląd do</th>
-                    <th data-sort="number">Przegląd</th>
-                    <th data-sort="number">Przebieg</th>
-                    <th data-sort="date">Przebieg z dnia</th>
-                    <th data-sort="number">Wymiana oleju</th>
-                    <th data-sort="number">Wymiana rozrządu</th>
-                    <th data-sort="text">Akcje</th>
+                    <th>L.P.</th>
+                    <th>Właściciel</th>
+                    <th>Rejestracja</th>
+                    <th>Miejsce</th>
+                    <th>Użytkownik</th>
+                    <th>Przebieg</th>
+                    <th>Data przebiegu</th>
+                    <th>Marka</th>
+                    <th>Model</th>
+                    <th>Akcje</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="car : ${cars}"
-    th:attr="
-        data-oil-course=${car.oilChangeCourse},
-        data-oil-int=${car.oilChangeIntervalKm},
-        data-timing-course=${car.timingSystemCourse},
-        data-timing-int=${car.timingSystemIntervalKm}">
-    <td th:text="${car.registration}">WX 12345</td>
-    <td th:text="${car.owner}">Właściciel</td>
-
-    <!-- Dane bieżącego zadania z map prostych Stringów -->
-    <td th:text="${currentTaskNameByCarId[car.id]}">—</td>
-    <td th:text="${currentTaskUsersByCarId[car.id]}">—</td>
-
-    <td th:text="${car.brand}">Marka</td>
-    <td th:text="${car.model}">Model</td>
-    <td class="insured-date" th:text="${car.insured}">2025-12-31</td>
-    <td class="insurance-days sev-neutral">—</td>
-    <td class="review-date" th:text="${car.review}">2025-12-31</td>
-    <td class="review-days sev-neutral">—</td>
-
-    <!-- ważne: ta komórka ma klasę .course, JS czyta z niej bieżący przebieg -->
-    <td class="course" th:text="${car.course}">123000</td>
-
-    <td th:text="${car.courseDate}">2025-01-01</td>
-    <td class="oil-remaining sev-neutral">—</td>
-    <td class="timing-remaining sev-neutral">—</td>
-
-    <td class="actions">
-        <a class="btn  btn-small" th:href="@{/cars/item/{id}(id=${car.id})}">Załadunek</a>
-        <a class="btn  btn-small" th:href="@{/cars/edit/{id}(id=${car.id})}">Edycja</a>
-        <a class="btn  btn-small" th:href="@{/cars/info/{id}(id=${car.id})}">Szczegóły</a>
-        <form th:action="@{/cars/delete/{id}(id=${car.id})}" method="post" class="inline-form" data-confirm="Usunąć to auto?">
-            <button type="submit" class="btn btn-danger btn-small">Usuń</button>
-        </form>
-    </td>
-</tr>
-                <tr th:if="${#lists.isEmpty(cars)}">
-                    <td colspan="15">Brak pojazdów.</td>
+                <tr class="critical" th:if="${!#lists.isEmpty(criticalCars)}">
+                    <td colspan="15" >Pojazdy wymagające natychmiastowego sprawdzenia !!!</td>
+                </tr>
+                <tr th:each="car, i : ${criticalCars}" >
+                    <td th:text="${i.count}">1</td>
+                    <td th:text="${car.owner}" th:style="'background-color:' + ${car.backgroundColor}">Właściciel</td>
+                    <td th:text="${car.registration}"></td>
+                    <td th:text="${currentTaskNameByCarId[car.id]}">—</td>
+                    <td th:text="${currentTaskUsersByCarId[car.id]}">—</td>
+                    <td th:text="${car.course}"></td>
+                    <td th:text="${car.courseDate}"></td>
+                    <td th:text="${car.brand}">Marka</td>
+                    <td th:text="${car.model}">Model</td>
+                    <td class="actions">
+                        <!--        <a class="btn  btn-small" th:href="@{/cars/item/{id}(id=${car.id})}">Załadunek</a>-->
+                        <a class="btn  btn-small" th:href="@{/cars/update/{id}(id=${car.id})}">Aktualizuj</a>
+                        <a class="btn  btn-small" th:href="@{/cars/edit/{id}(id=${car.id})}">Edycja</a>
+                        <a class="btn  btn-small" th:href="@{/cars/info/{id}(id=${car.id})}">Szczegóły</a>
+                        <form th:action="@{/cars/delete/{id}(id=${car.id})}" method="post" class="inline-form" data-confirm="Usunąć to auto?">
+                            <button type="submit" class="btn btn-danger btn-small">Usuń</button>
+                        </form>
+                    </td>
+                </tr>
+                <tr class="warning" th:if="${!#lists.isEmpty(warningCars)}">
+                    <td colspan="15">Pojazdy wymagające uwagi</td>
+                </tr>
+                <tr th:each="car, i : ${warningCars}" >
+                    <td th:text="${i.count}">1</td>
+                    <td th:text="${car.owner}" th:style="'background-color:' + ${car.backgroundColor}">Właściciel</td>
+                    <td th:text="${car.registration}"></td>
+                    <td th:text="${currentTaskNameByCarId[car.id]}">—</td>
+                    <td th:text="${currentTaskUsersByCarId[car.id]}">—</td>
+                    <td th:text="${car.course}"></td>
+                    <td th:text="${car.courseDate}"></td>
+                    <td th:text="${car.brand}">Marka</td>
+                    <td th:text="${car.model}">Model</td>
+                    <td class="actions">
+                        <!--        <a class="btn  btn-small" th:href="@{/cars/item/{id}(id=${car.id})}">Załadunek</a>-->
+                        <a class="btn  btn-small" th:href="@{/cars/update/{id}(id=${car.id})}">Aktualizuj</a>
+                        <a class="btn  btn-small" th:href="@{/cars/edit/{id}(id=${car.id})}">Edycja</a>
+                        <a class="btn  btn-small" th:href="@{/cars/info/{id}(id=${car.id})}">Szczegóły</a>
+                        <form th:action="@{/cars/delete/{id}(id=${car.id})}" method="post" class="inline-form" data-confirm="Usunąć to auto?">
+                            <button type="submit" class="btn btn-danger btn-small">Usuń</button>
+                        </form>
+                    </td>
+                </tr>
+                <tr class="normal" th:if="${!#lists.isEmpty(normalCars)}">
+                    <td colspan="15" >Pozzostałe pojazdy</td>
+                </tr>
+                <tr th:each="car, i : ${normalCars}" >
+                    <td th:text="${i.count}">1</td>
+                    <td th:text="${car.owner}" th:style="'background-color:' + ${car.backgroundColor}">Właściciel</td>
+                    <td th:text="${car.registration}"></td>
+                    <td th:text="${currentTaskNameByCarId[car.id]}">—</td>
+                    <td th:text="${currentTaskUsersByCarId[car.id]}">—</td>
+                    <td>
+                        <input class="car-course" type="number" style="display: inline-block; width: 150px;" th:value="${car.course}" th:data-car-id="${car.id}">
+                        <span style="display: inline-block; margin-left: 4px;">KM</span>
+                    </td>
+                    <td th:text="${car.courseDate}"></td>
+                    <td th:text="${car.brand}">Marka</td>
+                    <td th:text="${car.model}">Model</td>
+                    <td class="actions">
+                        <!--        <a class="btn  btn-small" th:href="@{/cars/item/{id}(id=${car.id})}">Załadunek</a>-->
+                        <a class="btn  btn-small" th:href="@{/cars/update/{id}(id=${car.id})}">Aktualizuj</a>
+                        <a class="btn  btn-small" th:href="@{/cars/edit/{id}(id=${car.id})}">Edycja</a>
+                        <a class="btn  btn-small" th:href="@{/cars/info/{id}(id=${car.id})}">Szczegóły</a>
+                        <form th:action="@{/cars/delete/{id}(id=${car.id})}" method="post" class="inline-form" data-confirm="Usunąć to auto?">
+                            <button type="submit" class="btn btn-danger btn-small">Usuń</button>
+                        </form>
+                    </td>
                 </tr>
                 </tbody>
             </table>
         </div>
     </section>
 </main>
-
-<script th:src="@{/js/general.js}"></script>
 <script th:src="@{/js/cars.js}"></script>
 
+<script th:src="@{/js/general.js}"></script>
 </body>
 </html>

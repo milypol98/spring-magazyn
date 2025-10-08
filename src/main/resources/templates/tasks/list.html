@@ -38,24 +38,27 @@
                     <th>Do</th>
                     <th>Status</th>
                     <th>Użytkownicy</th>
+                    <th>Auto</th>
                     <th>Akcje</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="t, i: ${tasks}">
-                    <td th:text="${i.count}">1</td>
+                    <td th:text="${i.count}"></td>
                     <td th:text="${t.name}"></td>
-                    <td th:text="${t.dateFrom}">2025-01-01</td>
-                    <td th:text="${t.dateTo}">2025-01-10</td>
+                    <td th:text="${t.dateFrom}"></td>
+                    <td th:text="${t.dateTo}"></td>
                     <td>
                         <span class="status-badge"
                               th:text="${t.status != null ? t.status.displayName : 'UNKNOWN'}">
                         </span>
                     </td>
                     <td>
-                <span th:each="u : ${t.users}"
-                      th:text="${u.firstname +' '+ u.lastName}">user</span>
+                        <span th:each="u, iterStat : ${t.users}">
+                            <span th:text="${u.firstname + ' ' + u.lastName}"></span><span th:unless="${iterStat.last}">, </span>
+                        </span>
                     </td>
+                    <td th:text="${t.car.brand + ' ' + t.car.model + ', ' + t.car.registration}"></td>
                     <td class="actions">
                         <a class="btn btn-small" th:href="@{|/tasks/${t.id}|}">Szczegóły</a>
                         <a class="btn btn-small" th:href="@{|/tasks/edit/${t.id}|}">Edytuj</a>
@@ -69,19 +72,6 @@
                 </tr>
                 </tbody>
             </table>
-<!--            <div class="pagination" th:if="${page != null and page.totalPages > 1}">-->
-<!--                <a th:href="@{|/tasks?page=${page.number - 1}&size=${page.size}-->
-<!--            &q=${q}&status=${status}&userId=${userId}&from=${from}&to=${to}|}"-->
-<!--                   th:classappend="${page.first} ? 'disabled' : ''"-->
-<!--                   class="page-btn">« Poprzednia</a>-->
-
-<!--                <span>Strona <span th:text="${page.number + 1}">1</span> z <span th:text="${page.totalPages}">3</span></span>-->
-
-<!--                <a th:href="@{|/tasks?page=${page.number + 1}&size=${page.size}-->
-<!--            &q=${q}&status=${status}&userId=${userId}&from=${from}&to=${to}|}"-->
-<!--                   th:classappend="${page.last} ? 'disabled' : ''"-->
-<!--                   class="page-btn">Następna »</a>-->
-<!--            </div>-->
         </div>
     </section>
 </main>

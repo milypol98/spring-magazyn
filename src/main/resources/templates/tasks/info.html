@@ -23,6 +23,52 @@
 </header>
 
 <main class="content">
+    <section class="card" th:data-task-id="${task.id}">
+        <div th:if="${task.status.name() == 'BEFORE_TASK'}">
+            <div class="subgrid-3">
+                <div class="field">
+                    <h3>Rozpocznij zadanie i podaj przebieg początkowy:</h3>
+                </div>
+                <div class="field">
+                    <form th:action="@{/tasks/update-status}" method="post" th:object="${taskDto}">
+                        <input type="hidden" th:field="*{id}" />
+                        <input type="hidden" name="status" value="IN_PROGRESS" />
+                        <input type="hidden" th:field="*{carId}"  />
+                        <label th:text="'Przebieg dla ' + ${task.car.registration} + ':'"></label>
+                        <input type="number" th:field="*{courseBefore}" th:min="${task.car.course ?: 0}" th:max="${(task.car.course ?: 0) + 9999}" placeholder="Przebieg przed zadaniem" required />
+                        <button type="submit" class="start-task-btn">Rozpocznij</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${task.status.name() == 'IN_PROGRESS'}">
+            <div class="subgrid-3">
+                <div class="field">
+                    <h3>Zakończ zadanie i podaj przebieg końcowy:</h3>
+                </div>
+                <div class="field">
+                    <form th:action="@{/tasks/update-status}" method="post" th:object="${taskDto}">
+
+                        <input type="hidden" th:field="*{id}"/>
+                        <input type="hidden" name="status" value="COMPLETED" />
+                        <input type="hidden" th:field="*{carId}" />
+                        <textarea th:field="*{comment}" placeholder="Opisz wykonane zadanie..."></textarea>
+                        <label th:text="'Przebieg dla ' + ${task.car.registration} + ':'"></label>
+                        <input type="number" th:field="*{courseAfter}" th:min="${task.car.course ?: 0}" th:max="${(task.car.course ?: 0) + 9999}" placeholder="Przebieg po zadaniu" required />
+                        <button type="submit" class="end-task-btn">Zakończ</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${task.status.name() == 'COMPLETED'}" class="completed-section">
+            <p><strong>Opis wykonania:</strong></p>
+            <p th:text="${task.comment}"></p>
+            <p><strong>Przebieg przed:</strong> <span th:text="${task.courseBefore}"></span></p>
+            <p><strong>Przebieg po:</strong> <span th:text="${task.courseAfter}"></span></p>
+        </div>
+    </section>
 
     <section class="card">
         <div class="details-grid">
@@ -44,7 +90,7 @@
             </div>
             <div class="detail">
                 <div class="label">Status</div>
-                <div class="value" th:text="${task.status}">OPEN</div>
+                <div class="value" th:text="${task.status != null ? task.status.displayName : 'UNKNOWN'}"></div>
             </div>
             <div class="detail">
                 <div class="label">Użytkownicy</div>
@@ -56,8 +102,8 @@
             <div class="detail">
                 <div class="label">Auta</div>
                 <div class="value">
-                    <span th:each="c : ${task.cars}" class="chip" th:text="${c.name}">car</span>
-                    <span th:if="${#lists.isEmpty(task.cars)}">—</span>
+                    <span th:text="${task.car.name}">car</span>
+                    <span th:if="${#lists.isEmpty(task.car)}">—</span>
                 </div>
             </div>
         </div>

@@ -1,26 +1,54 @@
 spring:
-  # --- Konfiguracja połączenia z bazą danych dla Render ---
   datasource:
-    # Te wartości MUSZĄ być ustawione w zmiennych środowiskowych na Render.com
-    url: ${JDBC_DATABASE_URL}
-    username: ${JDBC_DATABASE_USERNAME}
-    password: ${JDBC_DATABASE_PASSWORD}
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/magazyn2}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:root}
     driver-class-name: org.postgresql.Driver
 
   jpa:
+    # Poprawiono z 'mysql' na 'postgresql'
     database: postgresql
     hibernate:
-      # BARDZO WAŻNE: Zmień 'create-drop' na 'validate' lub 'update'
-      # aby nie tracić danych po każdym restarcie aplikacji!
-      ddl-auto: update
-    # Na produkcji lepiej wyłączyć, aby nie zaśmiecać logów.
-    show-sql: false
+      # Ta opcja jest świetna do developmentu, ale niebezpieczna na produkcji.
+      # 'create-drop' usuwa i tworzy schemat bazy danych przy każdym uruchomieniu.
+      ddl-auto: create-drop
+    # Wyświetla zapytania SQL generowane przez Hibernate w konsoli.
+    show-sql: true
     properties:
       hibernate:
-        format_sql: false
+        # Formatuje wyświetlane zapytania SQL, aby były bardziej czytelne.
+        format_sql: true
 
-  # --- Konfiguracja Spring MVC (bez zmian) ---
+  # --- Konfiguracja Spring MVC ---
   mvc:
     hiddenmethod:
       filter:
+        # Włącza obsługę dodatkowych metod HTTP (np. PUT, DELETE) w formularzach.
         enabled: true
+
+#        spring:
+#          # --- Konfiguracja połączenia z bazą danych dla Render ---
+#          datasource:
+#            # Te wartości MUSZĄ być ustawione w zmiennych środowiskowych na Render.com
+#            url: ${JDBC_DATABASE_URL}
+#            username: ${JDBC_DATABASE_USERNAME}
+#            password: ${JDBC_DATABASE_PASSWORD}
+#            driver-class-name: org.postgresql.Driver
+#
+#          jpa:
+#            database: postgresql
+#            hibernate:
+#              # BARDZO WAŻNE: Zmień 'create-drop' na 'validate' lub 'update'
+#              # aby nie tracić danych po każdym restarcie aplikacji!
+#              ddl-auto: update
+#            # Na produkcji lepiej wyłączyć, aby nie zaśmiecać logów.
+#            show-sql: false
+#            properties:
+#              hibernate:
+#                format_sql: false
+#
+#          # --- Konfiguracja Spring MVC (bez zmian) ---
+#          mvc:
+#            hiddenmethod:
+#              filter:
+#                enabled: true

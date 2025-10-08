@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/general.css}" />
+</head>
+<body>
+<header class="page-header">
+    <nav class="breadcrumbs" aria-label="breadcrumb">
+        <a th:href="@{/dashboard}" class="crumb">Strona główna</a>
+        <span class="sep">/</span>
+        <a th:href="@{/cars}" class="crumb">Pojazdy</a>
+        <span class="sep">/</span>
+        <span class="crumb current" th:text="${car.id} != null ? 'Edycja' : 'Nowy pojazd'">Edycja</span>
+    </nav>
+    <div class="header-row">
+        <h1 class="page-title" th:text="${car.id} != null ? 'Edytuj pojazd' : 'Dodaj pojazd'">Pojazd</h1>
+        <div class="header-tools">
+            <a th:href="@{/cars/cost/add/{carId}(carId=${car.id})}" class="btn btn-primary">+ Dodaj koszt</a>
+        </div>
+    </div>
+</header>
+<section class="form-container">
+    <form th:action="@{/cars/save}" th:object="${car}" method="post" novalidate>
+        <input type="hidden" th:field="*{id}" />
+
+        <div class="section-box" style="margin-bottom: 1.5rem;">
+            <div class="section-header" style="display: flex; justify-content: space-between; align-items: center;">
+                <span>Szybka aktualizacja dla: <strong th:text="|${car.name} (${car.brand} ${car.model})|">Moje Auto (Ford Focus)</strong></span>
+                <span style="font-size: 0.9em; font-weight: normal;" th:text="|Rejestracja: ${car.registration}|">SK 12345</span>
+            </div>
+            <div style="padding: 1rem; text-align: center; font-size: 1.2em;">
+                Aktualny przebieg pojazdu: <strong th:text="|${#numbers.formatInteger(car.course, 0, 'WHITESPACE')} km|">150 000 km</strong>
+            </div>
+        </div>
+
+        <div th:if="${#fields.hasErrors()}" class="flash" style="border-color:#fca5a5;background:#fef2f2;color:#991b1b;">
+            Popraw zaznaczone pola formularza.
+        </div>
+
+        <div class="form-grid">
+
+            <div class="section-box">
+                <div class="section-header">Aktualizacja terminów</div>
+                <div class="subgrid-single-col"> <div class="field" th:if="${car.review != null}">
+                    <label for="review">Nowa data przeglądu technicznego</label>
+                    <input id="review" type="date" th:field="*{review}" th:classappend="${#fields.hasErrors('review')} ? 'invalid'" />
+                    <div class="status-info"
+                         th:with="daysRemaining=${T(java.time.temporal.ChronoUnit).DAYS.between(T(java.time.LocalDate).now(), car.review)}"
+                         th:text="|Aktualnie: ${#temporals.format(car.review, 'dd.MM.yyyy')} (${daysRemaining >= 0 ? 'zostało ' + daysRemaining : 'po terminie ' + -daysRemaining} dni)|"
+                         th:classappend="${daysRemaining <= car.reviewCriticalDay} ? 'status-critical' : (${daysRemaining <= car.reviewWarningDay} ? 'status-warning' : '')">
+                    </div>
+                    <div class="error" th:if="${#fields.hasErrors('review')}" th:errors="*{review}">Błąd</div>
+                </div>
+
+                    <div class="field" th:if="${car.insured != null}">
+                        <label for="insured">Nowa data ubezpieczenia OC</label>
+                        <input id="insured" type="date" th:field="*{insured}" th:classappend="${#fields.hasErrors('insured')} ? 'invalid'" />
+                        <div class="status-info"
+                             th:with="daysRemaining=${T(java.time.temporal.ChronoUnit).DAYS.between(T(java.time.LocalDate).now(), car.insured)}"
+                             th:text="|Aktualnie: ${#temporals.format(car.insured, 'dd.MM.yyyy')} (${daysRemaining >= 0 ? 'zostało ' + daysRemaining : 'po terminie ' + -daysRemaining} dni)|"
+                             th:classappend="${daysRemaining <= car.insuredCriticalDay} ? 'status-critical' : (${daysRemaining <= car.insuredWarningDay} ? 'status-warning' : '')">
+                        </div>
+                        <div class="error" th:if="${#fields.hasErrors('insured')}" th:errors="*{insured}">Błąd</div>
+                    </div>
+
+                    <div class="field" th:if="${car.tiresCheck != null}">
+                        <label for="tiresCheck">Nowa data kontroli opon</label>
+                        <input id="tiresCheck" type="date" th:field="*{tiresCheck}" th:classappend="${#fields.hasErrors('tiresCheck')} ? 'invalid'" />
+                        <div class="status-info"
+                             th:with="daysRemaining=${T(java.time.temporal.ChronoUnit).DAYS.between(T(java.time.LocalDate).now(), car.tiresCheck)}"
+                             th:text="|Aktualnie: ${#temporals.format(car.tiresCheck, 'dd.MM.yyyy')} (${daysRemaining >= 0 ? 'zostało ' + daysRemaining : 'po terminie ' + -daysRemaining} dni)|"
+                             th:classappend="${daysRemaining <= car.tiresCheckCriticalDay} ? 'status-critical' : (${daysRemaining <= car.tiresCheckWarningDay} ? 'status-warning' : '')">
+                        </div>
+                        <div class="error" th:if="${#fields.hasErrors('tiresCheck')}" th:errors="*{tiresCheck}">Błąd</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-box">
+                <div class="section-header">Aktualizacja serwisu</div>
+                <div class="subgrid-single-col">
+
+                    <div class="field" th:if="${car.oilChangeIntervalKm != null}">
+                        <label for="oilChangeCourse">Przebieg ostatniej wymiany oleju (km)</label>
+                        <div class="field-hint" th:text="|(Interwał co ${#numbers.formatInteger(car.oilChangeIntervalKm, 0, 'WHITESPACE')} km)|">(Interwał co 15 000 km)</div>
+                        <input id="oilChangeCourse" type="number" th:field="*{oilChangeCourse}" min="0" max="3000000" step="100" th:classappend="${#fields.hasErrors('oilChangeCourse')} ? 'invalid'" />
+                        <div class="status-info"
+                             th:if="${car.oilChangeCourse != null and car.course != null}"
+                             th:with="nextServiceKm=${car.oilChangeCourse + car.oilChangeIntervalKm}, kmRemaining=${(car.oilChangeCourse + car.oilChangeIntervalKm) - car.course}"
+                             th:text="|Następna wymiana przy ${#numbers.formatInteger(nextServiceKm, 0, 'WHITESPACE')} km (${kmRemaining >= 0 ? 'zostało ' + #numbers.formatInteger(kmRemaining, 0, 'WHITESPACE') : 'przekroczono o ' + #numbers.formatInteger(-kmRemaining, 0, 'WHITESPACE')} km)|"
+                             th:classappend="${kmRemaining <= car.oilChangeIntervalKmCritical} ? 'status-critical' : (${kmRemaining <= car.oilChangeIntervalKmWarning} ? 'status-warning' : '')">
+                        </div>
+                        <div class="error" th:if="${#fields.hasErrors('oilChangeCourse')}" th:errors="*{oilChangeCourse}">Błąd</div>
+                    </div>
+
+                    <div class="field" th:if="${car.timingSystemIntervalKm != null}">
+                        <label for="timingSystemCourse">Przebieg ostatniej wymiany rozrządu (km)</label>
+                        <div class="field-hint" th:text="|(Interwał co ${#numbers.formatInteger(car.timingSystemIntervalKm, 0, 'WHITESPACE')} km)|">(Interwał co 120 000 km)</div>
+                        <input id="timingSystemCourse" type="number" th:field="*{timingSystemCourse}" min="0" max="3000000" step="100" th:classappend="${#fields.hasErrors('timingSystemCourse')} ? 'invalid'" />
+                        <div class="status-info"
+                             th:if="${car.timingSystemCourse != null and car.course != null}"
+                             th:with="nextServiceKm=${car.timingSystemCourse + car.timingSystemIntervalKm}, kmRemaining=${(car.timingSystemCourse + car.timingSystemIntervalKm) - car.course}"
+                             th:text="|Następna wymiana przy ${#numbers.formatInteger(nextServiceKm, 0, 'WHITESPACE')} km (${kmRemaining >= 0 ? 'zostało ' + #numbers.formatInteger(kmRemaining, 0, 'WHITESPACE') : 'przekroczono o ' + #numbers.formatInteger(-kmRemaining, 0, 'WHITESPACE')} km)|"
+                             th:classappend="${kmRemaining <= car.timingSystemKmCritical} ? 'status-critical' : (${kmRemaining <= car.timingSystemKmWarning} ? 'status-warning' : '')">
+                        </div>
+                        <div class="error" th:if="${#fields.hasErrors('timingSystemCourse')}" th:errors="*{timingSystemCourse}">Błąd</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-box span-2"> <div class="section-header">Aktualizacja przypomnień</div>
+                <div class="subgrid"> <div class="field">
+                    <label for="reminderDate">Nowa data przypomnienia</label>
+                    <input id="reminderDate" type="date" th:field="*{reminderDate}" th:classappend="${#fields.hasErrors('reminderDate')} ? 'invalid'" />
+                    <div class="status-info" th:if="${car.reminderDate != null}"
+                         th:with="daysRemaining=${T(java.time.temporal.ChronoUnit).DAYS.between(T(java.time.LocalDate).now(), car.reminderDate)}"
+                         th:text="|Aktualnie: ${car.reminderDateDescription} - ${#temporals.format(car.reminderDate, 'dd.MM.yyyy')} (${daysRemaining >= 0 ? 'zostało ' + daysRemaining : 'po terminie ' + -daysRemaining} dni)|"
+                         th:classappend="${daysRemaining <= car.reminderDateCriticalDay} ? 'status-critical' : (${daysRemaining <= car.reminderDateWarningDay} ? 'status-warning' : '')">
+                    </div>
+                    <div class="error" th:if="${#fields.hasErrors('reminderDate')}" th:errors="*{reminderDate}">Błąd</div>
+                </div>
+
+                    <div class="field">
+                        <label for="reminderKm">Nowy przebieg dla przypomnienia (km)</label>
+                        <input id="reminderKm" type="number" th:field="*{reminderKm}" min="0" max="1000000" step="1000" th:classappend="${#fields.hasErrors('reminderKm')} ? 'invalid'" />
+                        <div class="status-info" th:if="${car.reminderKm != null and car.course != null}"
+                             th:with="kmRemaining=${car.reminderKm - car.course}"
+                             th:text="|Aktualnie: ${car.reminderKmDescription} - przy ${#numbers.formatInteger(car.reminderKm, 0, 'WHITESPACE')} km (${kmRemaining >= 0 ? 'zostało ' + #numbers.formatInteger(kmRemaining, 0, 'WHITESPACE') : 'przekroczono o ' + #numbers.formatInteger(-kmRemaining, 0, 'WHITESPACE')} km)|"
+                             th:classappend="${kmRemaining <= car.reminderKmCritical} ? 'status-critical' : (${kmRemaining <= car.reminderKmWarning} ? 'status-warning' : '')">
+                        </div>
+                        <div class="error" th:if="${#fields.hasErrors('reminderKm')}" th:errors="*{reminderKm}">Błąd</div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Zapisz zmiany</button>
+            <a th:href="@{/cars/details/{id}(id=${car.id})}" class="btn btn-secondary">Anuluj</a>
+        </div>
+    </form>
+</section>
+<script th:src="@{/js/general.js}"></script>
+</body>
+</html>

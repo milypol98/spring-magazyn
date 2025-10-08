@@ -10,6 +10,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import jakarta.validation.constraints.AssertTrue;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -25,17 +27,19 @@ public class Task {
     private Integer id;
 
     @Size(max = 255, message = "Opis może mieć maksymalnie 255 znaków.")
-    @Column(length = 255)
     private String description;
+    private String comment;
 
     @NotBlank(message = "Nazwa jest wymagana.")
     @Column(nullable = false, length = 150)
     private String name;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateFrom;
-
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateTo;
-
+    private Integer courseBefore;
+    private Integer courseAfter;
     @ManyToMany
     @JoinTable(
             name = "task_user",
@@ -44,13 +48,8 @@ public class Task {
     )
     private List<User> users;
 
-    @ManyToMany
-    @JoinTable(
-            name = "task_car",
-            joinColumns = @JoinColumn(name = "task_id"),
-            inverseJoinColumns = @JoinColumn(name = "car_id")
-    )
-    private List<Car> cars;
+    @ManyToOne
+    private Car car;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

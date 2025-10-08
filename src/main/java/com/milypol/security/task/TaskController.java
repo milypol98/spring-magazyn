@@ -1,15 +1,12 @@
 package com.milypol.security.task;
 
+import com.milypol.security.car.Car;
 import com.milypol.security.car.CarService;
 import com.milypol.security.product.ProductService;
 import com.milypol.security.productEvent.ProductEventService;
 import com.milypol.security.user.UserService;
 import com.milypol.security.cart.CartService;
 import jakarta.validation.Valid;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -44,8 +41,15 @@ public class TaskController {
     @GetMapping("/{id}")
     public String details(@PathVariable Integer id, Model model) {
         Task task = taskService.getTaskById(id);
+        TaskUpdateDto dto = new TaskUpdateDto();
+        dto.setId(task.getId());
+        dto.setCarId(task.getCar().getId());
+        dto.setStatus(task.getStatus());
+        dto.setComment(task.getComment());
+        dto.setCourseBefore(task.getCourseBefore());
+        dto.setCourseAfter(task.getCourseAfter());
+        model.addAttribute("taskDto", dto);
         model.addAttribute("task", task);
-        // Zużycia: USED -> TASK, kod lokacji = id zadania
         model.addAttribute("usedEvents", productEventService.findUsedForTask(id));
         return "tasks/info";
     }
@@ -79,7 +83,15 @@ public class TaskController {
 
     @PostMapping("/save")
     public String saveTask(@Valid @ModelAttribute Task task){
+        if (task.getStatus() == null){
+            task.setStatus(TaskStatus.BEFORE_TASK);
+        }
         taskService.saveTask(task);
+        return "redirect:/tasks";
+    }
+    @PostMapping("/update-status")
+    public String updateStatus(@ModelAttribute TaskUpdateDto dto) {
+        taskService.updateTaskAndCarCourse(dto);
         return "redirect:/tasks";
     }
 

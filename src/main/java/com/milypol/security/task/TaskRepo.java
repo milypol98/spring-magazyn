@@ -3,6 +3,7 @@ package com.milypol.security.task;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -12,10 +13,11 @@ import java.util.Optional;
 
 public interface TaskRepo extends JpaRepository<Task, Integer> {
     List<Task> findAllByUsers_IdOrderByDateFromDesc(Integer userId);
-    List<Task> findAllByCars_id(Integer carId);
+    List<Task> findAllByCar_id(Integer carId);
     List<Task> findAllByStatus(TaskStatus status);
 
-    @Query("SELECT t FROM Task t JOIN t.cars c " +
+
+    @Query("SELECT t FROM Task t JOIN t.car c " +
             "WHERE c.id = :carId " +
             "AND :now BETWEEN t.dateFrom AND t.dateTo")
     Optional<Task> findTaskByCarIdAndCurrentDateBetween(@Param("carId") Integer carId, @Param("now") LocalDate date);

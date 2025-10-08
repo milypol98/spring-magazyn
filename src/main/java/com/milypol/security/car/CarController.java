@@ -9,6 +9,7 @@ import com.milypol.security.task.Task;
 import com.milypol.security.task.TaskService;
 import com.milypol.security.task.TaskStatus;
 import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -53,8 +54,13 @@ public class CarController {
 
     @GetMapping
     public String showCarPage(Model model) {
-        var cars = carService.getAllCars();
-        model.addAttribute("cars", cars);
+        List<Car> cars = carService.getAllCars();
+        CarStatusEvaluator evaluator = new CarStatusEvaluator();
+        Map<CarStatus, List<Car>> groupedCars = cars.stream()
+                .collect(Collectors.groupingBy(evaluator::evaluate));
+        model.addAttribute("criticalCars", groupedCars.getOrDefault(CarStatus.CRITICAL, List.of()));
+        model.addAttribute("warningCars", groupedCars.getOrDefault(CarStatus.WARNING, List.of()));
+        model.addAttribute("normalCars", groupedCars.getOrDefault(CarStatus.NORMAL, List.of()));
 
         Map<Integer, String> currentTaskNameByCarId = new HashMap<>();
         Map<Integer, String> currentTaskUsersByCarId = new HashMap<>();
@@ -65,7 +71,7 @@ public class CarController {
             Task current = currentOpt.orElse(null);
 
             if (current == null) {
-                List<Task> tasks = taskService.getAllTasksByCarsId(car.getId());
+                List<Task> tasks = taskService.getAllTasksByCarId(car.getId());
                 if (tasks != null) {
                     current = tasks.stream()
                             .filter(t -> t.getStatus() == TaskStatus.IN_PROGRESS)
@@ -112,7 +118,19 @@ public class CarController {
         model.addAttribute("allCarts", cartService.getAllCarts());
         return "cars/edit";
     }
-
+    @GetMapping("/update/{id}")
+    public String updateForm(@PathVariable Integer id, Model model) {
+        model.addAttribute("car", carService.getCarById(id));
+        return "cars/car-update";
+    }
+    @PostMapping("/update")
+    public String updateCar(@Valid @ModelAttribute("car") Car car, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "cars/car-update";
+        }
+        carService.saveCar(car);
+        return "redirect:/cars";
+    }
     @PostMapping("/save")
     public String saveCar(@Valid @ModelAttribute("car") Car car,
                           BindingResult bindingResult,
@@ -123,6 +141,16 @@ public class CarController {
         }
         carService.saveCar(car);
         return "redirect:/cars";
+    }
+    @PostMapping("/update-course")
+    public ResponseEntity<String> updateCourse(
+            @RequestParam("id") Integer carId,
+            @RequestParam("course") Integer newCourse) {
+        Car car = carService.getCarById(carId);
+        car.setCourse(newCourse);
+        car.setCourseDate(LocalDate.now());
+        carService.saveCar(car);
+        return ResponseEntity.ok("Przebieg zaktualizowany dla auta ID: " + carId + " na wartość: " + newCourse + " KM.");
     }
 
     @PostMapping("/delete/{id}")

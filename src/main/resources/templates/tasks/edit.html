@@ -23,7 +23,7 @@
 <section class="form-container">
     <form th:action="@{/tasks/save}" method="post" th:object="${task}"  class="card form">
         <input type="hidden" th:field="*{id}" />
-
+        <input type="hidden" th:field="*{status}">
         <div class="form-row">
             <label>Nazwa <span class="req">*</span></label>
             <input type="text" th:field="*{name}" maxlength="150" required />
@@ -50,16 +50,6 @@
             <div class="field-hint" th:if="${#fields.hasErrors('dateRangeValid')}" th:errors="*{dateRangeValid}">Błąd</div>
         </div>
 
-<!--        <div class="form-row">-->
-<!--            <label>Status <span class="req">*</span></label>-->
-<!--            <select th:field="*{status}" required>-->
-<!--                <option th:each="s: ${T(com.milypol.security.task.TaskStatus).values()}"-->
-<!--                        th:value="${s}"-->
-<!--                        th:text="${s}">OPEN</option>-->
-<!--            </select>-->
-<!--            <div class="field-hint" th:if="${#fields.hasErrors('status')}" th:errors="*{status}">Błąd</div>-->
-<!--        </div>-->
-
         <div class="form-row">
             <label>Użytkownicy <small>(CTRL/CMD aby zaznaczyć wiele)</small></label>
             <select th:field="*{users}" multiple size="6">
@@ -69,7 +59,7 @@
 
         <div class="form-row">
             <label>Auta</label>
-            <select th:field="*{cars}">
+            <select th:field="*{car}">
                 <option th:each="c : ${allCars}" th:value="${c.id}" th:text="${c.name}"></option>
             </select>
         </div>

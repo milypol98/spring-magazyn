@@ -10,14 +10,14 @@ import java.util.Optional;
 public interface TaskService {
     List<Task> getAllTasks();
     Task getTaskById(Integer id);
-    Task saveTask(Task task);
+    void saveTask(Task task);
     void deleteTask(Integer id);
     List<Task> getAllTasksByUserId(Integer userId);
 
-    List<Task> getAllTasksByCarsId(Integer id);
+    List<Task> getAllTasksByCarId(Integer id);
 
     List<Task> getAllTasksByStatus(TaskStatus status);
     Optional<Task> getTaskByCarIdAndDate(Integer carId, LocalDate date);
     Page<Task> search(String q, TaskStatus status, Integer userId, LocalDate fromDate, LocalDate toDate, Pageable pageable);
-
+    void updateTaskAndCarCourse(TaskUpdateDto dto);
 }

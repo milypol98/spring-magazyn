@@ -1,29 +1,24 @@
-package com.milypol.security.workerQualification;
+package com.milypol.security.workerTool;
 
 import com.milypol.security.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import java.time.LocalDate;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Entity
-public class WorkerQualification {
+public class WorkerTool {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
+    private String category;
     private String description;
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate dateFrom;
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate dateTo;
+    private String reviewDate;
+    private String status;
     @ManyToOne
     private User user;
-
 }

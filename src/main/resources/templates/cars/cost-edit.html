@@ -43,7 +43,6 @@
                     <div class="field">
                         <label for="description">Opis <span class="req">*</span></label>
                         <input id="description" type="text" th:field="*{description}" maxlength="255" th:classappend="${#fields.hasErrors('description')} ? 'invalid'" placeholder="np. Ubezpieczenie OC/AC" required />
-                        <div class="hint">Krótki opis kosztu.</div>
                         <div class="error" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Błąd</div>
                     </div>
 
@@ -53,7 +52,6 @@
                             <span class="prefix">PLN</span>
                             <input id="cost" type="number" th:field="*{cost}" step="0.01" min="0" th:classappend="${#fields.hasErrors('cost')} ? 'invalid'" placeholder="0.00" required />
                         </div>
-                        <div class="hint">Użyj kropki jako separatora dziesiętnego (np. 1234.56).</div>
                         <div class="error" th:if="${#fields.hasErrors('cost')}" th:errors="*{cost}">Błąd</div>
                     </div>
 
@@ -66,7 +64,6 @@
                     <div class="field">
                         <label for="dateTo">Data do</label>
                         <input id="dateTo" type="date" th:field="*{dateTo}" th:classappend="${#fields.hasErrors('dateTo')} ? 'invalid'" />
-                        <div id="rangeHint" class="hint">Zakres dat (dni): —</div>
                         <div class="error" th:if="${#fields.hasErrors('dateTo')}" th:errors="*{dateTo}">Błąd</div>
                     </div>
                 </div>

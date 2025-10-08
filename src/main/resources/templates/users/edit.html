@@ -162,8 +162,8 @@
                             <div class="res-row">
                                 <span class="res-label">Auta:</span>
                                 <span class="res-values">
-                                    <span th:each="car, ciStat : ${task.cars}"
-                                          th:text="${car.name + (ciStat.last ? '' : ', ')}"></span>
+                                    <span th:text="${task.car.name}"></span>
+
                                 </span>
                             </div>
                         </div>

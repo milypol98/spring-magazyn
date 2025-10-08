@@ -1,6 +1,7 @@
 package com.milypol.security.car;
 
 
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,7 +16,7 @@ public class CarServiceImpl implements CarService{
 
     @Override
     public List<Car> getAllCars() {
-        return carRepo.findAll();
+        return carRepo.findAll(Sort.by("id"));
     }
 
     @Override
@@ -24,14 +25,16 @@ public class CarServiceImpl implements CarService{
     }
 
     @Override
-    public Car saveCar(Car car) {
-        return carRepo.save(car);
+    public void saveCar(Car car) {
+        carRepo.save(car);
     }
 
     @Override
     public void deleteCar(Integer id) {
         carRepo.deleteById(id);
     }
+
+
 
 
 }

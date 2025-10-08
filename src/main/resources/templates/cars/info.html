@@ -31,56 +31,119 @@
                 <div class="value" th:text="${car.id}">1</div>
             </div>
             <div class="detail">
+                <div class="label">Nazwa</div>
+                <div class="value" th:text="${#strings.defaultString(car.name,'—')}">Moje Auto</div>
+            </div>
+            <div class="detail">
                 <div class="label">Rejestracja</div>
-                <div class="value" th:text="${#strings.defaultString(car.registration,'—')}">—</div>
+                <div class="value" th:text="${#strings.defaultString(car.registration,'—')}">SK 12345</div>
             </div>
             <div class="detail">
                 <div class="label">VIN</div>
-                <div class="value" th:text="${#strings.defaultString(car.vin,'—')}">—</div>
+                <div class="value" th:text="${#strings.defaultString(car.vin,'—')}">ABC...</div>
             </div>
             <div class="detail">
                 <div class="label">Marka</div>
-                <div class="value" th:text="${#strings.defaultString(car.brand,'—')}">—</div>
+                <div class="value" th:text="${#strings.defaultString(car.brand,'—')}">Ford</div>
             </div>
             <div class="detail">
                 <div class="label">Model</div>
-                <div class="value" th:text="${#strings.defaultString(car.model,'—')}">—</div>
+                <div class="value" th:text="${#strings.defaultString(car.model,'—')}">Focus</div>
+            </div>
+            <div class="detail">
+                <div class="label">Rok produkcji</div>
+                <div class="value" th:text="${car.year != null ? #temporals.format(car.year, 'yyyy') : '—'}">2020</div>
             </div>
             <div class="detail">
                 <div class="label">Kolor</div>
-                <div class="value" th:text="${#strings.defaultString(car.color,'—')}">—</div>
+                <div class="value" th:text="${#strings.defaultString(car.color,'—')}">Niebieski</div>
             </div>
             <div class="detail">
                 <div class="label">Właściciel</div>
-                <div class="value" th:text="${#strings.defaultString(car.owner,'—')}">—</div>
+                <div class="value" th:text="${#strings.defaultString(car.owner,'—')}">Jan Kowalski</div>
             </div>
             <div class="detail">
                 <div class="label">Poj. silnika</div>
-                <div class="value" th:text="${#strings.defaultString(car.engineCapacity,'—')}">—</div>
+                <div class="value" th:text="${#strings.defaultString(car.engineCapacity,'—')}">1.5</div>
             </div>
+
             <div class="detail">
-                <div class="label">Rok (data)</div>
-                <div class="value" th:text="${car.year}">—</div>
-            </div>
-            <div class="detail">
-                <div class="label">Ubezpieczenie do</div>
-                <div class="value" th:text="${car.insured}">—</div>
-            </div>
-            <div class="detail">
-                <div class="label">Przegląd do</div>
-                <div class="value" th:text="${car.review}">—</div>
-            </div>
-            <div class="detail">
-                <div class="label">Przebieg</div>
-                <div class="value" th:text="${car.course}">—</div>
+                <div class="label">Aktualny przebieg</div>
+                <div class="value" th:text="${car.course != null ? car.course + ' km' : '—'}">150 000 km</div>
             </div>
             <div class="detail">
                 <div class="label">Przebieg z dnia</div>
-                <div class="value" th:text="${car.courseDate}">—</div>
+                <div class="value" th:text="${car.courseDate != null ? #temporals.format(car.courseDate, 'dd.MM.yyyy') : '—'}">01.10.2025</div>
             </div>
-            <div class="detail wide">
+
+            <div class="detail" th:if="${car.review != null}">
+                <div class="label">Przegląd techniczny</div>
+                <div class="value"
+                     th:with="daysRemaining=${T(java.time.temporal.ChronoUnit).DAYS.between(T(java.time.LocalDate).now(), car.review)}"
+                     th:text="|${#temporals.format(car.review, 'dd.MM.yyyy')} (${daysRemaining >= 0 ? 'zostało ' + daysRemaining : 'po terminie ' + -daysRemaining} dni)|"
+                     th:classappend="${daysRemaining <= car.reviewCriticalDay} ? 'status-critical' : (${daysRemaining <= car.reviewWarningDay} ? 'status-warning' : '')">
+                </div>
+            </div>
+
+            <div class="detail" th:if="${car.insured != null}">
+                <div class="label">Ubezpieczenie OC</div>
+                <div class="value"
+                     th:with="daysRemaining=${T(java.time.temporal.ChronoUnit).DAYS.between(T(java.time.LocalDate).now(), car.insured)}"
+                     th:text="|${#temporals.format(car.insured, 'dd.MM.yyyy')} (${daysRemaining >= 0 ? 'zostało ' + daysRemaining : 'po terminie ' + -daysRemaining} dni)|"
+                     th:classappend="${daysRemaining <= car.insuredCriticalDay} ? 'status-critical' : (${daysRemaining <= car.insuredWarningDay} ? 'status-warning' : '')">
+                </div>
+            </div>
+
+            <div class="detail" th:if="${car.tiresCheck != null}">
+                <div class="label">Kontrola opon</div>
+                <div class="value"
+                     th:with="daysRemaining=${T(java.time.temporal.ChronoUnit).DAYS.between(T(java.time.LocalDate).now(), car.tiresCheck)}"
+                     th:text="|${#temporals.format(car.tiresCheck, 'dd.MM.yyyy')} (${daysRemaining >= 0 ? 'zostało ' + daysRemaining : 'po terminie ' + -daysRemaining} dni)|"
+                     th:classappend="${daysRemaining <= car.tiresCheckCriticalDay} ? 'status-critical' : (${daysRemaining <= car.tiresCheckWarningDay} ? 'status-warning' : '')">
+                </div>
+            </div>
+
+            <div class="detail" th:if="${car.oilChangeCourse != null and car.oilChangeIntervalKm != null and car.course != null}">
+                <div class="label">Wymiana oleju</div>
+                <div class="value"
+                     th:with="nextServiceKm=${car.oilChangeCourse + car.oilChangeIntervalKm}, kmRemaining=${(car.oilChangeCourse + car.oilChangeIntervalKm) - car.course}"
+                     th:text="|przy ${#numbers.formatInteger(nextServiceKm, 0, 'WHITESPACE')} km (${kmRemaining >= 0 ? 'zostało ' + #numbers.formatInteger(kmRemaining, 0, 'WHITESPACE') : 'przekroczono o ' + #numbers.formatInteger(-kmRemaining, 0, 'WHITESPACE')} km)|"
+                     th:classappend="${kmRemaining <= car.oilChangeIntervalKmCritical} ? 'status-critical' : (${kmRemaining <= car.oilChangeIntervalKmWarning} ? 'status-warning' : '')">
+                </div>
+            </div>
+
+            <div class="detail" th:if="${car.timingSystemCourse != null and car.timingSystemIntervalKm != null and car.course != null}">
+                <div class="label">Wymiana rozrządu</div>
+                <div class="value"
+                     th:with="nextServiceKm=${car.timingSystemCourse + car.timingSystemIntervalKm}, kmRemaining=${(car.timingSystemCourse + car.timingSystemIntervalKm) - car.course}"
+                     th:text="|przy ${#numbers.formatInteger(nextServiceKm, 0, 'WHITESPACE')} km (${kmRemaining >= 0 ? 'zostało ' + #numbers.formatInteger(kmRemaining, 0, 'WHITESPACE') : 'przekroczono o ' + #numbers.formatInteger(-kmRemaining, 0, 'WHITESPACE')} km)|"
+                     th:classappend="${kmRemaining <= car.timingSystemKmCritical} ? 'status-critical' : (${kmRemaining <= car.timingSystemKmWarning} ? 'status-warning' : '')">
+                </div>
+            </div>
+
+
+
+            <div class="detail" th:if="${car.reminderDate != null}">
+                <div class="label" th:text="${#strings.defaultString(car.reminderDateDescription, 'Przypomnienie')}"></div>
+                <div class="value"
+                     th:with="daysRemaining=${T(java.time.temporal.ChronoUnit).DAYS.between(T(java.time.LocalDate).now(), car.reminderDate)}"
+                     th:text="|${#temporals.format(car.reminderDate, 'dd.MM.yyyy')} (${daysRemaining >= 0 ? 'zostało ' + daysRemaining : 'po terminie ' + -daysRemaining} dni)|"
+                     th:classappend="${daysRemaining <= car.reminderDateCriticalDay} ? 'status-critical' : (${daysRemaining <= car.reminderDateWarningDay} ? 'status-warning' : '')">
+                </div>
+            </div>
+
+            <div class="detail" th:if="${car.reminderKm != null and car.course != null}">
+                <div class="label" th:text="${#strings.defaultString(car.reminderKmDescription, 'Przypomnienie')}"></div>
+                <div class="value"
+                     th:with="kmRemaining=${car.reminderKm - car.course}"
+                     th:text="|przy ${#numbers.formatInteger(car.reminderKm, 0, 'WHITESPACE')} km (${kmRemaining >= 0 ? 'zostało ' + #numbers.formatInteger(kmRemaining, 0, 'WHITESPACE') : 'przekroczono o ' + #numbers.formatInteger(-kmRemaining, 0, 'WHITESPACE')} km)|"
+                     th:classappend="${kmRemaining <= car.reminderKmCritical} ? 'status-critical' : (${kmRemaining <= car.reminderKmWarning} ? 'status-warning' : '')">
+                </div>
+            </div>
+
+            <div class="detail wide" th:if="${not #strings.isEmpty(car.description)}">
                 <div class="label">Opis</div>
-                <div class="value" th:text="${#strings.defaultString(car.description,'—')}">—</div>
+                <div class="value" th:text="${car.description}">Dodatkowe informacje o samochodzie.</div>
             </div>
         </div>
     </section>
