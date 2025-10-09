@@ -27,10 +27,6 @@
     <section class="card">
         <div class="details-grid">
             <div class="detail">
-                <div class="label">ID</div>
-                <div class="value" th:text="${car.id}">1</div>
-            </div>
-            <div class="detail">
                 <div class="label">Nazwa</div>
                 <div class="value" th:text="${#strings.defaultString(car.name,'—')}">Moje Auto</div>
             </div>
@@ -155,26 +151,34 @@
             <input type="search"
                    class="table-search"
                    placeholder="Szukaj..."
-                   data-target-table="#carsCostTable">
+                   data-target-table="#carsCostTable"
+                   data-sum-columns="4:carSum,5:invCarSumNet">
         </div>
 
         <div class="table-wrapper">
             <table id="carsCostTable" class="table">
                 <thead>
                 <tr>
+                    <th>L.P.</th>
                     <th>Data od</th>
                     <th>Data do</th>
                     <th>Opis</th>
-                    <th>Kwota</th>
+                    <th>Kwota(Netto) z faktury</th>
+                    <th>Cena</th>
                     <th>Akcje</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="c : ${car.costs}">
-                    <td th:text="${c.dateFrom}">2024-01-01</td>
-                    <td th:text="${c.dateTo}">2024-01-31</td>
-                    <td th:text="${#strings.defaultString(c.description,'—')}">—</td>
-                    <td class="text-right" th:text="${#numbers.formatDecimal(c.cost,1,'COMMA',2,'POINT')}">0,00</td>
+                <tr th:each="c, i : ${car.costs}">
+                    <td th:text="${i.index + 1}"></td>
+                    <td th:text="${c.dateFrom}"></td>
+                    <td th:text="${c.dateTo}"></td>
+                    <td th:text="${#strings.defaultString(c.description,'—')}"></td>
+                    <td>
+                        <span th:if="${c.invoice != null}" th:text="${#numbers.formatDecimal(c.invoice.totalNet, 1, 'POINT', 2, 'COMMA')}"></span>
+                        <span th:unless="${c.invoice != null}">—</span>
+                    </td>
+                    <td th:text="${c.cost}"></td>
                     <td class="actions">
                         <a class="btn btn-small" th:href="@{/cars/cost/edit/{id}(id=${c.id})}">Edytuj</a>
                         <form th:action="@{/cars/cost/delete/{id}(id=${c.id})}" method="post" class="inline-form" data-confirm="Usunąć ten koszt?">
@@ -183,6 +187,13 @@
                         </form>
                     </td>
                 </tr>
+                <tfoot th:if="${!#lists.isEmpty(car.costs)}">
+                <tr>
+                    <td colspan="4" class="text-right"><strong>Suma</strong></td>
+                    <td id="carSum"></td>
+                    <td id="invCarSumNet"></td>
+                </tr>
+                </tfoot>
                 <tr th:if="${#lists.isEmpty(car.costs)}">
                     <td colspan="5">Brak kosztów dla tego pojazdu.</td>
                 </tr>

@@ -20,71 +20,59 @@
 </header>
 
 <section class="form-container">
-    <form th:action="@{/invoices/save}"
-          method="post"
-          enctype="multipart/form-data"
-          class="card form">
-
-        <div th:if="${error}" class="flash" style="border-color:#fca5a5;background:#fef2f2;color:#991b1b;" th:text="${error}">
-            Wystąpił błąd
-        </div>
+    <form th:action="@{/invoices/save}" th:object="${invoice}" method="post" enctype="multipart/form-data" class="card form">
 
         <div class="form-grid">
+            <input type="hidden" th:field="*{id}" />
             <div class="field">
-                <label for="invoiceNumber">Nr faktury <span class="req">*</span></label>
-                <input id="invoiceNumber" type="text" name="nrFaktury" th:value="${nrFaktury}" placeholder="np. FV/01/2025" required />
+                <label for="invoiceNumber">Nr faktury</label>
+                <input id="invoiceNumber" type="text" th:field="*{invoiceNumber}"  required />
             </div>
 
             <div class="field">
-                <label for="name">Nazwa (kontrahent / tytuł) <span class="req">*</span></label>
-                <input id="name" type="text" name="nazwa" th:value="${nazwa}" placeholder="np. Acme Sp. z o.o." required />
+                <label for="name">Nazwa</label>
+                <input id="name" type="text" th:field="*{name}"  required />
             </div>
 
             <div class="field">
-                <label for="companyId">Firma (opcjonalnie)</label>
-                <select id="companyId" name="companyId">
-                    <option value="">-- Wybierz firmę --</option>
+                <label for="company">Firma</label>
+                <select id="company" th:field="*{company}">
+                    <option value="">-- Wybierz firmę (opcjonalnie) --</option>
                     <option th:each="c : ${companies}"
                             th:value="${c.id}"
-                            th:text="${c.name}"
-                            th:selected="${companyId != null and c.id == companyId}">
-                    </option>
+                            th:text="${c.name}">Nazwa Firmy</option>
                 </select>
-                <small style="display: block; margin-top: 4px;">
-                    <a th:href="@{/companies/add}" target="_blank" rel="noopener">Dodaj nową firmę</a>
-                </small>
             </div>
 
             <div class="field">
                 <label for="currency">Waluta</label>
-                <input id="currency" type="text" name="currency" th:value="${currency}" placeholder="np. PLN" />
+                <input id="currency" type="text" th:field="*{currency}" placeholder="np. PLN" />
             </div>
 
             <div class="field">
                 <label for="totalNet">Netto</label>
-                <input id="totalNet" type="number" step="0.01" name="totalNet" th:value="${totalNet}" placeholder="0.00" />
+                <input id="totalNet" type="number" step="0.01" th:field="*{totalNet}" placeholder="0.00" />
             </div>
 
             <div class="field">
-                <label for="totalVat">VAT</label>
-                <input id="totalVat" type="number" step="0.01" name="totalVat" th:value="${totalVat}" placeholder="0.00" />
+                <label for="vatRate">Stawka VAT (%)</label>
+                <input id="vatRate" type="number" step="1" th:field="*{vatRate}"  />
             </div>
 
             <div class="field">
                 <label for="totalGross">Brutto</label>
-                <input id="totalGross" type="number" step="0.01" name="totalGross" th:value="${totalGross}" placeholder="0.00" />
+                <input id="totalGross" type="number" step="0.01" th:field="*{totalGross}" placeholder="0.00" readonly style="background-color: #f3f4f6;" />
             </div>
 
             <div class="field">
-                <label for="file">Plik (PDF/skan) <span class="req">*</span></label>
-                <input id="file" type="file" name="plik" accept=".pdf,image/*" required />
+                <label for="file">Plik (PDF/skan) <span style="font-weight: normal; color: #6b7280;">(opcjonalnie)</span></label>
+                <input id="file" type="file" name="file" accept=".pdf,image/*" />
             </div>
         </div>
-
         <div class="form-actions">
-            <button type="submit" class="btn btn-primary">Zapisz fakturę</button>
-            <a th:href="@{/invoices}" class="btn btn-secondary">Anuluj</a>
+            <button type="submit" class="btn btn-primary">Zapisz</button>
         </div>
+
     </form>
 </section>
 

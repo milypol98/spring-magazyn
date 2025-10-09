@@ -25,14 +25,12 @@ import java.util.stream.Collectors;
 @RequestMapping("/cars")
 public class CarController {
     private final CarService carService;
-    private final CarCostService carCostService;
     private final TaskService taskService;
     private final CartService cartService;
     private final ProductEventService productEventService;
 
-    public CarController(CarService carService, CarCostService carCostService, TaskService taskService, CartService cartService, ProductEventService productEventService) {
+    public CarController(CarService carService, TaskService taskService, CartService cartService, ProductEventService productEventService) {
         this.carService = carService;
-        this.carCostService = carCostService;
         this.taskService = taskService;
         this.cartService = cartService;
         this.productEventService = productEventService;
@@ -120,15 +118,19 @@ public class CarController {
     }
     @GetMapping("/update/{id}")
     public String updateForm(@PathVariable Integer id, Model model) {
-        model.addAttribute("car", carService.getCarById(id));
+        Car car = carService.getCarById(id);
+        CarUpdateDto carUpdateDto = new CarUpdateDto();
+        carUpdateDto.setId(id);
+        model.addAttribute("carUpdateDto",carUpdateDto);
+        model.addAttribute("car", car);
         return "cars/car-update";
     }
     @PostMapping("/update")
-    public String updateCar(@Valid @ModelAttribute("car") Car car, BindingResult bindingResult) {
+    public String updateCar(@Valid @ModelAttribute("car") CarUpdateDto carUpdateDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "cars/car-update";
         }
-        carService.saveCar(car);
+        carService.applyQuickUpdate(carUpdateDto);
         return "redirect:/cars";
     }
     @PostMapping("/save")
@@ -159,31 +161,6 @@ public class CarController {
         return "redirect:/cars";
     }
 
-    @GetMapping("cost/add/{carId}")
-    public String carCostAdd(@PathVariable Integer carId, Model model) {
-        CarCost carCost = new CarCost();
-        carCost.setCar(carService.getCarById(carId));
-        model.addAttribute("car_cost", carCost);
-        return "cars/cost-edit";
-    }
-
-    @GetMapping("cost/edit/{id}")
-    public String carCostEdit(@PathVariable Integer id, Model model) {
-        model.addAttribute("car_cost", carCostService.getCarCostById(id));
-        return "cars/cost-edit";
-    }
-
-    @PostMapping("cost/save")
-    public String saveCostCar(@ModelAttribute CarCost carCost) {
-        carCostService.saveCarCost(carCost);
-        return "redirect:/cars/info/" + carCost.getCar().getId();
-    }
-
-    @PostMapping("/cost/delete/{id}")
-    public String deleteCostCar(@PathVariable Integer id, @RequestParam("carId") Integer carId){
-        carCostService.deleteCarCost(id);
-        return "redirect:/cars/info/" + carId;
-    }
     @GetMapping("/item/{id}")
     public String costInfo(@PathVariable Integer id, Model model) {
         model.addAttribute("car", carService.getCarById(id));

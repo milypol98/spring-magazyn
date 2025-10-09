@@ -70,7 +70,8 @@
             <input type="search"
                    class="table-search"
                    placeholder="Szukaj..."
-                   data-target-table="#invoicesTable">
+                   data-target-table="#invoicesTable"
+                   data-sum-columns="5:invSumNet,7:invSumVAT,8:invSumGross">
         </div>
         <div class="table-wrapper">
             <table id="invoicesTable" class="table">
@@ -82,6 +83,7 @@
                     <th>Firma</th>
                     <th>Waluta</th>
                     <th>Netto</th>
+                    <th>Stawka VAT (%)</th>
                     <th>VAT</th>
                     <th>Brutto</th>
                     <th>Akcje</th>
@@ -98,21 +100,34 @@
                            th:href="@{|/companies/${inv.company.id}|}"
                            th:text="${inv.company.name}">Firma</a>
                     </td>
-                    <td th:text="${inv?.currency ?: '—'}">PLN</td>
-                    <td th:text="${inv?.totalNet ?: '—'}">0.00</td>
-                    <td th:text="${inv?.totalVat ?: '—'}">0.00</td>
-                    <td th:text="${inv?.totalGross ?: '—'}">0.00</td>
+                    <td th:text="${inv?.currency ?: '—'}"></td>
+                    <td th:text="${inv?.totalNet ?: '—'}"></td>
+                    <td th:text="${inv?.vatRate + '%' ?: '—'}"></td>
+                    <td th:text="${inv?.calculatedVat ?: '—'}"></td>
+                    <td th:text="${inv?.totalGross ?: '—'}"></td>
                     <td class="actions">
+                        <a class="btn btn-small" th:if="${inv.storedFileName != null}"
+                           th:href="@{/invoices/download/{id}(id=${inv.id})}"
+                           target="_blank"
+                           rel="noopener noreferrer">
+                            Pobierz plik
+                        </a>
                         <a class="btn btn-small" th:href="@{|/invoices/${inv?.id}|}">Szczegóły</a>
-<!--                        <a class="btn btn-small" th:href="@{|/invoices/${inv?.id}/edit|}">Edytuj</a>-->
-<!--                        <a class="btn btn-small" th:href="@{|/invoices/${inv?.id}/download|}">Pobierz</a>-->
-
+                        <a class="btn btn-small" th:href="@{|/invoices/edit/${inv?.id}|}">Edytuj</a>
                         <form th:action="@{|/invoices/${inv?.id}/delete|}" method="post" class="inline-form"
                               onsubmit="return confirm('Usunąć tę fakturę?');">
                             <button type="submit" class="btn btn-danger btn-small">Usuń</button>
                         </form>
                     </td>
                 </tr>
+                <tfoot th:if="${!#lists.isEmpty(invoices)}">
+                <tr>
+                    <td colspan="5" class="text-right"><strong>Suma</strong></td>
+                    <td colspan="2" id="invSumNet"></td>
+                    <td id="invSumVAT"></td>
+                    <td id="invSumGross"></td>
+                </tr>
+                </tfoot>
                 <tr th:if="${#lists.isEmpty(invoices)}">
                     <td colspan="15">Brak firm do wyświetlenia.</td>
                 </tr>

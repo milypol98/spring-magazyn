@@ -8,23 +8,16 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 public interface InvoiceService {
     List<Invoice> findAll();
-    Optional<Invoice> findById(Long id);
-    Invoice create(String invoiceNumber,
-                   String name,
-                   MultipartFile file,
-                   String currency,
-                   String totalNet,
-                   String totalVat,
-                   String totalGross,
-                   Long companyId) throws IOException;
+    Invoice findById(Long id);
+
+    void saveInvoice(Invoice invoice, MultipartFile file) throws IOException;
+
+    Resource loadFileAsResource(String filename);
 
     Page<Invoice> list(Pageable pageable);
-    Optional<Invoice> get(Long id);
-    Resource loadFile(Long id);
     void delete(Long id);
     List<Invoice> getAllInvoicesByCompanyId(Long companyId);
     Page<Invoice> search(String q, LocalDate dateFrom, LocalDate dateTo, Long companyId, Pageable pageable);

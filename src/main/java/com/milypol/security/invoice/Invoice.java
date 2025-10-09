@@ -6,6 +6,9 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import jakarta.persistence.*;
+import lombok.*;
+import java.math.RoundingMode;
 
 @Entity
 @Table(name = "invoices")
@@ -20,40 +23,45 @@ public class Invoice {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "invoice_number", nullable = false, length = 128)
+    @Column(nullable = false, length = 128)
     private String invoiceNumber;
 
-    @Column(name = "name", nullable = false, length = 255)
+    @Column(nullable = false, length = 255)
     private String name;
 
-    @Column(name = "stored_file_name", length = 255)
     private String storedFileName;
-
-    @Column(name = "original_file_name", length = 255)
     private String originalFileName;
-
-    @Column(name = "content_type", length = 128)
     private String contentType;
-
-    @Column(name = "file_size")
     private Long fileSize;
-
-    @Column(name = "uploaded_at")
     private Instant uploadedAt;
 
-    @Column(name = "total_net", precision = 19, scale = 2)
+    @Column(precision = 19, scale = 2)
     private BigDecimal totalNet;
 
-    @Column(name = "total_vat", precision = 19, scale = 2)
-    private BigDecimal totalVat;
+    private Integer vatRate;
 
-    @Column(name = "total_gross", precision = 19, scale = 2)
+    @Column(precision = 19, scale = 2)
+    private BigDecimal calculatedVat;
+
+    @Column(precision = 19, scale = 2)
     private BigDecimal totalGross;
 
-    @Column(name = "currency", length = 8)
+    @Column(length = 8)
     private String currency;
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    @JoinColumn(name = "company_id", foreignKey = @ForeignKey(name = "fk_invoice_company"))
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id")
     private Company company;
 
+    @PrePersist
+    @PreUpdate
+    public void calculateTotals() {
+        if (totalNet != null && vatRate != null) {
+            BigDecimal rate = BigDecimal.valueOf(vatRate).divide(new BigDecimal("100"));
+            this.calculatedVat = totalNet.multiply(rate).setScale(2, RoundingMode.HALF_UP);
+            this.totalGross = totalNet.add(this.calculatedVat);
+        } else if (totalNet != null) {
+            this.totalGross = totalNet;
+        }
+    }
 }

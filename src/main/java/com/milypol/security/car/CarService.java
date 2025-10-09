@@ -1,5 +1,7 @@
 package com.milypol.security.car;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 public interface CarService {
@@ -8,4 +10,6 @@ public interface CarService {
     void saveCar(Car car);
     void deleteCar(Integer id);
 
+    @Transactional
+    void applyQuickUpdate(CarUpdateDto dto);
 }

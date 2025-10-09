@@ -1,73 +1,82 @@
 package com.milypol.security.invoice;
 
-import com.milypol.security.company.Company;
-import com.milypol.security.company.CompanyService;
-import lombok.RequiredArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.math.BigDecimal;
+import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
+import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
 public class InvoiceServiceImpl implements InvoiceService {
 
     private final InvoiceRepo invoiceRepo;
-    private final CompanyService companyService;
+    private final Path fileStorageLocation;
 
-
+    public InvoiceServiceImpl(InvoiceRepo invoiceRepo, @Value("${file.upload-dir}") String uploadDir) {
+        this.invoiceRepo = invoiceRepo;
+        this.fileStorageLocation = Paths.get(uploadDir).toAbsolutePath().normalize();
+        try {
+            Files.createDirectories(this.fileStorageLocation);
+        } catch (Exception ex) {
+            throw new RuntimeException("Nie można utworzyć folderu do przechowywania plików.", ex);
+        }
+    }
     @Override
     public List<Invoice> findAll() {
         return invoiceRepo.findAll();
     }
 
     @Override
-    public Optional<Invoice> findById(Long id) {
-        return invoiceRepo.findById(id);
+    public Invoice findById(Long id) {
+        return invoiceRepo.findById(id).orElseThrow(() -> new RuntimeException("Invoice not found"));
     }
 
     @Override
-    public Invoice create(String invoiceNumber,
-                          String name,
-                          MultipartFile file,
-                          String currency,
-                          String totalNet,
-                          String totalVat,
-                          String totalGross,
-                          Long companyId) throws IOException {
-        Invoice inv = new Invoice();
-        inv.setInvoiceNumber(invoiceNumber);
-        inv.setName(name);
-        inv.setCurrency(currency);
-        if (totalNet != null && !totalNet.isBlank()) inv.setTotalNet(new BigDecimal(totalNet.replace(",", ".")));
-        if (totalVat != null && !totalVat.isBlank()) inv.setTotalVat(new BigDecimal(totalVat.replace(",", ".")));
-        if (totalGross != null && !totalGross.isBlank()) inv.setTotalGross(new BigDecimal(totalGross.replace(",", ".")));
-        inv.setUploadedAt(Instant.now());
-
+    public void saveInvoice(Invoice invoice, MultipartFile file) throws IOException {
         if (file != null && !file.isEmpty()) {
-            String storedName = /* twoja logika zapisu pliku */ file.getOriginalFilename();
-            inv.setStoredFileName(storedName);
-            inv.setOriginalFileName(file.getOriginalFilename());
-            inv.setContentType(file.getContentType());
-            inv.setFileSize(file.getSize());
-        }
+            String originalFileName = StringUtils.cleanPath(file.getOriginalFilename());
+            String fileExtension = StringUtils.getFilenameExtension(originalFileName);
+            String storedFileName = UUID.randomUUID() + "." + fileExtension;
 
-        // Przypisanie firmy (opcjonalne)
-        if (companyId != null) {
-            Company company = companyService.findById(companyId)
-                    .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono firmy o id " + companyId));
-            inv.setCompany(company);
-        }
+            Path targetLocation = this.fileStorageLocation.resolve(storedFileName);
+            Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 
-        return invoiceRepo.save(inv);
+            invoice.setOriginalFileName(originalFileName);
+            invoice.setStoredFileName(storedFileName);
+            invoice.setContentType(file.getContentType());
+            invoice.setFileSize(file.getSize());
+            invoice.setUploadedAt(Instant.now());
+        }
+        invoiceRepo.save(invoice);
+    }
+    @Override
+    public Resource loadFileAsResource(String filename) {
+        try {
+            Path filePath = this.fileStorageLocation.resolve(filename).normalize();
+            Resource resource = new UrlResource(filePath.toUri());
+            if (resource.exists()) {
+                return resource;
+            } else {
+                throw new RuntimeException("Plik nie został znaleziony: " + filename);
+            }
+        } catch (MalformedURLException ex) {
+            throw new RuntimeException("Błąd podczas odczytu pliku: " + filename, ex);
+        }
     }
 
     @Override
@@ -75,16 +84,6 @@ public class InvoiceServiceImpl implements InvoiceService {
         return invoiceRepo.findAll(pageable);
     }
 
-    @Override
-    public Optional<Invoice> get(Long id) {
-        return invoiceRepo.findById(id);
-    }
-
-    @Override
-    public Resource loadFile(Long id) {
-        // ...
-        throw new UnsupportedOperationException("Not implemented here");
-    }
 
     @Override
     public void delete(Long id) {

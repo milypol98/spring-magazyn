@@ -94,14 +94,14 @@ public class Car {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate reminderDate;
-    @Size(max = 100, message = "{car.description.size}")
+    @Size(max = 1000, message = "{car.description.size}")
     private String reminderDateDescription;
     private Integer reminderDateWarningDay;
     private Integer reminderDateCriticalDay;
     @Min(value = 0)
     @Max(value = 1000000)
     private Integer reminderKm;
-    @Size(max = 100, message = "{car.description.size}")
+    @Size(max = 1000, message = "{car.description.size}")
     private String reminderKmDescription;
     private Integer reminderKmWarning;
     private Integer reminderKmCritical;

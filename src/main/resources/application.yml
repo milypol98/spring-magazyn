@@ -1,3 +1,5 @@
+file:
+  upload-dir: ./uploads/invoices
 spring:
   datasource:
     url: ${DB_URL:jdbc:postgresql://localhost:5432/magazyn2}
@@ -6,24 +8,18 @@ spring:
     driver-class-name: org.postgresql.Driver
 
   jpa:
-    # Poprawiono z 'mysql' na 'postgresql'
     database: postgresql
     hibernate:
-      # Ta opcja jest świetna do developmentu, ale niebezpieczna na produkcji.
-      # 'create-drop' usuwa i tworzy schemat bazy danych przy każdym uruchomieniu.
+
       ddl-auto: create-drop
-    # Wyświetla zapytania SQL generowane przez Hibernate w konsoli.
     show-sql: true
     properties:
       hibernate:
-        # Formatuje wyświetlane zapytania SQL, aby były bardziej czytelne.
         format_sql: true
 
-  # --- Konfiguracja Spring MVC ---
   mvc:
     hiddenmethod:
       filter:
-        # Włącza obsługę dodatkowych metod HTTP (np. PUT, DELETE) w formularzach.
         enabled: true
 
 #        spring:

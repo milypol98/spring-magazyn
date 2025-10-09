@@ -18,6 +18,14 @@
         <h1 class="page-title" >
             <span th:text="${invoice.name}"></span>
         </h1>
+        <div class="header-tools">
+            <a class="btn btn-small" th:if="${invoice.storedFileName != null}"
+               th:href="@{/invoices/download/{id}(id=${invoice.id})}"
+               target="_blank"
+               rel="noopener noreferrer">
+                Pobierz plik
+            </a>
+        </div>
     </div>
 </header>
 <main class="content">
@@ -33,7 +41,14 @@
                 <div class="label">Nazwa</div>
                 <div class="value" th:text="${#strings.defaultString(invoice?.name,'—')}">—</div>
             </div>
-
+            <div class="detail">
+                <div class="label">Firma</div>
+                <div class="value">
+                    <span th:if="${invoice.company == null}" class="muted">—</span>
+                    <a th:if="${invoice.company != null}"
+                       th:href="@{|/companies/${invoice.company.id}|}"
+                       th:text="${invoice.company.name}">Firma</a></div>
+            </div>
             <div class="detail">
                 <div class="label">Waluta</div>
                 <div class="value" th:text="${#strings.defaultString(invoice?.currency,'—')}">—</div>
@@ -45,10 +60,13 @@
             </div>
 
             <div class="detail">
-                <div class="label">VAT</div>
-                <div class="value" th:text="${invoice?.totalVat != null ? invoice.totalVat : '—'}">—</div>
+                <div class="label">Stawka VAT (%)</div>
+                <div class="value" th:text="${invoice?.vatRate != null ? invoice.vatRate : '—'}">—</div>
             </div>
-
+            <div class="detail">
+                <div class="label">VAT</div>
+                <div class="value" th:text="${invoice?.calculatedVat != null ? invoice.calculatedVat : '—'}">—</div>
+            </div>
             <div class="detail">
                 <div class="label">Brutto</div>
                 <div class="value" th:text="${invoice?.totalGross != null ? invoice.totalGross : '—'}">—</div>
@@ -58,8 +76,10 @@
                 <div class="label">Dodano</div>
                 <div class="value" th:text="${invoice.uploadedAt != null ? #temporals.format(invoice.uploadedAt,'yyyy-MM-dd HH:mm') : '—'}">—</div>
             </div>
+
         </div>
     </section>
+
     <section th:if="${invoice == null}" class="empty-state">
         Nie znaleziono faktury.
     </section>

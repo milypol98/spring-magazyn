@@ -7,15 +7,13 @@ import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 public interface InvoiceRepo extends JpaRepository<Invoice, Long> {
 
-    Optional<Invoice> findByInvoiceNumber(String invoiceNumber);
-
     List<Invoice> findAllByCompany_Id(Long companyId);
-    boolean existsByInvoiceNumber(String invoiceNumber);
 
     @Query("""
            SELECT i FROM Invoice i

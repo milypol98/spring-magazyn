@@ -98,7 +98,7 @@
                    class="table-search"
                    placeholder="Szukaj..."
                    data-target-table="#invoicesTable"
-                   data-sum-columns="4:invSumNet,5:invSumVAT,6:invSumGross">
+                   data-sum-columns="5:invSumNet,7:invSumVAT,8:invSumGross">
         </div>
 
         <div class="table-wrapper">
@@ -108,8 +108,10 @@
                     <th>L.P.</th>
                     <th>Nr faktury</th>
                     <th>Nazwa</th>
+                    <th>Firma</th>
                     <th>Waluta</th>
                     <th>Netto</th>
+                    <th>Stawka VAT (%)</th>
                     <th>VAT</th>
                     <th>Brutto</th>
                     <th>Akcje</th>
@@ -119,11 +121,18 @@
                 <tr th:each="inv,i : ${invoices}">
                     <td th:text="${i.count}">1</td>
                     <td th:text="${inv?.invoiceNumber ?: '—'}"></td>
-                    <td th:text="${inv?.name ?: '—'}">Acme</td>
-                    <td th:text="${inv?.currency ?: '—'}">PLN</td>
-                    <td th:text="${inv?.totalNet ?: '—'}">0.00</td>
-                    <td th:text="${inv?.totalVat ?: '—'}">0.00</td>
-                    <td th:text="${inv?.totalGross ?: '—'}">0.00</td>
+                    <td th:text="${inv?.name ?: '—'}"></td>
+                    <td>
+                        <span th:if="${inv.company == null}" class="muted">—</span>
+                        <a th:if="${inv.company != null}"
+                           th:href="@{|/companies/${inv.company.id}|}"
+                           th:text="${inv.company.name}">Firma</a>
+                    </td>
+                    <td th:text="${inv?.currency ?: '—'}"></td>
+                    <td th:text="${inv?.totalNet ?: '—'}"></td>
+                    <td th:text="${inv?.vatRate + '%' ?: '—'}"></td>
+                    <td th:text="${inv?.calculatedVat ?: '—'}"></td>
+                    <td th:text="${inv?.totalGross ?: '—'}"></td>
                     <td class="actions">
                         <a class="btn btn-small" th:href="@{|/invoices/${inv?.id}|}">Szczegóły</a>
 <!--                        <a class="btn btn-small" th:href="@{|/invoices/${inv?.id}/download|}">Pobierz</a>-->
@@ -132,8 +141,8 @@
                 </tbody>
                 <tfoot th:if="${!#lists.isEmpty(invoices)}">
                 <tr>
-                    <td colspan="4" class="text-right"><strong>Suma</strong></td>
-                    <td id="invSumNet"></td>
+                    <td colspan="5" class="text-right"><strong>Suma</strong></td>
+                    <td colspan="2" id="invSumNet"></td>
                     <td id="invSumVAT"></td>
                     <td id="invSumGross"></td>
                 </tr>
@@ -146,9 +155,6 @@
     </section>
 
 </main>
-
-
-
 
 <section th:if="${company == null}" class="empty-state">
     Nie znaleziono firmy.
